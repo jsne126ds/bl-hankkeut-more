@@ -1,1 +1,327 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f4fb">
+<title>BL 한끗 더</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f4fb; --paper:#fff; --ink:#23212a; --muted:#76717d;
+  --line:#e9e3ef; --accent:#8b68b8; --accent-2:#efe7f8; --accent-3:#5f447f;
+  --shadow:0 10px 30px rgba(71,52,90,.07); --radius:22px;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nanum Gothic",system-ui,sans-serif;line-height:1.65}
+button{font:inherit}
+.wrap{width:min(1180px,100%);margin:0 auto;padding:20px 18px 80px}
+.brand{font-weight:900;font-size:26px;letter-spacing:-1.2px;margin:2px 0 18px;color:#2b2531}
+.hero-btn{width:100%;border:0;border-radius:18px;background:var(--accent);color:white;font-weight:800;font-size:17px;padding:16px 18px;box-shadow:0 8px 22px rgba(139,104,184,.22);cursor:pointer}
+.hero-btn:active{transform:translateY(1px)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:18px;margin-top:16px;align-items:start}
+.panel{background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:26px;padding:18px;box-shadow:var(--shadow);backdrop-filter:blur(6px)}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 14px}
+.section-title{margin:0;font-size:20px;font-weight:900;letter-spacing:-.7px}
+.result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:15px 16px;min-width:0}
+.card.wide{grid-column:1/-1}
+.label{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:800;color:var(--accent-3);margin-bottom:7px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.value{font-size:14.5px;letter-spacing:-.2px;word-break:keep-all}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.chip{background:var(--accent-2);color:var(--accent-3);border-radius:999px;padding:4px 8px;font-size:11.5px;font-weight:700}
+.actions{display:grid;gap:8px}
+.action-btn{width:100%;border:1px solid var(--line);border-radius:14px;background:white;color:var(--ink);padding:13px 12px;font-weight:800;cursor:pointer}
+.action-btn.primary{background:#2f2937;color:#fff;border-color:#2f2937}
+.side-title{font-size:14px;font-weight:900;margin:19px 2px 9px}
+.recent{display:grid;gap:8px}
+.recent-item{border:1px solid var(--line);background:white;border-radius:14px;padding:11px 12px;cursor:pointer;text-align:left}
+.recent-item strong{display:block;font-size:12.5px;margin-bottom:3px}
+.recent-item span{display:block;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.empty{font-size:12px;color:var(--muted);padding:10px 3px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:#2f2937;color:white;padding:10px 14px;border-radius:999px;font-size:12px;font-weight:700;transition:.2s;z-index:10}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .side{order:2}
+}
+@media(max-width:640px){
+  .wrap{padding:16px 14px 64px}
+  .brand{font-size:23px;margin-bottom:14px}
+  .hero-btn{position:sticky;top:10px;z-index:5;border-radius:16px;padding:15px}
+  .layout{margin-top:12px;gap:12px}
+  .panel{padding:14px;border-radius:20px}
+  .section-title{font-size:18px}
+  .result-grid{grid-template-columns:1fr;gap:9px}
+  .card,.card.wide{grid-column:auto;padding:14px 15px;border-radius:16px}
+  .value{font-size:14px}
+  .side{background:transparent;border:0;box-shadow:none;padding:0}
+  .actions{grid-template-columns:1fr 1fr}
+  .side-title{margin-top:16px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">BL 한끗 더</div>
+  <button id="generate" class="hero-btn">한끗 더 ✦</button>
 
+  <div class="layout">
+    <main class="panel">
+      <div class="section-head">
+        <h1 class="section-title">오늘의 한 끗</h1>
+      </div>
+      <div id="result" class="result-grid"></div>
+    </main>
+
+    <aside class="panel side">
+      <div class="actions">
+        <button id="reroll" class="action-btn primary">다시 뽑기</button>
+        <button id="copy" class="action-btn">결과 복사</button>
+      </div>
+      <div class="side-title">최근 결과</div>
+      <div id="recent" class="recent"></div>
+    </aside>
+  </div>
+</div>
+<div id="toast" class="toast">복사했어</div>
+
+<script>
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const maybe=(p=.5)=>Math.random()<p;
+const sample=(a,n)=>[...a].sort(()=>Math.random()-.5).slice(0,n);
+
+const DATA={
+  worlds:[
+    "현대 회사물","현대 전문직물","현대 캠퍼스물","현대 연예계물","현대 스포츠물","현대 재벌가물",
+    "현대 조직물","현대 일상물","현대판타지 · 오메가버스","현대판타지 · 가이드버스","현대판타지 · 헌터/능력자",
+    "현대판타지 · 수인"
+  ],
+  settings:[
+    "대기업 본사에서 서로의 사생활을 철저히 숨기고 일한다",
+    "같은 프로젝트를 맡아 한동안 매일 늦게까지 붙어 있어야 한다",
+    "출장 기간 동안 같은 호텔에 머물게 된다",
+    "한 달짜리 임시 플레이 계약을 맺었다",
+    "정해진 요일에만 만나는 플레이 파트너 관계다",
+    "회사 밖에서는 현실의 직급과 정반대의 통제 관계를 유지한다",
+    "서로의 취향을 익명 커뮤니티에서 먼저 알고 만났다",
+    "재회 후 연애는 보류하고 플레이 관계부터 다시 시작했다",
+    "성인 전용 폐쇄형 합숙 프로그램에서 생활 규칙을 함께 지켜야 한다",
+    "VIP 생활관리 프로그램의 관리자와 참가자로 만났다",
+    "성인 수험생용 기숙형 스파르타 센터에서 규칙을 공유한다",
+    "기업 후계자 대상 비공개 합숙교육에서 전담 관리자와 후보자로 묶인다",
+    "D/s 매칭 업체의 테스트 하우스에서 단기 합숙을 시작한다",
+    "길드의 장기 동조 훈련 기간 동안 같은 숙소를 쓴다",
+    "성인 수인 사회적응 프로그램에서 생활 파트너로 배정된다",
+    "능력 과부하 예방을 위한 격리형 숙소에서 둘만 장기 체류한다"
+  ],
+  timing:[
+    "퇴근 직후","야근이 끝난 새벽","휴일 오후","출장 첫날 밤","출장 마지막 밤","계약 첫날",
+    "계약 종료를 앞둔 날","오랜만에 다시 만난 날","다툰 직후","화해한 직후","다음 날 중요한 일정이 있는 밤","정기 플레이 날"
+  ],
+  secrecy:[
+    "완전히 안전한 사적 공간","누군가 들어올 가능성이 있는 공간","벽 너머에 사람이 있는 공간",
+    "업무 공간이라 흔적을 남기면 곤란한 상황","관계가 알려지면 곤란한 상황","호칭이나 태도만 들켜도 관계를 의심받는 상황",
+    "주변에서는 둘을 단순한 동료로만 알고 있음","아무도 둘의 사적인 관계를 모름"
+  ],
+  rules:[
+    "회사에서는 반드시 직급 호칭을 유지한다","플레이 밖에서는 명령하지 않는다","먼저 연락하지 않는다",
+    "정해진 날에만 만난다","거짓말하지 않는다","무리해서 버티지 않는다","끝난 뒤 반드시 피드백한다",
+    "특정 호칭은 둘만 있을 때만 쓴다","한쪽이 먼저 요구하기 전에는 시작하지 않는다"
+  ],
+  stages:[
+    "첫 플레이 전","처음 몇 번 만나는 단계","서로 반응을 익혀 가는 단계","익숙한 장기 파트너",
+    "정식 계약 직전","연애 직전","막 연애를 시작한 단계","오래된 연인","권태기","헤어진 뒤 재회한 단계","관계 종료 직전"
+  ],
+  relations:[
+    "상사 × 부하","팀장 × 팀원","대표 × 실장","대표 × 비서","선배 × 후배","라이벌 동료","친구 × 친구",
+    "친구 → 플레이 파트너","연애하지 않는 플레이 파트너","전 연인","전 플레이 파트너","재회한 옛 파트너",
+    "룸메이트","동거인","재혼가정의 비혈연 형제","코치 × 선수","트레이너 × 회원","강사 × 성인 수강생",
+    "후계자 × 전담 관리자","고객 × 전담 컨설턴트"
+  ],
+  situations:[
+    "서로 같은 취향이라는 사실을 처음 확인한다","익명 커뮤니티에서 만나던 상대가 아는 사람이었다는 걸 알게 된다",
+    "오늘만 하기로 합의했던 플레이가 두 번째 약속으로 이어진다","임시 계약의 첫날이다","계약 종료 직전 마지막 플레이를 준비한다",
+    "처음으로 둘만의 규칙을 정한다","규칙 위반이 들킨 직후다","새로운 규칙을 하나 추가한다","기존 규칙 하나를 완화하기로 한다",
+    "처음으로 역할을 바꿔 보기로 한다","상호 스팽을 처음 제안한다","연애와 플레이를 분리하기로 다시 합의한다",
+    "플레이 관계에 감정이 섞였다는 사실이 처음 드러난다","다른 파트너 이야기가 나오며 관계가 흔들린다",
+    "회사에서 크게 충돌한 뒤 사적으로 다시 만난다","퇴근 후 약속된 플레이를 위해 상대의 집으로 간다",
+    "야근 후 둘만 남은 사무실에서 평소와 다른 호칭이 나온다","출장 마지막 밤, 다음 약속을 정할지 말지 결정해야 한다",
+    "한동안 플레이를 쉬었다가 처음 재개한다","새 도구를 처음 써 보는 날이다","스팽만 하기로 합의한 날이다",
+    "받는 쪽이 먼저 오늘의 횟수를 정하겠다고 나선다","일부러 규칙을 어긴 사람이 벌을 기다리고 있다"
+  ],
+  variables:[
+    "평소 잘 버티던 쪽이 오늘은 유독 빨리 흔들린다","평소보다 훨씬 오래 버틴다","도구보다 맨손에 더 크게 반응한다",
+    "맞는 것보다 기다리는 시간이 더 힘들다","한쪽 엉덩이만 유독 민감하다는 사실이 드러난다",
+    "스팽커가 예상보다 먼저 감정적으로 흔들린다","받는 쪽이 먼저 강도를 올려 달라고 요청한다",
+    "받는 쪽이 자기 손으로 횟수를 늘린다","평소 피하던 자세를 오늘은 먼저 고른다",
+    "처음에는 장난이었지만 중간부터 분위기가 진지해진다","스팽커가 평소 쓰지 않던 칭찬을 한다",
+    "평소 말이 많은 쪽이 갑자기 조용해진다","평소 조용한 쪽이 처음으로 요구를 말한다",
+    "끝난 뒤 먼저 떨어지던 쪽이 이번에는 자리를 떠나지 않는다","플레이용 호칭이 일상에서 무심코 튀어나온다",
+    "회사에서는 명령하던 사람이 사적으로는 먼저 허락을 구한다","즉흥적으로 고른 도구가 준비한 도구보다 더 잘 맞는다",
+    "횟수가 끝나기 전에 감정이 먼저 무너진다","평소 중요하게 여기던 규칙을 오늘 처음 완화한다",
+    "둘 다 상대가 먼저 감정을 품었다고 착각하고 있다"
+  ],
+  places:[
+    "집 · 서재 책상 앞","집 · 거실 소파 옆","집 · 침대 끝","집 · 거울 앞","오피스텔 · 홈오피스",
+    "회사 · 대표실","회사 · 팀장실","회사 · 빈 회의실","회사 · 야근 후 사무실","회사 · 지하 주차장과 연결된 휴게실",
+    "호텔 · 스위트룸","호텔 · 드레스룸 앞","호텔 · 침대 끝","레지던스 · 거실","출장 숙소 · 작은 서재",
+    "프라이빗 플레이룸 · 거울벽 앞","임팩트 룸 · 스팽킹 벤치","임팩트 룸 · 스팽킹 체어","로프 룸 · 매트 위",
+    "훈육 테마 룸 · 책상 앞","회원제 클럽 · 개인실","D/s 테스트 하우스 · 개인실","성인 기숙형 프로그램 · 상담실",
+    "길드 · 훈련실","길드 · 합숙소 개인실","능력자 격리 숙소 · 거실"
+  ],
+  objects:[
+    "넥타이","벨트","자","사원증","카드키","계약서","태블릿","휴대폰","타이머","안경","정장 재킷",
+    "거울","의자","책상","칼라","커프","도구 케이스"
+  ],
+  roles:[
+    {giver:"공",receiver:"수",label:"공 스팽커 / 수 스팽키"},
+    {giver:"수",receiver:"공",label:"수 스팽커 / 공 스팽키"},
+    {giver:"상호",receiver:"상호",label:"상호 스팽"}
+  ],
+  tendencies:["돔","섭","스위치","사디스트","마조히스트","브랫","브랫 테이머","스팽커","스팽키","서비스 돔","서비스 섭","리거","로프 버니"],
+  impactAreas:["엉덩이 전체","엉덩이 위쪽","엉덩이 중앙","엉덩이 아래쪽","왼쪽 엉덩이 집중","오른쪽 엉덩이 집중","좌우 번갈아","엉덩이 바깥쪽","엉덩이 안쪽 가까운 부분","엉덩이와 허벅지 경계","허벅지 뒤쪽"],
+  tools:["맨손","패들","가죽 패들","나무 패들","케인","라이딩 크롭","플로거","벨트","자","스트랩"],
+  positions:["OTK","침대 끝에 엎드리기","책상에 상체 기대기","의자 등받이를 잡고 서기","벽에 손 짚고 상체 숙이기","무릎 꿇고 상체 숙이기","네발 자세","다리를 벌리고 서기","스팽킹 체어","스팽킹 벤치","스톡스"],
+  rhythms:["일정한 간격","일부러 긴 간격","짧게 연속","몇 대씩 묶어서","좌우 교대로","같은 자리에 반복","부위를 옮겨 가며","약하게 시작해 단계 상승","한동안 멈췄다가 다시 시작","질문 후 한 대씩","횟수를 세게 하며 진행"],
+  strengths:["끝까지 일정한 강도","3단계로 서서히 상승","반응에 따라 강도 상승","횟수보다 강도 중심","강도보다 누적 중심","마지막 몇 대만 강하게","한계 직전 한 단계 낮춤"],
+  restraints:["구속 없음","손목 커프","손목을 뒤로 묶기","침대 프레임에 손목 고정","의자에 손목 고정","로프로 손목 고정","자세 유지 명령만 하고 물리적 구속은 하지 않음"],
+  humiliation:[
+    "거울 앞에서 자세를 유지하며 횟수를 직접 센다","바지를 직접 내리고 자세를 잡은 채 기다린다",
+    "정장 차림을 유지한 채 엉덩이만 드러낸다","자세가 흐트러질 때마다 스스로 처음 자세로 돌아간다",
+    "도구를 직접 가져와 건넨다","왜 맞는지 자기 입으로 짧게 설명한다","맨손과 패들 중 하나를 직접 고른다",
+    "몇 대 받을지 스스로 정한 뒤 다시 말로 확인한다","도구를 고르는 동안 엉덩이를 내민 채 기다린다",
+    "맞기 전과 후의 상태를 거울로 직접 확인한다","끝난 뒤 어느 쪽이 더 민감했는지 직접 말한다",
+    "칭찬을 들을 때마다 짧게 대답한다","평소 쓰지 않는 사적인 호칭을 유지한다"
+  ],
+  weaknesses:[
+    "칭찬에 유독 약함","특정 호칭에 약함","무시당하는 걸 견디기 어려움","기다리는 시간을 못 견딤",
+    "눈이 마주치면 오히려 더 흔들림","상대가 실망하는 걸 더 무서워함","버티는 척하지만 인정받고 싶어함",
+    "플레이보다 애프터케어에서 더 크게 흔들림","자기 반응을 정확히 지적당하면 당황함"
+  ],
+  triggers:[
+    "문을 잠그는 소리","넥타이를 푸는 행동","휴대폰을 내려놓게 하는 말","안경을 벗는 순간","소매를 걷는 행동",
+    "계약서를 펼치는 행동","도구를 꺼내 책상 위에 놓는 행동","의자를 방 중앙으로 옮기는 행동","평소 말투가 명령조로 바뀌는 순간",
+    "횟수를 먼저 알려 주는 말"
+  ],
+  receiverEmotion:[
+    "창피해서 시선을 피하고 싶지만 오히려 들키기 싫어 상대를 똑바로 본다. 몸은 먼저 긴장하면서도 지시에는 정확히 따른다.",
+    "억울하다는 듯 버티지만 사실은 상대가 끝까지 자신을 보고 있다는 데 안도한다. 대답은 짧아지고 호흡만 조금씩 흐트러진다.",
+    "처음엔 오기로 버티다가 칭찬 한마디에 예상보다 크게 흔들린다. 그 반응이 들킨 게 더 창피해 다시 무표정을 만들려 한다.",
+    "자기가 먼저 원했다고 말한 순간부터 도망갈 명분이 사라진 기분이 든다. 긴장과 기대가 섞여 자세를 스스로 더 정확히 고쳐 잡는다.",
+    "상대에게 통제를 넘기는 게 이상할 만큼 편해진다. 몸은 긴장하지만 머릿속은 오히려 조용해지고, 지시를 기다리는 시간이 길게 느껴진다.",
+    "견딜 수 있다는 걸 보여 주고 싶어 애써 태연한 척한다. 하지만 횟수를 세는 목소리가 조금씩 짧아지면서 자존심과 만족감이 동시에 올라온다."
+  ],
+  giverEmotion:[
+    "상대가 버티는 척한다는 걸 알아차리고 서두르지 않는다. 반응보다 호흡과 자세 변화를 보면서 어디까지 맡겨도 되는지 판단한다.",
+    "평소보다 빠른 반응에 순간 놀라지만 티 내지 않고 페이스를 낮춘다. 상대가 안전하다는 확신을 주는 게 지금은 통제감보다 중요하다.",
+    "도발을 받아 주는 재미와 선을 넘지 않아야 한다는 책임감이 동시에 든다. 상대가 스스로 자세를 고쳐 잡는 순간 만족감이 크게 올라온다.",
+    "자기 지시보다 상대의 자발적인 선택에서 더 강한 만족을 느낀다. 더 밀어붙이고 싶은 마음을 잠시 눌러 상대가 먼저 다음 신호를 주는지 기다린다.",
+    "상대가 반응을 숨길수록 더 세밀하게 관찰하게 된다. 소리보다 손끝의 긴장과 시선 변화를 보고 다음 강도를 정한다."
+  ],
+  voice:[
+    "처음에는 숨을 거의 흐트러뜨리지 않지만, 간격이 길어질수록 대답이 늦어진다. 한 번 새어 나온 짧은 숨을 들킨 뒤에는 오히려 더 조용해진다.",
+    "횟수는 또박또박 세지만 끝으로 갈수록 한 박자씩 늦어진다. 소리를 삼킨 직후 상대의 표정을 확인하려다 시선을 피한다.",
+    "놀랄 때마다 짧게 숨을 들이마시고 곧바로 평소 말투로 돌아오려 한다. 하지만 칭찬을 들으면 대답 끝이 조금 흐려진다.",
+    "말수가 줄고 호흡이 짧아진다. 참으려는 기색이 분명한데도 자세는 먼저 고쳐 잡아, 몸과 태도가 서로 다른 말을 한다.",
+    "평소보다 말이 많아져 긴장을 농담으로 넘기려 한다. 한 번 목소리가 끊긴 뒤부터는 농담이 줄고 필요한 대답만 남는다."
+  ],
+  aftermath:[
+    "다음 약속이 없는데도 무의식적으로 같은 요일을 비워 둔다","일상에서 특정 호칭을 들으면 순간적으로 상대를 떠올린다",
+    "앉을 때 남은 얼얼함 때문에 방금 장면을 다시 의식한다","거울을 볼 때 흔적보다 그때의 표정을 먼저 떠올린다",
+    "플레이가 끝난 뒤 상대를 보는 시선이 미묘하게 달라진다","평소라면 먼저 자리를 떴을 사람이 오늘은 피드백이 끝날 때까지 남아 있다"
+  ]
+};
+
+function buildResult(){
+  const role=pick(DATA.roles);
+  const mutual=role.label==="상호 스팽";
+  const topT=sample(DATA.tendencies,2).join(" · ");
+  const botT=sample(DATA.tendencies,2).join(" · ");
+  const humiliation=sample(DATA.humiliation,Math.random()<.45?2:1).join(" + ");
+  const tool1=pick(DATA.tools);
+  const tool2=maybe(.3)?pick(DATA.tools.filter(x=>x!==tool1)):null;
+  const toolText=tool2?tool1+" → "+tool2:tool1;
+  const impact=pick(DATA.impactAreas);
+  const posture=pick(DATA.positions);
+  const restraint=(posture==="OTK"||posture==="스톡스")?"구속 없음":pick(DATA.restraints);
+  const place=pick(DATA.places);
+  const object=pick(DATA.objects);
+  const result={
+    설정:`${pick(DATA.worlds)} · ${pick(DATA.settings)}. ${pick(DATA.timing)}, ${place}. ${pick(DATA.secrecy)}. 관계 단계는 ‘${pick(DATA.stages)}’이며, 둘 사이에는 “${pick(DATA.rules)}”라는 약속이 있다.`,
+    관계:pick(DATA.relations),
+    상황:`${pick(DATA.situations)} 분위기를 바꾸는 작은 신호는 ‘${pick(DATA.triggers)}’이고, 장면에 ${object}가 놓여 있다.`,
+    변수:pick(DATA.variables),
+    성향:`공: ${topT} / 수: ${botT} / 스팽 역할: ${role.label}`,
+    플레이:`${impact} · ${toolText} · ${posture} · ${pick(DATA.rhythms)} · ${pick(DATA.strengths)} · ${restraint}. 수치 요소는 ‘${humiliation}’. 이번 장면에서 특히 드러나는 약점은 ‘${pick(DATA.weaknesses)}’.`,
+    "받는 사람 감정선":pick(DATA.receiverEmotion),
+    "하는 사람 감정선":pick(DATA.giverEmotion),
+    "음성 반응":pick(DATA.voice)+" "+pick(DATA.aftermath)
+  };
+  if(mutual){
+    result["받는 사람 감정선"]="역할이 오갈 때마다 상대가 방금 자신에게 보인 반응을 그대로 돌려줄지, 일부러 다르게 할지 의식한다. "+result["받는 사람 감정선"];
+    result["하는 사람 감정선"]="자기가 받은 감각을 기억한 채 상대의 반응을 새롭게 읽는다. "+result["하는 사람 감정선"];
+  }
+  return result;
+}
+
+const order=["설정","관계","상황","변수","성향","플레이","받는 사람 감정선","하는 사람 감정선","음성 반응"];
+let current=null;
+let recent=JSON.parse(localStorage.getItem("hankkeutMoreRecent")||"[]");
+
+function render(r){
+  current=r;
+  const el=document.getElementById("result");
+  el.innerHTML=order.map(k=>`
+    <section class="card ${["설정","상황","플레이","받는 사람 감정선","하는 사람 감정선","음성 반응"].includes(k)?"wide":""}">
+      <div class="label"><span class="dot"></span>${k}</div>
+      <div class="value">${escapeHtml(r[k])}</div>
+    </section>`).join("");
+}
+
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+
+function saveRecent(r){
+  recent.unshift(r);
+  recent=recent.slice(0,5);
+  localStorage.setItem("hankkeutMoreRecent",JSON.stringify(recent));
+  renderRecent();
+}
+
+function renderRecent(){
+  const el=document.getElementById("recent");
+  if(!recent.length){el.innerHTML='<div class="empty">아직 저장된 결과가 없어.</div>';return}
+  el.innerHTML=recent.map((r,i)=>`<button class="recent-item" data-i="${i}"><strong>${escapeHtml(r.관계)} · ${escapeHtml(r.변수)}</strong><span>${escapeHtml(r.상황)}</span></button>`).join("");
+  el.querySelectorAll(".recent-item").forEach(b=>b.onclick=()=>render(recent[+b.dataset.i]));
+}
+
+function generate(){
+  const r=buildResult();
+  render(r);
+  saveRecent(r);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function copyCurrent(){
+  if(!current)return;
+  const text="BL 한끗 더\n\n"+order.map(k=>`[${k}]\n${current[k]}`).join("\n\n");
+  navigator.clipboard.writeText(text).then(()=>toast("결과를 복사했어")).catch(()=>toast("복사에 실패했어"));
+}
+
+function toast(msg){
+  const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(window.__toast); window.__toast=setTimeout(()=>t.classList.remove("show"),1400);
+}
+
+document.getElementById("generate").onclick=generate;
+document.getElementById("reroll").onclick=generate;
+document.getElementById("copy").onclick=copyCurrent;
+renderRecent();
+render(buildResult());
+</script>
+</body>
+</html>
