@@ -92,7 +92,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.3.8</span>
+  <span class="version">v0.4.0</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -368,16 +368,50 @@ function makeTendencies(role,relation){
   };
 }
 function chooseHumiliations(impact,type,count){const bilateral=/전체|좌우 번갈아/.test(impact),formal=(type==="work"||type==="hotel");let pool=HUMS.filter(h=>!h.need||h.need==="mirror"||h.need==="toolcase"||(h.need==="bilateral"&&bilateral)||(h.need==="formal"&&formal));const chosen=sample(pool,count);let forcedObject=null;if(chosen.some(h=>h.need==="mirror"))forcedObject="거울";else if(chosen.some(h=>h.need==="toolcase"))forcedObject="도구 케이스";return{texts:chosen.map(h=>h.text),forcedObject};}
+
+const OBJECTS=[
+  {name:"정장",text:"공적인 이미지와 사적인 상황의 대비를 만든다.",types:["work","hotel","institution"]},
+  {name:"넥타이",text:"공적인 호칭과 사적인 통제의 대비를 만든다.",types:["work","hotel","home"]},
+  {name:"셔츠",text:"단정한 외형이 흐트러지는 변화를 장면의 신호로 쓴다.",types:["work","hotel","home"]},
+  {name:"장갑",text:"직접 닿는 감각과 일부러 거리를 두는 느낌을 강조한다.",types:["work","playroom","fantasy","institution"]},
+  {name:"안대",text:"시야를 제한해 기다림과 상대의 지시에 집중하게 만든다.",types:["playroom","hotel","home"]},
+  {name:"로프",text:"구속 자체보다 준비 과정과 관계의 규칙을 시각화한다.",types:["playroom","hotel","home"]},
+  {name:"칼라",text:"둘 사이에서만 통하는 역할 관계의 표식으로 사용한다.",types:["playroom","hotel","home"]},
+  {name:"초커",text:"일상에서도 감출 수 있는 사적인 관계의 표식으로 쓴다.",types:["work","hotel","home","fantasy"]},
+  {name:"책상",text:"공적인 공간을 사적인 관계로 전환하는 경계가 된다.",types:["work","home","institution"]},
+  {name:"의자",text:"기다리는 위치나 자세를 정하는 장면 장치로 활용한다.",types:["work","home","hotel","playroom","institution"]},
+  {name:"거울",text:"자기 자세와 상대의 반응을 동시에 의식하게 만든다.",types:["home","hotel","playroom"]},
+  {name:"휴대폰",text:"연락 규칙·호칭·비밀이 일상으로 새어 나오는 장치가 된다.",types:["work","home","hotel","fantasy","institution"]},
+  {name:"태블릿·체크리스트",text:"합의한 규칙과 선호를 다시 확인하는 도구로 쓴다.",types:["work","playroom","hotel","institution"]},
+  {name:"유니폼",text:"직업적 역할과 사적인 역할의 대비를 선명하게 만든다.",types:["work","fantasy","institution"]},
+  {name:"명찰·사원증",text:"공적인 신분을 눈앞에 둔 채 사적인 관계를 의식하게 한다.",types:["work","institution"]},
+  {name:"열쇠·카드키",text:"둘만의 공간에 들어가는 권한과 약속의 상징이 된다.",types:["hotel","work","playroom","institution"]},
+  {name:"계약서",text:"합의된 관계와 규칙을 눈에 보이는 형태로 만든다.",types:["work","hotel","playroom","institution"]},
+  {name:"타이머",text:"기다림·간격·시간 제한을 명확하게 만드는 장치로 쓴다.",types:["home","hotel","playroom","work","institution"]},
+  {name:"가운",text:"완전히 차려입은 상태와 편하게 풀어진 상태 사이의 변화를 만든다.",types:["hotel","home"]},
+  {name:"수건",text:"플레이 뒤 정리와 돌봄으로 분위기를 전환하는 소품이 된다.",types:["hotel","home","playroom"]},
+  {name:"안경",text:"평소의 이미지가 벗겨지는 순간을 강조한다.",types:["work","home","hotel","institution"]},
+  {name:"손목시계",text:"약속한 시간과 기다리는 시간을 계속 의식하게 만든다.",types:["work","hotel","home","institution"]},
+  {name:"반지",text:"관계의 약속이나 소유감을 직접 말하지 않고 암시한다.",types:["work","hotel","home","fantasy"]},
+  {name:"얼음",text:"플레이 뒤 남은 감각이나 온도 차를 의식하게 만드는 소품이다.",types:["hotel","home","playroom"]},
+  {name:"녹음기",text:"말과 호칭을 기록한다는 긴장감을 장면에 더한다.",types:["work","playroom","hotel"]},
+  {name:"리모컨",text:"거리를 둔 채 지시하거나 장치를 제어하는 이미지를 만든다.",types:["home","hotel","playroom"]}
+];
+function chooseSceneObject(type){
+  const pool=OBJECTS.filter(o=>o.types.includes(type));
+  return pick(pool.length?pool:OBJECTS);
+}
+
 function chooseObject(type,forced){if(forced)return forced;const common=["넥타이","벨트","계약서","태블릿","휴대폰","타이머","안경","거울","의자","책상","칼라","커프","도구 케이스"];if(type==="work")return pick(["넥타이","사원증","계약서","태블릿","휴대폰","안경","의자","책상"]);if(type==="playroom")return pick(["타이머","거울","칼라","커프","도구 케이스","의자"]);return pick(common);}
 function chooseTrigger(type){if(type==="work")return pick(["넥타이를 푸는 행동","휴대폰을 내려놓게 하는 말","안경을 벗는 순간","소매를 걷는 행동","의자를 방 중앙으로 옮기는 행동","평소 말투가 명령조로 바뀌는 순간","횟수를 먼저 알려 주는 말"]);return pick(DATA.triggers);}
 
 function buildResult(){
- const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type),variable=pick(VARS),weak=pick(WEAKS.filter(w=>w[0]!==variable[0])),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),object=chooseObject(type,hum.forcedObject),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
- const result={설정:`${world} · ${chooseBase(world,profile,relation)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${chooseRule(relation)}”라는 약속이 있다.`,관계:relation,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’이고, 장면에는 ${object}가 놓여 있다.`,변수:variable[1],성향:`공: ${tendencies.top} / 수: ${tendencies.bottom}`,플레이:`${impact} · ${toolText} · ${posture} · ${pick(DATA.rhythms)} · ${pick(DATA.strengths)} · ${restraint}. 수치 요소는 ‘${hum.texts.join(" + ")}’. 이번 장면에서 특히 드러나는 약점은 ‘${weak[1]}’.`,"받는 사람 감정선":`${receiver+"은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
+ const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type),variable=pick(VARS),weak=pick(WEAKS.filter(w=>w[0]!==variable[0])),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),sceneObject=chooseSceneObject(type),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
+ const result={설정:`${world} · ${chooseBase(world,profile,relation)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${chooseRule(relation)}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’다.`,변수:variable[1],성향:`공: ${tendencies.top} / 수: ${tendencies.bottom}`,플레이:`${impact} · ${toolText} · ${posture} · ${pick(DATA.rhythms)} · ${pick(DATA.strengths)} · ${restraint}. 수치 요소는 ‘${hum.texts.join(" + ")}’. 이번 장면에서 특히 드러나는 약점은 ‘${weak[1]}’.`,"받는 사람 감정선":`${receiver+"은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
  return result;
 }
 
-const order=["설정","성향","관계","상황","변수","플레이","받는 사람 감정선","하는 사람 감정선","음성 반응"];
+const order=["설정","성향","관계","오브제","상황","변수","플레이","받는 사람 감정선","하는 사람 감정선","음성 반응"];
 let current=null;
 let recent=JSON.parse(localStorage.getItem("hankkeutMoreRecent")||"[]");
 
