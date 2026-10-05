@@ -92,7 +92,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.3.3</span>
+  <span class="version">v0.3.4</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -378,7 +378,7 @@ function buildResult(){
  return result;
 }
 
-const order=["설정","관계","상황","변수","성향","플레이","받는 사람 감정선","하는 사람 감정선","음성 반응"];
+const order=["설정","관계","성향","상황","변수","플레이","받는 사람 감정선","하는 사람 감정선","음성 반응"];
 let current=null;
 let recent=JSON.parse(localStorage.getItem("hankkeutMoreRecent")||"[]");
 
