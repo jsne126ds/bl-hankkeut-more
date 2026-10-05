@@ -92,7 +92,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.3.2</span>
+  <span class="version">v0.3.3</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -254,6 +254,23 @@ const WEAKS=[["praise","칭찬에 유독 약함"],["title","특정 호칭에 약
 const HUMS=[{"text":"거울 앞에서 자세를 유지하며 횟수를 직접 센다","need":"mirror"},{"text":"바지를 직접 내리고 자세를 잡은 채 기다린다"},{"text":"정장 차림을 유지한 채 엉덩이만 드러낸다","need":"formal"},{"text":"자세가 흐트러질 때마다 스스로 처음 자세로 돌아간다"},{"text":"도구를 직접 가져와 건넨다","need":"toolcase"},{"text":"왜 맞는지 자기 입으로 짧게 설명한다"},{"text":"맨손과 패들 중 하나를 직접 고른다"},{"text":"몇 대 받을지 스스로 정한 뒤 다시 말로 확인한다"},{"text":"도구를 고르는 동안 엉덩이를 내민 채 기다린다"},{"text":"맞기 전과 후의 상태를 거울로 직접 확인한다","need":"mirror"},{"text":"끝난 뒤 어느 쪽이 더 민감했는지 직접 말한다","need":"bilateral"},{"text":"칭찬을 들을 때마다 짧게 대답한다"},{"text":"평소 쓰지 않는 사적인 호칭을 유지한다"}];
 const isWorkRelation=r=>/(상사|부하|팀장|팀원|대표|실장|비서|매니저|코치|선수|트레이너|회원|담당자|에스퍼|가이드|센터 동료|길드|능력자)/.test(r);
 
+
+const NONWORK_BASES={
+  "현대 회사물":["같은 업계에서 일하지만 사적으로 먼저 가까워졌다","직장은 다르지만 공통 지인을 통해 알게 됐다","업무와 무관한 자리에서 친해진 뒤 각자의 직장 생활을 공유하게 됐다"],
+  "현대 전문직물":["각자 전문직으로 일하지만 사적인 인연으로 먼저 가까워졌다","서로 다른 기관에서 일하며 업무 밖에서 관계가 시작됐다","전문 분야는 다르지만 사적으로 취향을 공유하게 됐다"],
+  "현대 캠퍼스물":["성인 재학생 또는 대학원생으로 캠퍼스 생활을 공유하지만 관계는 사적으로 시작됐다","같은 학교에 다니지만 수업이나 연구와 무관하게 가까워졌다","캠퍼스 밖에서 먼저 친해진 뒤 같은 학교라는 사실을 알게 됐다"],
+  "현대 연예계물":["같은 업계에 있지만 공식적인 업무 관계보다 사적인 인연이 먼저다","활동 분야는 겹치지만 서로의 일정과는 별개로 사적인 관계를 이어 간다","대외적으로는 서로 가까운 사이로만 알려져 있고 플레이 관계는 숨긴다"],
+  "현대 스포츠물":["같은 종목 또는 인접한 운동 생활권에 있지만 사적인 관계가 먼저다","선수 생활과 별개로 친분을 쌓다가 서로의 취향을 알게 됐다","훈련 일정이 겹치지만 공식적인 지도 관계는 아니다"],
+  "현대 재벌가물":["재벌가와 연결된 생활권 안에 있지만 사적인 인연이 먼저다","가문이나 회사의 공식 관계와 별개로 개인적으로 가까워졌다","사회적 위치는 다르지만 둘의 관계는 업무 계약이 아니라 사적으로 시작됐다"],
+  "현대 조직물":["조직과 연결된 생활권에 있지만 둘의 관계는 업무 밖에서 시작됐다","서로의 소속은 알지만 공식적인 지휘 관계는 아니다","조직 내부에서는 거리를 두고 사적으로만 가까운 사이를 유지한다"],
+  "현대 일상물":["평범한 일상에서 친해진 뒤 서로의 취향을 알게 됐다","생활 반경이 겹치며 가까워졌고 플레이 관계는 그 뒤에 시작됐다","연애 여부와 별개로 사적인 신뢰를 먼저 쌓은 사이다"],
+  "현대판타지 · 오메가버스":["형질과 무관한 사적인 인연으로 먼저 가까워졌다","현대 사회에서 각자 생활하다 서로의 취향을 알게 됐다","형질 관계와 플레이 관계를 분리해서 생각하기로 합의했다"],
+  "현대판타지 · 가이드버스":["센터 업무와 별개로 사적인 인연이 먼저 생겼다","가이드·에스퍼 체계 안에 있지만 둘의 플레이 관계는 업무 밖에서 시작됐다","능력 관련 역할과 사적인 관계를 의식적으로 분리하고 있다"],
+  "현대판타지 · 헌터/능력자":["같은 헌터 사회에 속하지만 사적인 인연으로 먼저 가까워졌다","길드나 임무 관계와 별개로 둘만의 플레이 규칙을 만들었다","능력자 생활권은 겹치지만 공식적인 지휘 관계는 아니다"],
+  "현대판타지 · 수인":["현대 사회에서 생활하는 성인 수인과 인간 또는 수인끼리 사적으로 가까워졌다","수인 사회의 생활 습관과 플레이 관계를 서로 별개의 문제로 다룬다","지원 제도나 직업 관계가 아니라 개인적인 인연으로 관계가 시작됐다"]
+};
+const chooseBase=(world,profile,relation)=>isWorkRelation(relation)?pick(profile.bases):pick(NONWORK_BASES[world]||profile.bases);
+
 const REVERSE_HIERARCHY={
   "상사 × 부하":"부하 × 상사",
   "팀장 × 팀원":"팀원 × 팀장",
@@ -356,7 +373,7 @@ function chooseTrigger(type){if(type==="work")return pick(["넥타이를 푸는 
 
 function buildResult(){
  const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=pick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type,role.label),variable=pick(VARS),weak=pick(WEAKS.filter(w=>w[0]!==variable[0])),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),object=chooseObject(type,hum.forcedObject),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,giver=role.label==="상호 스팽"?"서로":role.giver,receiver=role.label==="상호 스팽"?"서로":role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
- const result={설정:`${world} · ${pick(profile.bases)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${chooseRule(relation)}”라는 약속이 있다.`,관계:relation,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’이고, 장면에는 ${object}가 놓여 있다.`,변수:variable[1],성향:`공: ${tendencies.top} / 수: ${tendencies.bottom} / 스팽 역할: ${role.label}`,플레이:`${impact} · ${toolText} · ${posture} · ${pick(DATA.rhythms)} · ${pick(DATA.strengths)} · ${restraint}. 수치 요소는 ‘${hum.texts.join(" + ")}’. 이번 장면에서 특히 드러나는 약점은 ‘${weak[1]}’.`,"받는 사람 감정선":`${receiver==="서로"?"서로는":receiver+"은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver==="서로"?"서로는":giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
+ const result={설정:`${world} · ${chooseBase(world,profile,relation)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${chooseRule(relation)}”라는 약속이 있다.`,관계:relation,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’이고, 장면에는 ${object}가 놓여 있다.`,변수:variable[1],성향:`공: ${tendencies.top} / 수: ${tendencies.bottom} / 스팽 역할: ${role.label}`,플레이:`${impact} · ${toolText} · ${posture} · ${pick(DATA.rhythms)} · ${pick(DATA.strengths)} · ${restraint}. 수치 요소는 ‘${hum.texts.join(" + ")}’. 이번 장면에서 특히 드러나는 약점은 ‘${weak[1]}’.`,"받는 사람 감정선":`${receiver==="서로"?"서로는":receiver+"은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver==="서로"?"서로는":giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
  if(role.label==="상호 스팽"){result["받는 사람 감정선"]="서로는 역할이 오갈 때마다 상대가 방금 보인 반응을 기억한다. "+receiverEmotion+" 플레이가 끝난 뒤에는 "+aftermath+".";result["하는 사람 감정선"]="서로는 자기가 받은 감각을 기억한 채 상대의 반응을 새롭게 읽는다. "+giverEmotion;}
  return result;
 }
