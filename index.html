@@ -102,7 +102,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.8.3</span>
+  <span class="version">v0.8.4</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -307,10 +307,10 @@ const SITUATION_BANK=[
   {text:"권태기가 온 줄 알았던 두 사람이 새로운 방식보다 예전에 가장 익숙했던 루틴에서 더 크게 흔들린다.",groups:["ongoing"],tags:["partner","cohabit"]},
   {text:"평소에는 끝내는 신호를 잘 지키던 사람이 오늘은 한 번 더를 요구하고 이유를 설명하지 못한다.",groups:["ongoing"],tags:["general"]},
   {text:"공적인 역할에서 크게 충돌한 뒤 사적으로 만났지만 그 감정을 플레이에 섞지 않기로 한 약속이 시험대에 오른다.",groups:["ongoing"],tags:["work"],weight:2},
-  {text:"야근 뒤 둘만 남은 공간에서 공적인 호칭을 유지한 채 사적인 약속 시간을 확인한다.",groups:["ongoing"],tags:["work"],weight:2},
+  {text:"공적인 일정이 끝난 뒤 둘만 남은 공간에서 공적인 호칭을 유지한 채 사적인 약속 시간을 확인한다.",groups:["ongoing"],tags:["work"],weight:2},
   {text:"현실에서 더 높은 위치인 사람이 사적으로는 먼저 허락을 구해야 하는 순간이 유난히 길어진다.",groups:["ongoing"],tags:["hierarchy"],weight:2},
-  {text:"인사 이동이나 프로젝트 종료가 확정되면서 지금의 비밀 관계도 계속 이어 갈지 처음 진지하게 이야기한다.",groups:["ongoing"],tags:["work"]},
-  {text:"다른 팀이나 회사로 옮길 수 있다는 소식이 나오자 평소 감정을 드러내지 않던 쪽이 먼저 다음 약속을 잡는다.",groups:["ongoing"],tags:["work"]},
+  {text:"담당 변경이나 함께하던 공식 일정의 종료가 확정되면서 지금의 비밀 관계도 계속 이어 갈지 처음 진지하게 이야기한다.",groups:["ongoing"],tags:["work"]},
+  {text:"소속이나 담당이 바뀔 수 있다는 소식이 나오자 평소 감정을 드러내지 않던 쪽이 먼저 다음 약속을 잡는다.",groups:["ongoing"],tags:["work"]},
   {text:"경쟁에서 이긴 쪽이 평소처럼 우위를 과시하지 않고 오히려 상대에게 선택권을 넘긴다.",groups:["ongoing"],tags:["rival"]},
   {text:"친구 사이에서는 아무렇지 않던 스킨십이 플레이 관계가 된 뒤부터 괜히 의식되기 시작한다.",groups:["ongoing"],tags:["friend"]},
   {text:"동거 생활 규칙과 플레이 규칙이 충돌하면서 평소 누가 더 많이 양보하고 있었는지가 드러난다.",groups:["ongoing"],tags:["cohabit"]},
@@ -320,7 +320,8 @@ const SITUATION_BANK=[
   {text:"출장 첫날에는 아무 일도 없을 거라 합의했지만 체크인 뒤 둘만 남자 평소의 긴장이 먼저 드러난다.",groups:["first","ongoing"],types:["hotel"],tags:["general"],weight:2},
   {text:"출장 마지막 밤, 돌아가면 다시 공적인 관계로 돌아가야 한다는 사실 때문에 다음 약속을 정할지가 중요해진다.",groups:["ongoing","ending"],types:["hotel"],tags:["work"],weight:2},
   {text:"낯선 숙소라 평소 쓰던 도구가 없고, 제한된 준비물 안에서 둘의 익숙한 방식이 얼마나 유지되는지 시험한다.",groups:["ongoing"],types:["hotel"],tags:["general"]},
-  {text:"원정이나 촬영 일정이 예상보다 길어지면서 정해 둔 플레이 날짜를 지킬 수 없게 된다.",groups:["ongoing"],types:["hotel"],tags:["work"]},
+  {text:"원정 일정이 예상보다 길어지면서 정해 둔 플레이 날짜를 지킬 수 없게 된다.",groups:["ongoing"],types:["hotel"],worlds:["현대 스포츠물"],tags:["work"]},
+  {text:"촬영 일정이 예상보다 길어지면서 정해 둔 플레이 날짜를 지킬 수 없게 된다.",groups:["ongoing"],types:["hotel"],worlds:["현대 연예계물"],tags:["work"]},
 
   // 재회 / 후회 / 애증
   {text:"헤어진 뒤 처음 다시 만났는데 서로 아직 예전의 규칙을 기억하고 있다는 사실이 먼저 드러난다.",groups:["reunion"],tags:["ex"],weight:2},
@@ -470,7 +471,7 @@ const VARIABLE_BANK=[
   {key:"hidden_reason",text:"상대가 지금까지 특정 규칙을 고집한 이유가 취향이 아니라 감추고 있던 개인적인 사정 때문이었다는 게 드러난다.",groups:["contract","ongoing","reunion"],category:"story"},
   {key:"hidden_item",text:"늘 숨겨 두던 물건이나 기록 하나가 발견되면서 상대가 말하지 않았던 과거의 플레이 경험을 알게 된다.",groups:["first","contract","ongoing","reunion"],category:"story"},
   {key:"rescue_boundary",text:"상대를 도와준 일 때문에 생긴 빚진 감정을 플레이의 명분으로 쓰지 않기로 선을 다시 긋는다.",groups:["first","contract","ongoing","reunion"],category:"story",tags:["partner","friend","work"]},
-  {key:"protective_stop",text:"평소보다 더 진행할 수 있는데도 상대의 컨디션을 알아챈 쪽이 먼저 중단을 제안한다.",groups:["first","contract","ongoing","reunion"],category:"story"},
+  {key:"protective_stop",text:"더 진행할 수 있어 보이는데도 상대의 컨디션을 알아챈 쪽이 먼저 중단을 제안한다.",groups:["first","contract","ongoing","reunion"],category:"story"},
   {key:"one_night_next",text:"한 번으로 끝내기로 했던 관계인데 헤어진 직후 둘 중 한 명이 다음 약속을 먼저 잡는다.",groups:["first"],stages:["처음 몇 번 만나는 단계"],category:"story",tags:["partner","friend"]},
   {key:"one_night_distance",text:"딱 한 번만 하기로 했던 약속 때문에 오히려 끝난 뒤의 평범한 대화가 더 어색해진다.",groups:["first"],stages:["처음 몇 번 만나는 단계"],category:"story",tags:["partner","friend"]},
   {key:"secret_seen",text:"둘만 아는 관계의 흔적을 제3자가 눈치챘을 가능성이 생겨 평소보다 행동을 더 조심해야 한다.",groups:["contract","ongoing"],category:"story",tags:["work","fakefamily"]},
@@ -504,6 +505,12 @@ function chooseVariable(group,type,relation,world,stage,situation){
     if(v.stages&&!v.stages.includes(stage))return false;
     if(v.tags&&!v.tags.some(t=>tags.includes(t)))return false;
     if(v.conflicts&&v.conflicts.some(word=>situation.includes(word)))return false;
+    const vt=v.text;
+    if(/다른 파트너/.test(situation)&&/다른 파트너/.test(vt))return false;
+    if(/다음 약속/.test(situation)&&/다음 약속/.test(vt))return false;
+    if(/연락/.test(situation)&&/연락/.test(vt))return false;
+    if(/호칭.*일상|일상.*호칭/.test(situation)&&/호칭.*일상|일상.*호칭/.test(vt))return false;
+    if(/감각.*예민|자극도 다르게/.test(situation)&&/감각.*예민|같은 자극에도 반응/.test(vt))return false;
     return true;
   });
 
@@ -747,12 +754,16 @@ function buildResult(){
 
 const order=["설정","성향","관계","오브제","상황","변수","플레이","받는 사람 감정선","하는 사람 감정선","음성 반응"];
 const SCENE_STARTS=["기존에 정한 플레이 날짜가 되어 자연스럽게 시작한다","직전 대화에서 드러난 감정을 정리하기 위해 둘만의 규칙 안에서 플레이를 시작한다","한쪽이 평소와 다른 반응을 보여 상대가 상태를 확인한 뒤 플레이를 제안한다","둘 사이에 쌓인 긴장을 익숙한 플레이 방식으로 정리하기로 한다","이전에 정한 규칙 하나를 다시 확인하는 과정에서 자연스럽게 플레이로 이어진다","평소라면 넘겼을 작은 행동이 오늘은 둘만의 신호가 되어 플레이가 시작된다","먼저 요구하지 않던 쪽이 오늘은 직접 플레이를 요청한다","직전의 갈등이나 어색함을 남겨 둔 채 시작해 평소보다 감정이 많이 실린다"];
+const FIRST_SCENE_STARTS=["첫 플레이 직전 서로의 상태와 중단 신호를 마지막으로 확인한 뒤 시작한다","아직 서로의 반응을 모르는 만큼 짧게 확인하고 천천히 첫 흐름을 잡는다","말로 정한 규칙을 실제 장면에서 처음 적용해 보며 시작한다"];
+const CONTRACT_SCENE_STARTS=["정식 계약을 앞두고 임시 기간에서 확인한 규칙 하나를 다시 점검한 뒤 시작한다","계약 조건을 말로 확인한 뒤 실제로 가장 잘 맞았던 방식부터 시작한다"];
+const REUNION_SCENE_STARTS=["예전 방식이 지금도 맞는지 확인하기 위해 가장 익숙했던 규칙 하나부터 조심스럽게 다시 시작한다","오랜만에 마주한 만큼 예전의 합의를 당연하게 여기지 않고 현재의 상태부터 다시 확인한다"];
+const ENDING_SCENE_STARTS=["마지막으로 정한 약속이라는 사실을 의식한 채 평소보다 천천히 시작한다","끝내기로 한 이유를 남겨 둔 채 오늘 합의한 범위만 지키기로 하고 시작한다"];
 const SCENE_ENDINGS=["정해 둔 횟수를 채우고 마지막 한 대를 분명하게 구분한 뒤 끝낸다","받는 쪽이 더 버틸 수 있다고 말하지만 하는 쪽이 먼저 종료를 선언한다","처음 정한 강도보다 한 단계 낮춰 마지막 몇 대를 마무리 신호로 사용한다","도구를 내려놓고 맨손 한 대로 마지막을 구분한다","받는 쪽이 스스로 끝났다는 대답을 한 뒤 자세를 풀게 한다","감정이 예상보다 커진 순간 횟수보다 상태 확인을 우선해 끝낸다","처음 합의한 기준에 도달하면 더 욕심내지 않고 바로 종료한다"];
 const SCENE_EMOTION_SHIFTS=["시작할 때는 규칙을 확인하려는 장면이었지만 끝날 때는 서로의 감정을 눈치챈다","처음에는 벌이나 교정의 명분이 강하지만 끝날 때는 상대를 안심시키는 쪽으로 분위기가 바뀐다","받는 쪽은 버티는 데 집중하다가 끝에는 먼저 애프터케어를 요구할 만큼 솔직해진다","하는 쪽은 통제하려고 시작하지만 끝에는 자기 감정이 더 크게 흔들렸다는 걸 깨닫는다","둘 다 가볍게 시작했지만 끝에는 평소 피하던 관계 이야기를 꺼내게 된다","처음엔 익숙한 루틴처럼 시작하지만 끝에는 한쪽의 예상 밖 반응 때문에 관계의 의미가 달라진다","시작할 때는 거리를 두려 했지만 끝날 때는 먼저 떨어지는 사람이 없어진다"];
 const WORK_EMOTION_SHIFTS=["현실의 위계를 의식하며 시작하지만 끝에는 사적인 역할이 더 선명해진다","공적인 자리에서 유지하던 거리감이 플레이 뒤에는 이전과 다르게 느껴진다"];
 const ONE_MORE_POINTS=["맞는 횟수보다 기다리는 시간을 더 길게 잡아 긴장을 만든다","스팽을 잘 버티던 인물이 SM 규칙 하나에는 의외로 크게 흔들리게 한다","플레이가 끝난 뒤가 아니라 시작 직전에 가장 솔직한 말을 하게 한다","도구보다 맨손으로 바뀌는 순간 감정적인 의미가 커지게 한다","상대가 원한 방식과 실제로 가장 잘 맞는 방식이 다르다는 걸 장면 중간에 발견하게 한다","끝내는 권한을 가진 쪽이 예상보다 일찍 멈춰 상대를 더 흔들리게 한다","섹스로 넘어가는 순간에도 둘만의 규칙 하나만큼은 바꾸지 않는다","평소 통제받는 쪽이 마지막 선택 하나만 직접 하게 해 관계의 균형을 살짝 흔든다"];
 const WORK_ONE_MORE_POINTS=["현실에서 더 높은 위치인 사람이 사적인 공간에서는 먼저 허락을 구하게 만든다","평소 쓰는 공적인 호칭을 끝까지 유지해 현실 관계와 사적 통제를 겹친다"];
-function getSceneContext(r){const ctx=(r&&r._ctx)||{};return {world:ctx.world||"",type:ctx.type||"home",relation:(r&&r.관계)||ctx.relation||"플레이 파트너",situation:(r&&r.상황)||"",variable:(r&&r.변수)||"",impact:ctx.impact||"",toolText:ctx.toolText||"",posture:ctx.posture||"",rhythm:ctx.rhythm||"",strength:ctx.strength||"",restraint:ctx.restraint||"",smPlay:ctx.smPlay||"",sexScene:ctx.sexScene||"",rule:ctx.rule||""};}
+function getSceneContext(r){const ctx=(r&&r._ctx)||{};return {world:ctx.world||"",type:ctx.type||"home",relation:(r&&r.관계)||ctx.relation||"플레이 파트너",stage:ctx.stage||"",situation:(r&&r.상황)||"",variable:(r&&r.변수)||"",impact:ctx.impact||"",toolText:ctx.toolText||"",posture:ctx.posture||"",rhythm:ctx.rhythm||"",strength:ctx.strength||"",restraint:ctx.restraint||"",smPlay:ctx.smPlay||"",sexScene:ctx.sexScene||"",rule:ctx.rule||""};}
 function buildSceneResult(base){
   const ctx=getSceneContext(base);
   const posture=ctx.posture||choosePosition(ctx.type);
@@ -763,7 +774,9 @@ function buildSceneResult(base){
   const smPool=SM_PLAYS.filter(x=>x.types.includes(ctx.type)&&x.text!==ctx.smPlay);
   const smChoices=[ctx.smPlay||chooseSMPlay(ctx.type)];
   if(maybe(.42)&&smPool.length)smChoices.push(pick(smPool).text);
-  const start=pick(SCENE_STARTS);
+  const sceneGroup=ctx.stage?stageGroup(ctx.stage):"ongoing";
+  const startPool=sceneGroup==="first"?FIRST_SCENE_STARTS:sceneGroup==="contract"?CONTRACT_SCENE_STARTS:sceneGroup==="reunion"?REUNION_SCENE_STARTS:sceneGroup==="ending"?ENDING_SCENE_STARTS:SCENE_STARTS;
+  const start=pick(startPool);
   const end=pick(SCENE_ENDINGS);
   const emotionPool=isWorkRelation(ctx.relation,ctx.world)?SCENE_EMOTION_SHIFTS.concat(WORK_EMOTION_SHIFTS):SCENE_EMOTION_SHIFTS;
   const pointPool=isWorkRelation(ctx.relation,ctx.world)?ONE_MORE_POINTS.concat(WORK_ONE_MORE_POINTS):ONE_MORE_POINTS;
