@@ -92,7 +92,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.3.5</span>
+  <span class="version">v0.3.6</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -100,6 +100,12 @@ button{font:inherit}
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const maybe=(p=.5)=>Math.random()<p;
 const sample=(a,n)=>[...a].sort(()=>Math.random()-.5).slice(0,n);
+const weightedPick=a=>{
+  const total=a.reduce((s,x)=>s+(x.weight||1),0);
+  let r=Math.random()*total;
+  for(const x of a){r-=x.weight||1;if(r<0)return x}
+  return a[a.length-1];
+};
 
 const DATA={
   worlds:[
@@ -185,9 +191,9 @@ const DATA={
     "거울","의자","책상","칼라","커프","도구 케이스"
   ],
   roles:[
-    {giver:"공",receiver:"수",label:"공 스팽커 / 수 스팽키"},
-    {giver:"수",receiver:"공",label:"수 스팽커 / 공 스팽키"},
-    {giver:"상호",receiver:"상호",label:"상호 스팽"}
+    {giver:"공",receiver:"수",label:"공 스팽커 / 수 스팽키",weight:47},
+    {giver:"수",receiver:"공",label:"수 스팽커 / 공 스팽키",weight:47},
+    {giver:"상호",receiver:"상호",label:"상호 스팽",weight:6}
   ],
   tendencies:["돔","섭","스위치","사디스트","마조히스트","브랫","브랫 테이머","스팽커","스팽키","서비스 돔","서비스 섭","리거","로프 버니"],
   impactAreas:["엉덩이 전체","엉덩이 위쪽","엉덩이 중앙","엉덩이 아래쪽","왼쪽 엉덩이 집중","오른쪽 엉덩이 집중","좌우 번갈아","엉덩이 바깥쪽","엉덩이 안쪽 가까운 부분","엉덩이와 허벅지 경계","허벅지 뒤쪽"],
@@ -372,7 +378,7 @@ function chooseObject(type,forced){if(forced)return forced;const common=["넥타
 function chooseTrigger(type){if(type==="work")return pick(["넥타이를 푸는 행동","휴대폰을 내려놓게 하는 말","안경을 벗는 순간","소매를 걷는 행동","의자를 방 중앙으로 옮기는 행동","평소 말투가 명령조로 바뀌는 순간","횟수를 먼저 알려 주는 말"]);return pick(DATA.triggers);}
 
 function buildResult(){
- const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=pick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type,role.label),variable=pick(VARS),weak=pick(WEAKS.filter(w=>w[0]!==variable[0])),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),object=chooseObject(type,hum.forcedObject),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,giver=role.label==="상호 스팽"?"서로":role.giver,receiver=role.label==="상호 스팽"?"서로":role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
+ const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type,role.label),variable=pick(VARS),weak=pick(WEAKS.filter(w=>w[0]!==variable[0])),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),object=chooseObject(type,hum.forcedObject),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,giver=role.label==="상호 스팽"?"서로":role.giver,receiver=role.label==="상호 스팽"?"서로":role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
  const result={설정:`${world} · ${chooseBase(world,profile,relation)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${chooseRule(relation)}”라는 약속이 있다.`,관계:relation,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’이고, 장면에는 ${object}가 놓여 있다.`,변수:variable[1],성향:`공: ${tendencies.top} / 수: ${tendencies.bottom} / 스팽 역할: ${role.label}`,플레이:`${impact} · ${toolText} · ${posture} · ${pick(DATA.rhythms)} · ${pick(DATA.strengths)} · ${restraint}. 수치 요소는 ‘${hum.texts.join(" + ")}’. 이번 장면에서 특히 드러나는 약점은 ‘${weak[1]}’.`,"받는 사람 감정선":`${receiver==="서로"?"서로는":receiver+"은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver==="서로"?"서로는":giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
  if(role.label==="상호 스팽"){result["받는 사람 감정선"]="서로는 역할이 오갈 때마다 상대가 방금 보인 반응을 기억한다. "+receiverEmotion+" 플레이가 끝난 뒤에는 "+aftermath+".";result["하는 사람 감정선"]="서로는 자기가 받은 감각을 기억한 채 상대의 반응을 새롭게 읽는다. "+giverEmotion;}
  return result;
