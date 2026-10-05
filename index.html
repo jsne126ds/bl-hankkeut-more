@@ -69,9 +69,23 @@ button{font:inherit}
   .actions{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
   .side-title{margin-top:16px}
 }
+
+html.preview-tab-s7,html.preview-tab-s7 body{min-width:1280px;overflow-x:auto}
+html.preview-tab-s7 .wrap{width:1280px;max-width:none;margin:0;padding:20px 24px 80px}
+html.preview-tab-s7 .layout{grid-template-columns:minmax(0,1fr) 310px}
+html.preview-tab-s7 .side{order:initial;background:rgba(255,255,255,.72);border:1px solid var(--line);box-shadow:var(--shadow);padding:18px}
+html.preview-tab-s7 .actions{grid-template-columns:1fr}
+html.preview-tab-s7 .result-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+html.preview-tab-s7 .card.wide{grid-column:1/-1}
+html.preview-tab-s7 .hero-btn{position:static}
 </style>
 </head>
 <body>
+<script>
+if(new URLSearchParams(location.search).get("preview")==="tab-s7"){
+  document.documentElement.classList.add("preview-tab-s7");
+}
+</script>
 <div class="wrap">
   <div class="brand">BL 한끗 더</div>
   <div class="tabs" role="tablist" aria-label="생성 모드">
@@ -101,7 +115,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.6.4</span>
+  <span class="version">v0.6.5</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
