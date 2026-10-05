@@ -92,7 +92,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.3.7</span>
+  <span class="version">v0.3.8</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -159,7 +159,7 @@ const DATA={
     "서로 같은 취향이라는 사실을 처음 확인한다","익명 커뮤니티에서 만나던 상대가 아는 사람이었다는 걸 알게 된다",
     "오늘만 하기로 합의했던 플레이가 두 번째 약속으로 이어진다","임시 계약의 첫날이다","계약 종료 직전 마지막 플레이를 준비한다",
     "처음으로 둘만의 규칙을 정한다","규칙 위반이 들킨 직후다","새로운 규칙을 하나 추가한다","기존 규칙 하나를 완화하기로 한다",
-    "처음으로 역할을 바꿔 보기로 한다","상호 스팽을 처음 제안한다","연애와 플레이를 분리하기로 다시 합의한다",
+    "처음으로 역할을 바꿔 보기로 한다","연애와 플레이를 분리하기로 다시 합의한다",
     "플레이 관계에 감정이 섞였다는 사실이 처음 드러난다","다른 파트너 이야기가 나오며 관계가 흔들린다",
     "회사에서 크게 충돌한 뒤 사적으로 다시 만난다","퇴근 후 약속된 플레이를 위해 상대의 집으로 간다",
     "야근 후 둘만 남은 사무실에서 평소와 다른 호칭이 나온다","출장 마지막 밤, 다음 약속을 정할지 말지 결정해야 한다",
@@ -191,9 +191,8 @@ const DATA={
     "거울","의자","책상","칼라","커프","도구 케이스"
   ],
   roles:[
-    {giver:"공",receiver:"수",label:"공 스팽커 / 수 스팽키",weight:47},
-    {giver:"수",receiver:"공",label:"수 스팽커 / 공 스팽키",weight:47},
-    {giver:"상호",receiver:"상호",label:"상호 스팽",weight:6}
+    {giver:"공",receiver:"수",label:"공 스팽커 / 수 스팽키",weight:1},
+    {giver:"수",receiver:"공",label:"수 스팽커 / 공 스팽키",weight:1}
   ],
   tendencies:["돔","섭","스위치","사디스트","마조히스트","브랫","브랫 테이머","스팽커","스팽키","서비스 돔","서비스 섭","리거","로프 버니"],
   impactAreas:["엉덩이 전체","엉덩이 위쪽","엉덩이 중앙","엉덩이 아래쪽","왼쪽 엉덩이 집중","오른쪽 엉덩이 집중","좌우 번갈아","엉덩이 바깥쪽","엉덩이 안쪽 가까운 부분","엉덩이와 허벅지 경계","허벅지 뒤쪽"],
@@ -329,7 +328,7 @@ function stageGroup(stage){for(const [g,arr] of Object.entries(STAGE_GROUPS))if(
 function chooseTiming(type,stage){if(stage==="헤어진 뒤 재회한 단계")return"오랜만에 다시 만난 날";if(stage==="관계 종료 직전")return pick(["계약 종료를 앞둔 날","마지막 약속을 잡은 날"]);const general=["휴일 오후","다툰 직후","화해한 직후","다음 날 중요한 일정이 있는 밤","정기 플레이 날"];if(type==="work")return pick(general.concat(["퇴근 직후","야근이 끝난 새벽"]));if(type==="hotel")return pick(general.concat(["출장 첫날 밤","출장 마지막 밤"]));return pick(general);}
 function chooseSecrecy(type){if(type==="work")return pick(["누군가 들어올 가능성이 있는 공간","벽 너머에 사람이 있는 공간","업무 공간이라 흔적을 남기면 곤란한 상황","관계가 알려지면 곤란한 상황","호칭이나 태도만 들켜도 관계를 의심받는 상황","주변에서는 둘을 단순한 동료로만 알고 있음"]);if(type==="playroom")return pick(["완전히 안전한 사적 공간","아무도 둘의 사적인 관계를 모름","관계가 알려지면 곤란한 상황"]);return pick(["완전히 안전한 사적 공간","관계가 알려지면 곤란한 상황","호칭이나 태도만 들켜도 관계를 의심받는 상황","아무도 둘의 사적인 관계를 모름"]);}
 function chooseRule(relation){const generic=["플레이 밖에서는 명령하지 않는다","먼저 연락하지 않는다","정해진 날에만 만난다","거짓말하지 않는다","무리해서 버티지 않는다","끝난 뒤 반드시 피드백한다","특정 호칭은 둘만 있을 때만 쓴다","한쪽이 먼저 요구하기 전에는 시작하지 않는다"];return isWorkRelation(relation)?pick(generic.concat(["업무 중에는 반드시 공적인 호칭을 유지한다"])):pick(generic);}
-function chooseSituation(group,type,roleLabel){let pool=[...GENERAL_SITUATIONS[group]];if((group==="first"||group==="ongoing")&&type==="work")pool=pool.concat(WORK_SITUATIONS);if((group==="first"||group==="ongoing")&&type==="hotel")pool=pool.concat(HOTEL_SITUATIONS);if(roleLabel==="상호 스팽"&&group!=="ending")pool.push("상호 스팽을 처음 제안하거나 다시 시도하기로 한다.");return pick(pool);}
+function chooseSituation(group,type){let pool=[...GENERAL_SITUATIONS[group]];if((group==="first"||group==="ongoing")&&type==="work")pool=pool.concat(WORK_SITUATIONS);if((group==="first"||group==="ongoing")&&type==="hotel")pool=pool.concat(HOTEL_SITUATIONS);return pick(pool);}
 function choosePosition(type){const common=["OTK","책상에 상체 기대기","의자 등받이를 잡고 서기","벽에 손 짚고 상체 숙이기","무릎 꿇고 상체 숙이기","네발 자세","다리를 벌리고 서기"];if(type==="hotel"||type==="home")return pick(common.concat(["침대 끝에 엎드리기"]));if(type==="playroom")return pick(common.concat(["침대 끝에 엎드리기","스팽킹 체어","스팽킹 벤치","스톡스"]));if(type==="fantasy"||type==="institution")return pick(common.concat(["스팽킹 벤치"]));return pick(common);}
 function chooseRestraint(position,type){
  const map={
@@ -354,17 +353,12 @@ function makeTendencies(role,relation){
   const suUpper=hasSuUpperHierarchy(relation);
   const giverCore=["돔","사디스트","브랫 테이머","서비스 돔","리거"];
   const receiverCore=["섭","마조히스트","브랫","서비스 섭","로프 버니"];
-  const mutualCore=["사디스트","마조히스트","브랫","브랫 테이머","서비스 돔","서비스 섭"];
   if(suUpper){
     giverCore.push("스위치");
     receiverCore.push("스위치");
-    mutualCore.push("스위치");
   }
   const giverCross=["마조히스트","섭"];
   const receiverCross=["사디스트","돔"];
-  if(role.label==="상호 스팽"){
-    return {top:"스팽커 · 스팽키 · "+pick(mutualCore),bottom:"스팽커 · 스팽키 · "+pick(mutualCore)};
-  }
   const topIsGiver=role.giver==="공";
   const gf=maybe(.14)?pick(giverCross):pick(giverCore);
   const rf=maybe(.14)?pick(receiverCross):pick(receiverCore);
@@ -378,9 +372,8 @@ function chooseObject(type,forced){if(forced)return forced;const common=["넥타
 function chooseTrigger(type){if(type==="work")return pick(["넥타이를 푸는 행동","휴대폰을 내려놓게 하는 말","안경을 벗는 순간","소매를 걷는 행동","의자를 방 중앙으로 옮기는 행동","평소 말투가 명령조로 바뀌는 순간","횟수를 먼저 알려 주는 말"]);return pick(DATA.triggers);}
 
 function buildResult(){
- const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type,role.label),variable=pick(VARS),weak=pick(WEAKS.filter(w=>w[0]!==variable[0])),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),object=chooseObject(type,hum.forcedObject),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,giver=role.label==="상호 스팽"?"서로":role.giver,receiver=role.label==="상호 스팽"?"서로":role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
- const result={설정:`${world} · ${chooseBase(world,profile,relation)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${chooseRule(relation)}”라는 약속이 있다.`,관계:relation,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’이고, 장면에는 ${object}가 놓여 있다.`,변수:variable[1],성향:`공: ${tendencies.top} / 수: ${tendencies.bottom} / 스팽 역할: ${role.label}`,플레이:`${impact} · ${toolText} · ${posture} · ${pick(DATA.rhythms)} · ${pick(DATA.strengths)} · ${restraint}. 수치 요소는 ‘${hum.texts.join(" + ")}’. 이번 장면에서 특히 드러나는 약점은 ‘${weak[1]}’.`,"받는 사람 감정선":`${receiver==="서로"?"서로는":receiver+"은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver==="서로"?"서로는":giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
- if(role.label==="상호 스팽"){result["받는 사람 감정선"]="서로는 역할이 오갈 때마다 상대가 방금 보인 반응을 기억한다. "+receiverEmotion+" 플레이가 끝난 뒤에는 "+aftermath+".";result["하는 사람 감정선"]="서로는 자기가 받은 감각을 기억한 채 상대의 반응을 새롭게 읽는다. "+giverEmotion;}
+ const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type),variable=pick(VARS),weak=pick(WEAKS.filter(w=>w[0]!==variable[0])),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),object=chooseObject(type,hum.forcedObject),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
+ const result={설정:`${world} · ${chooseBase(world,profile,relation)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${chooseRule(relation)}”라는 약속이 있다.`,관계:relation,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’이고, 장면에는 ${object}가 놓여 있다.`,변수:variable[1],성향:`공: ${tendencies.top} / 수: ${tendencies.bottom}`,플레이:`${impact} · ${toolText} · ${posture} · ${pick(DATA.rhythms)} · ${pick(DATA.strengths)} · ${restraint}. 수치 요소는 ‘${hum.texts.join(" + ")}’. 이번 장면에서 특히 드러나는 약점은 ‘${weak[1]}’.`,"받는 사람 감정선":`${receiver+"은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
  return result;
 }
 
