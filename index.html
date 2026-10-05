@@ -92,7 +92,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.3.0</span>
+  <span class="version">v0.3.1</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -302,13 +302,52 @@ function chooseRestraint(position,type){
  };return pick(map[position]||["구속 없음"]);
 }
 function chooseTool(type){const portable=["맨손","패들","가죽 패들","라이딩 크롭","벨트","자","스트랩"];if(type==="work")return pick(["맨손","패들","벨트","자","스트랩"]);if(type==="playroom")return pick(DATA.tools);if(type==="institution"||type==="fantasy")return pick(portable);return pick(portable.concat(["나무 패들","케인"]));}
-function makeTendencies(role){const gf=["돔","사디스트","브랫 테이머","서비스 돔","리거","스위치","마조히스트"],rf=["섭","마조히스트","브랫","서비스 섭","로프 버니","스위치","사디스트"],mf=["스위치","사디스트","마조히스트","브랫","브랫 테이머","서비스 돔","서비스 섭"];if(role.label==="상호 스팽")return{top:`스팽커 · 스팽키 · ${pick(mf)}`,bottom:`스팽커 · 스팽키 · ${pick(mf)}`};const topIsGiver=role.giver==="공";return{top:topIsGiver?`스팽커 · ${pick(gf)}`:`스팽키 · ${pick(rf)}`,bottom:topIsGiver?`스팽키 · ${pick(rf)}`:`스팽커 · ${pick(gf)}`};}
+
+const HIERARCHY_RELATIONS={
+  "상사 × 부하":true,
+  "팀장 × 팀원":true,
+  "대표 × 실장":true,
+  "대표 × 비서":true,
+  "선배 × 후배":true,
+  "코치 × 선수":true,
+  "트레이너 × 회원":true,
+  "후계자 × 전담 관리자":true,
+  "생활지원 담당자 × 성인 수인":true,
+  "훈련 담당자 × 에스퍼":true,
+  "길드 선배 × 후배":true,
+  "훈련 담당자 × 능력자":true
+};
+const hasHierarchyRelation=r=>!!HIERARCHY_RELATIONS[r];
+
+function makeTendencies(role,relation){
+  const suUpper=hasHierarchyRelation(relation);
+  const giverCore=["돔","사디스트","브랫 테이머","서비스 돔","리거"];
+  const receiverCore=["섭","마조히스트","브랫","서비스 섭","로프 버니"];
+  const mutualCore=["사디스트","마조히스트","브랫","브랫 테이머","서비스 돔","서비스 섭"];
+  if(suUpper){
+    giverCore.push("스위치");
+    receiverCore.push("스위치");
+    mutualCore.push("스위치");
+  }
+  const giverCross=["마조히스트","섭"];
+  const receiverCross=["사디스트","돔"];
+  if(role.label==="상호 스팽"){
+    return {top:"스팽커 · 스팽키 · "+pick(mutualCore),bottom:"스팽커 · 스팽키 · "+pick(mutualCore)};
+  }
+  const topIsGiver=role.giver==="공";
+  const gf=maybe(.14)?pick(giverCross):pick(giverCore);
+  const rf=maybe(.14)?pick(receiverCross):pick(receiverCore);
+  return {
+    top:topIsGiver?"스팽커 · "+gf:"스팽키 · "+rf,
+    bottom:topIsGiver?"스팽키 · "+rf:"스팽커 · "+gf
+  };
+}
 function chooseHumiliations(impact,type,count){const bilateral=/전체|좌우 번갈아/.test(impact),formal=(type==="work"||type==="hotel");let pool=HUMS.filter(h=>!h.need||h.need==="mirror"||h.need==="toolcase"||(h.need==="bilateral"&&bilateral)||(h.need==="formal"&&formal));const chosen=sample(pool,count);let forcedObject=null;if(chosen.some(h=>h.need==="mirror"))forcedObject="거울";else if(chosen.some(h=>h.need==="toolcase"))forcedObject="도구 케이스";return{texts:chosen.map(h=>h.text),forcedObject};}
 function chooseObject(type,forced){if(forced)return forced;const common=["넥타이","벨트","계약서","태블릿","휴대폰","타이머","안경","거울","의자","책상","칼라","커프","도구 케이스"];if(type==="work")return pick(["넥타이","사원증","계약서","태블릿","휴대폰","안경","의자","책상"]);if(type==="playroom")return pick(["타이머","거울","칼라","커프","도구 케이스","의자"]);return pick(common);}
 function chooseTrigger(type){if(type==="work")return pick(["넥타이를 푸는 행동","휴대폰을 내려놓게 하는 말","안경을 벗는 순간","소매를 걷는 행동","의자를 방 중앙으로 옮기는 행동","평소 말투가 명령조로 바뀌는 순간","횟수를 먼저 알려 주는 말"]);return pick(DATA.triggers);}
 
 function buildResult(){
- const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=pick(profile.relations),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=pick(DATA.roles),tendencies=makeTendencies(role),situation=chooseSituation(group,type,role.label),variable=pick(VARS),weak=pick(WEAKS.filter(w=>w[0]!==variable[0])),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),object=chooseObject(type,hum.forcedObject),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,giver=role.label==="상호 스팽"?"서로":role.giver,receiver=role.label==="상호 스팽"?"서로":role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
+ const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=pick(profile.relations),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=pick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type,role.label),variable=pick(VARS),weak=pick(WEAKS.filter(w=>w[0]!==variable[0])),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),object=chooseObject(type,hum.forcedObject),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,giver=role.label==="상호 스팽"?"서로":role.giver,receiver=role.label==="상호 스팽"?"서로":role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
  const result={설정:`${world} · ${pick(profile.bases)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${chooseRule(relation)}”라는 약속이 있다.`,관계:relation,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’이고, 장면에는 ${object}가 놓여 있다.`,변수:variable[1],성향:`공: ${tendencies.top} / 수: ${tendencies.bottom} / 스팽 역할: ${role.label}`,플레이:`${impact} · ${toolText} · ${posture} · ${pick(DATA.rhythms)} · ${pick(DATA.strengths)} · ${restraint}. 수치 요소는 ‘${hum.texts.join(" + ")}’. 이번 장면에서 특히 드러나는 약점은 ‘${weak[1]}’.`,"받는 사람 감정선":`${receiver==="서로"?"서로는":receiver+"은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver==="서로"?"서로는":giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
  if(role.label==="상호 스팽"){result["받는 사람 감정선"]="서로는 역할이 오갈 때마다 상대가 방금 보인 반응을 기억한다. "+receiverEmotion+" 플레이가 끝난 뒤에는 "+aftermath+".";result["하는 사람 감정선"]="서로는 자기가 받은 감각을 기억한 채 상대의 반응을 새롭게 읽는다. "+giverEmotion;}
  return result;
