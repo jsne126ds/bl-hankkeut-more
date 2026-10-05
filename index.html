@@ -91,8 +91,8 @@ button{font:inherit}
 
     <aside class="panel side">
       <div class="actions">
-        <button id="reroll" class="action-btn primary">한끗 더</button>
-        <button id="copy" class="action-btn">결과 복사</button>
+        <button id="copy" class="action-btn primary">결과 복사</button>
+        <button id="copyAll" class="action-btn">전체 복사</button>
       </div>
       <div class="side-title">최근 결과</div>
       <div id="recent" class="recent"></div>
@@ -101,7 +101,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.6.0</span>
+  <span class="version">v0.6.1</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -488,15 +488,24 @@ function escapeHtml(s){return String(s??"").replace(/[&<>"\']/g,m=>({"&":"&amp;"
 function saveRecent(r){recent.unshift(r);recent=recent.slice(0,5);localStorage.setItem("hankkeutMoreRecent",JSON.stringify(recent));renderRecent();}
 function renderRecent(){const el=document.getElementById("recent");if(!recent.length){el.innerHTML='<div class="empty">아직 저장된 결과가 없어.</div>';return}el.innerHTML=recent.map((r,i)=>`<button class="recent-item" data-i="${i}"><strong>${escapeHtml(r.관계)} · ${escapeHtml(r.변수)}</strong><span>${escapeHtml(r.상황)}</span></button>`).join("");el.querySelectorAll(".recent-item").forEach(b=>b.onclick=()=>{current=recent[+b.dataset.i];activeTab==="scene"?renderScene():render(current);scrollToResult();});}
 function scrollToResult(){const target=document.querySelector("main.panel"),top=target.getBoundingClientRect().top+window.scrollY-74;window.scrollTo({top,behavior:"smooth"});}
-function setTab(tab){activeTab=tab;const idea=tab==="idea";document.getElementById("ideaTab").classList.toggle("active",idea);document.getElementById("sceneTab").classList.toggle("active",!idea);document.getElementById("ideaTab").setAttribute("aria-selected",String(idea));document.getElementById("sceneTab").setAttribute("aria-selected",String(!idea));document.querySelector(".section-title").textContent=idea?"오늘의 한 끗":"장면 한끗";document.getElementById("generate").textContent=idea?"한끗 더 ✦":"장면 한끗 더 ✦";document.getElementById("reroll").textContent=idea?"한끗 더":"장면 한끗 더";document.getElementById("contextNote").textContent=idea?"소재를 먼저 뽑으면 장면 한끗이 이 설정을 이어서 확장해.":"현재 소재의 설정·성향·관계·상황을 유지한 채 장면만 확장해.";idea?render(current):renderScene();}
+function setTab(tab){activeTab=tab;const idea=tab==="idea";document.getElementById("ideaTab").classList.toggle("active",idea);document.getElementById("sceneTab").classList.toggle("active",!idea);document.getElementById("ideaTab").setAttribute("aria-selected",String(idea));document.getElementById("sceneTab").setAttribute("aria-selected",String(!idea));document.querySelector(".section-title").textContent=idea?"오늘의 한 끗":"장면 한끗";document.getElementById("generate").textContent=idea?"한끗 더 ✦":"장면 한끗 더 ✦";document.getElementById("contextNote").textContent=idea?"소재를 먼저 뽑으면 장면 한끗이 이 설정을 이어서 확장해.":"현재 소재의 설정·성향·관계·상황을 유지한 채 장면만 확장해.";idea?render(current):renderScene();}
 function generate(){if(activeTab==="scene"){renderScene();window.scrollTo({top:0,behavior:"smooth"});return}const r=buildResult();render(r);currentScene=null;saveRecent(r);window.scrollTo({top:0,behavior:"smooth"});}
 function copyCurrent(){const isScene=activeTab==="scene",r=isScene?currentScene:current;if(!r)return;const keys=isScene?sceneOrder:order,title=isScene?"BL 한끗 더 · 장면 한끗":"BL 한끗 더 · 소재 한끗",text=title+"\n\n"+keys.map(k=>`[${k}]\n${r[k]}`).join("\n\n");navigator.clipboard.writeText(text).then(()=>toast("결과를 복사했어")).catch(()=>toast("복사에 실패했어"));}
+function copyAll(){
+  if(!current)return;
+  if(!currentScene)currentScene=buildSceneResult(current);
+  const ideaText="BL 한끗 더 · 소재 한끗\n\n"+order.map(k=>`[${k}]\n${current[k]}`).join("\n\n");
+  const sceneText="BL 한끗 더 · 장면 한끗\n\n"+sceneOrder.map(k=>`[${k}]\n${currentScene[k]}`).join("\n\n");
+  navigator.clipboard.writeText(ideaText+"\n\n--------------------\n\n"+sceneText)
+    .then(()=>toast("두 탭 결과를 모두 복사했어"))
+    .catch(()=>toast("복사에 실패했어"));
+}
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),1400);}
 document.getElementById("ideaTab").onclick=()=>setTab("idea");
 document.getElementById("sceneTab").onclick=()=>setTab("scene");
 document.getElementById("generate").onclick=generate;
-document.getElementById("reroll").onclick=generate;
 document.getElementById("copy").onclick=copyCurrent;
+document.getElementById("copyAll").onclick=copyAll;
 const initialResult=buildResult();render(initialResult);saveRecent(initialResult);
 </script>
 </body>
