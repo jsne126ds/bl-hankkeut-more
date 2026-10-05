@@ -101,7 +101,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.6.1</span>
+  <span class="version">v0.6.2</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -359,21 +359,12 @@ function chooseTool(type){const portable=["맨손","패들","가죽 패들","라
 const hasSuUpperHierarchy=r=>SU_UPPER_RELATIONS.has(r);
 
 function makeTendencies(role,relation){
-  const suUpper=hasSuUpperHierarchy(relation);
-  const giverCore=["돔","사디스트","브랫 테이머","서비스 돔","리거"];
-  const receiverCore=["섭","마조히스트","브랫","서비스 섭","로프 버니"];
-  if(suUpper){
-    giverCore.push("스위치");
-    receiverCore.push("스위치");
-  }
-  const giverCross=["마조히스트","섭"];
-  const receiverCross=["사디스트","돔"];
   const topIsGiver=role.giver==="공";
-  const gf=maybe(.14)?pick(giverCross):pick(giverCore);
-  const rf=maybe(.14)?pick(receiverCross):pick(receiverCore);
+  const giverExtra=pick(["사디스트","브랫 테이머","서비스 돔","리거"]);
+  const receiverExtra=pick(["마조히스트","브랫","서비스 섭","로프 버니"]);
   return {
-    top:topIsGiver?"스팽커 · "+gf:"스팽키 · "+rf,
-    bottom:topIsGiver?"스팽키 · "+rf:"스팽커 · "+gf
+    top:topIsGiver?"스팽커 · 돔 · "+giverExtra:"스팽키 · 섭 · "+receiverExtra,
+    bottom:topIsGiver?"스팽키 · 섭 · "+receiverExtra:"스팽커 · 돔 · "+giverExtra
   };
 }
 function chooseHumiliations(impact,type,count){const bilateral=/전체|좌우 번갈아/.test(impact),formal=(type==="work"||type==="hotel");let pool=HUMS.filter(h=>!h.need||h.need==="mirror"||h.need==="toolcase"||(h.need==="bilateral"&&bilateral)||(h.need==="formal"&&formal));const chosen=sample(pool,count);let forcedObject=null;if(chosen.some(h=>h.need==="mirror"))forcedObject="거울";else if(chosen.some(h=>h.need==="toolcase"))forcedObject="도구 케이스";return{texts:chosen.map(h=>h.text),forcedObject};}
