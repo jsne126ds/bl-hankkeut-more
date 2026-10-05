@@ -102,7 +102,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.8.2</span>
+  <span class="version">v0.8.3</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -390,6 +390,8 @@ function chooseSituation(group,type,relation,world,stage){
     return true;
   });
   if(!pool.length)pool=SITUATION_BANK.filter(s=>s.groups.includes(group)&&s.tags&&s.tags.includes("general")&&!s.worlds&&!s.types&&situationStageCompatible(s.text,stage));
+  if(!pool.length)pool=SITUATION_BANK.filter(s=>s.groups.includes(group)&&situationStageCompatible(s.text,stage));
+  if(!pool.length)pool=SITUATION_BANK.filter(s=>s.tags&&s.tags.includes("general")&&!s.worlds&&!s.types);
   return weightedPick(pool.map(s=>({...s,weight:s.weight||1}))).text;
 }
 
@@ -594,7 +596,13 @@ const REL_STAGE={
 "트레이너 × 회원":["처음 몇 번 만나는 단계","서로 반응을 익혀 가는 단계","익숙한 장기 파트너"],
 "고객 × 전담 컨설턴트":["첫 플레이 전","처음 몇 번 만나는 단계","서로 반응을 익혀 가는 단계","정식 계약 직전"]
 };
-const chooseStageForRelation=r=>pick(REL_STAGE[canonicalRelation(r)]||DATA.stages);
+const DEFAULT_REL_STAGES=["첫 플레이 전","처음 몇 번 만나는 단계","서로 반응을 익혀 가는 단계","익숙한 장기 파트너","연애 직전","막 연애를 시작한 단계","오래된 연인","권태기","관계 종료 직전"];
+const chooseStageForRelation=r=>{
+  const canonical=canonicalRelation(r);
+  if(REL_STAGE[canonical])return pick(REL_STAGE[canonical]);
+  if(/전 연인|전 플레이 파트너|재회/.test(r))return "헤어진 뒤 재회한 단계";
+  return pick(DEFAULT_REL_STAGES);
+};
 const chooseArrangementForRelation=r=>{
  if(/전 연인|전 플레이 파트너|재회/.test(r)) return "과거에 끝났던 관계를 다시 시작할지 시험해 보기로 했다";
  if(r==="친구 × 친구") return pick(["원래 알던 사이였지만 익명 커뮤니티에서 우연히 같은 취향을 확인했다","서로의 한계와 선호를 기록하며 규칙을 조정한다"]);
