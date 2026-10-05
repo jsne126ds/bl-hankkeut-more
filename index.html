@@ -102,7 +102,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.7.1</span>
+  <span class="version">v0.8.0</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -393,7 +393,104 @@ function chooseSituation(group,type,relation,world,stage){
   return weightedPick(pool.map(s=>({...s,weight:s.weight||1}))).text;
 }
 
-const VARS=[["fast","평소 잘 버티던 쪽이 오늘은 유독 빨리 흔들린다"],["endure","평소보다 훨씬 오래 버틴다"],["hand","도구보다 맨손에 더 크게 반응한다"],["wait","맞는 것보다 기다리는 시간이 더 힘들다"],["side","한쪽 엉덩이만 유독 민감하다는 사실이 드러난다"],["giver","스팽커가 예상보다 먼저 감정적으로 흔들린다"],["more","받는 쪽이 먼저 강도를 올려 달라고 요청한다"],["count","받는 쪽이 자기 손으로 횟수를 늘린다"],["pose","평소 피하던 자세를 오늘은 먼저 고른다"],["serious","처음에는 장난이었지만 중간부터 분위기가 진지해진다"],["praise","스팽커가 평소 쓰지 않던 칭찬을 한다"],["quiet","평소 말이 많은 쪽이 갑자기 조용해진다"],["request","평소 조용한 쪽이 처음으로 요구를 말한다"],["after","끝난 뒤 먼저 떨어지던 쪽이 이번에는 자리를 떠나지 않는다"],["title","플레이용 호칭이 일상에서 무심코 튀어나온다"],["power","현실에서 지시하던 사람이 사적으로는 먼저 허락을 구한다"],["tool","즉흥적으로 고른 도구가 준비한 도구보다 더 잘 맞는다"],["emotion","횟수가 끝나기 전에 감정이 먼저 흔들린다"],["rule","평소 중요하게 여기던 규칙을 오늘 처음 완화한다"],["misread","둘 다 상대가 먼저 감정을 품었다고 착각하고 있다"]];
+const VARIABLE_BANK=[
+  // 반응 — 플레이 중 예상과 다르게 드러나는 것
+  {key:"fast",text:"평소보다 훨씬 빨리 반응이 무너져 하는 쪽이 속도를 다시 조절한다.",groups:["ongoing","reunion","ending"],category:"reaction"},
+  {key:"endure",text:"예상보다 오래 버텨 원래 정한 종료 기준을 그대로 지킬지 다시 확인하게 된다.",groups:["first","contract","ongoing","reunion"],category:"reaction"},
+  {key:"hand",text:"준비한 도구보다 맨손으로 바뀐 순간 반응이 더 커진다.",groups:["first","contract","ongoing","reunion"],category:"reaction",conflicts:["도구보다 맨손"]},
+  {key:"wait",text:"맞는 순간보다 다음 지시를 기다리는 시간이 더 힘들다는 사실이 드러난다.",groups:["first","contract","ongoing","reunion"],category:"reaction"},
+  {key:"side",text:"한쪽 엉덩이만 유독 민감하다는 걸 둘 다 처음 알아챈다.",groups:["first","contract","ongoing","reunion"],category:"reaction"},
+  {key:"quiet",text:"평소 말이 많은 쪽이 플레이가 시작되자 지나치게 조용해진다.",groups:["first","contract","ongoing","reunion"],category:"reaction"},
+  {key:"voice",text:"소리를 억누르려던 쪽이 특정 한마디에만 반사적으로 대답해 버린다.",groups:["first","contract","ongoing","reunion"],category:"reaction"},
+  {key:"pose",text:"평소 피하던 자세를 오늘은 받는 쪽이 먼저 고른다.",groups:["ongoing","reunion"],category:"reaction"},
+  {key:"finish",text:"끝날 때까지 버티겠다고 한 사람이 종료 직전에 먼저 상태 확인을 요청한다.",groups:["contract","ongoing","reunion","ending"],category:"reaction"},
+
+  // 주도권·역할 — 누가 결정권을 쥐는지가 살짝 흔들림
+  {key:"more",text:"받는 쪽이 먼저 강도를 한 단계 올려 달라고 요구한다.",groups:["contract","ongoing","reunion"],category:"control"},
+  {key:"count",text:"받는 쪽이 오늘 받을 횟수를 직접 제안하고 그 숫자를 바꾸지 않겠다고 한다.",groups:["contract","ongoing"],category:"control"},
+  {key:"choice",text:"하는 쪽이 마지막 선택 하나를 받는 쪽에게 넘기자 오히려 더 긴장한다.",groups:["first","contract","ongoing","reunion"],category:"control"},
+  {key:"stop",text:"계속할 수 있는 상태인데도 하는 쪽이 먼저 끝내겠다고 결정한다.",groups:["contract","ongoing","reunion","ending"],category:"control"},
+  {key:"request",text:"늘 기다리던 쪽이 오늘은 먼저 정확한 요구를 말한다.",groups:["contract","ongoing","reunion"],category:"control"},
+  {key:"permission",text:"평소 쉽게 내주던 허락 하나를 오늘은 일부러 바로 주지 않는다.",groups:["ongoing","reunion"],category:"control"},
+  {key:"power",text:"현실에서 지시하던 사람이 사적인 순간에는 먼저 허락을 구해야 한다.",groups:["first","contract","ongoing","reunion"],category:"control",tags:["hierarchy"],conflicts:["먼저 허락을 구해야"]},
+  {key:"reverse_choice",text:"현실에서는 아랫사람인 쪽이 사적인 규칙을 정하는 순간에만 단호해진다.",groups:["first","contract","ongoing"],category:"control",tags:["hierarchy"]},
+
+  // 감정 — 장면의 해석이 바뀜
+  {key:"giver",text:"하는 쪽이 예상보다 먼저 감정적으로 흔들려 잠깐 말을 잃는다.",groups:["first","contract","ongoing","reunion","ending"],category:"emotion"},
+  {key:"serious",text:"가볍게 시작했던 분위기가 중간부터 둘 다 농담을 멈출 만큼 진지해진다.",groups:["first","ongoing","reunion"],category:"emotion"},
+  {key:"praise",text:"평소 거의 하지 않던 칭찬 한마디가 강도 변화보다 더 크게 먹힌다.",groups:["contract","ongoing","reunion"],category:"emotion"},
+  {key:"after",text:"끝나면 먼저 거리를 두던 사람이 이번에는 자리를 떠나지 않는다.",groups:["ongoing","reunion","ending"],category:"emotion"},
+  {key:"misread",text:"둘 다 상대가 먼저 감정을 품었다고 착각하고 있어 같은 행동을 정반대로 해석한다.",groups:["ongoing"],category:"emotion",stages:["서로 반응을 익혀 가는 단계","익숙한 장기 파트너","연애 직전"]},
+  {key:"jealous",text:"다른 사람 이야기가 나온 뒤 아무렇지 않은 척하던 쪽의 반응이 평소와 달라진다.",groups:["ongoing","reunion"],category:"emotion",tags:["partner","friend"]},
+  {key:"comfort",text:"받는 쪽이 강한 자극보다 끝난 뒤의 짧은 확인 한마디에 더 크게 흔들린다.",groups:["first","contract","ongoing","reunion"],category:"emotion"},
+  {key:"admit",text:"플레이 자체보다 ‘오늘 이걸 원했다’고 인정하는 순간이 더 어려워진다.",groups:["first","contract","ongoing","reunion"],category:"emotion"},
+
+  // 규칙 — 기존 합의가 한 번 비틀림
+  {key:"rule",text:"평소 중요하게 지키던 규칙 하나를 오늘만 완화할지 둘이 다시 합의한다.",groups:["contract","ongoing","reunion"],category:"rule",conflicts:["규칙 하나를 완화"]},
+  {key:"tight_rule",text:"최근 너무 익숙해졌다는 이유로 오히려 규칙 하나를 더 엄격하게 적용한다.",groups:["ongoing"],category:"rule"},
+  {key:"new_rule",text:"장면 중간에 새로 필요해진 규칙 하나를 멈춰서 합의한 뒤 다시 이어 간다.",groups:["first","contract","ongoing","reunion"],category:"rule",conflicts:["새로운 규칙","규칙을 추가"]},
+  {key:"title",text:"둘만 쓰기로 한 호칭이 플레이 밖에서 무심코 튀어나온다.",groups:["contract","ongoing","reunion"],category:"rule",conflicts:["호칭이 일상에서"]},
+  {key:"contact",text:"플레이 전에는 연락을 최소화하기로 했는데 한쪽이 처음으로 먼저 상태를 묻는다.",groups:["contract","ongoing","reunion","ending"],category:"rule"},
+  {key:"aftercare_rule",text:"늘 정해진 방식으로 하던 애프터케어를 오늘은 상대가 다른 방식으로 요청한다.",groups:["ongoing","reunion"],category:"rule"},
+
+  // 관계 — 플레이 밖의 관계가 장면 안으로 들어옴
+  {key:"next",text:"끝난 뒤가 아니라 플레이 도중에 다음 약속 날짜가 먼저 나온다.",groups:["first","contract","ongoing","reunion","ending"],category:"relationship"},
+  {key:"stay",text:"원래는 끝나면 헤어지는 관계인데 오늘은 한쪽이 먼저 더 있다 가라고 말한다.",groups:["ongoing","reunion"],category:"relationship",tags:["partner"]},
+  {key:"exclusive",text:"다른 파트너 가능성을 대수롭지 않게 말했는데 상대가 예상보다 명확하게 선을 긋는다.",groups:["contract","ongoing"],category:"relationship",tags:["partner"]},
+  {key:"distance",text:"평소보다 사적인 거리를 두고 시작한 탓에 작은 접촉 하나가 유난히 크게 느껴진다.",groups:["ongoing","reunion","ending"],category:"relationship"},
+  {key:"public_private",text:"밖에서는 평소처럼 행동해야 한다는 생각 때문에 둘만 남은 뒤 오히려 사적인 태도가 더 선명해진다.",groups:["first","contract","ongoing"],category:"relationship",tags:["work","fakefamily"]},
+  {key:"cohabit",text:"같이 사는 생활 습관 하나가 플레이 규칙과 충돌해 오늘만 예외를 정해야 한다.",groups:["ongoing"],category:"relationship",tags:["cohabit"]},
+
+  // 경험 — 알고 있던 숙련도와 실제 반응이 어긋남
+  {key:"hidden_exp",text:"초보라고 생각했던 쪽이 특정 준비 과정만큼은 지나치게 익숙하다.",groups:["first"],category:"experience"},
+  {key:"expert_pause",text:"경험이 많은 쪽이 오히려 익숙하지 않은 상대 반응 앞에서 먼저 멈춰 확인한다.",groups:["first","contract","ongoing","reunion"],category:"experience"},
+  {key:"learn_fast",text:"처음 몇 번밖에 안 했는데 한쪽이 상대의 반응 패턴을 너무 빨리 익혀 버린다.",groups:["first"],category:"experience",stages:["처음 몇 번 만나는 단계"]},
+  {key:"old_habit",text:"재회한 뒤에도 예전에 익힌 상대의 버릇을 몸이 먼저 기억하고 있다.",groups:["reunion"],category:"experience",tags:["ex"]},
+
+  // 플레이 — 진행 방식 자체에 생기는 작은 변수
+  {key:"tool",text:"즉흥적으로 바꾼 도구가 준비해 둔 도구보다 둘에게 더 잘 맞는다.",groups:["first","contract","ongoing","reunion"],category:"play"},
+  {key:"no_tool",text:"도구를 준비했지만 시작 직전에 맨손만 쓰기로 바꾼다.",groups:["first","contract","ongoing","reunion"],category:"play"},
+  {key:"pace",text:"원래 강도를 올릴 생각이었는데 간격을 늘리는 쪽이 더 효과적이라는 걸 중간에 알아챈다.",groups:["first","contract","ongoing","reunion"],category:"play"},
+  {key:"count_change",text:"횟수는 그대로 두고 마지막 몇 대의 간격만 완전히 다르게 바꾼다.",groups:["contract","ongoing","reunion"],category:"play"},
+  {key:"object",text:"플레이용으로 준비한 물건보다 일상에서 늘 보던 소품 하나가 더 강한 신호가 된다.",groups:["first","contract","ongoing","reunion"],category:"play"},
+
+  // 일상 누출 / 발각 위험
+  {key:"leak",text:"플레이 때만 쓰는 말투가 일상 대화에서 한 번 튀어나와 둘 다 잠깐 멈춘다.",groups:["contract","ongoing"],category:"leak"},
+  {key:"message",text:"둘만 알아볼 수 있는 메시지를 다른 사람이 볼 뻔하면서 평소보다 거리 조절에 예민해진다.",groups:["ongoing"],category:"leak",tags:["work","fakefamily"]},
+  {key:"interrupt",text:"누군가 가까이 있다는 기척 때문에 장면을 멈췄다가 다시 시작해야 한다.",groups:["first","contract","ongoing"],category:"leak",types:["work","hotel","institution"]},
+  {key:"schedule",text:"예상치 못한 일정 변경 때문에 평소보다 훨씬 짧은 시간 안에 끝내야 한다.",groups:["contract","ongoing"],category:"leak",tags:["work"]},
+
+  // 현대판타지 전용
+  {key:"omega_state",text:"형질 컨디션이 평소와 달라 같은 자극에도 반응이 달라져 강도를 다시 맞춘다.",groups:["first","contract","ongoing","reunion"],category:"world",worlds:["현대판타지 · 오메가버스"]},
+  {key:"guide_state",text:"가이딩이나 동조 직후라 감각이 평소보다 선명해져 익숙한 방식부터 다시 확인한다.",groups:["first","contract","ongoing"],category:"world",worlds:["현대판타지 · 가이드버스"]},
+  {key:"ability_state",text:"능력 사용 직후라 몸 상태가 평소와 달라 원래 계획보다 단순한 플레이로 바꾼다.",groups:["first","contract","ongoing"],category:"world",worlds:["현대판타지 · 헌터/능력자"]},
+  {key:"beast_sense",text:"감각이 유난히 예민한 날이라 평소 괜찮던 접촉부터 먼저 다시 확인한다.",groups:["first","contract","ongoing"],category:"world",worlds:["현대판타지 · 수인"]}
+];
+
+function chooseVariable(group,type,relation,world,stage,situation){
+  const tags=relationSituationTags(relation,world);
+  let pool=VARIABLE_BANK.filter(v=>{
+    if(v.groups&&!v.groups.includes(group))return false;
+    if(v.types&&!v.types.includes(type))return false;
+    if(v.worlds&&!v.worlds.includes(world))return false;
+    if(v.stages&&!v.stages.includes(stage))return false;
+    if(v.tags&&!v.tags.some(t=>tags.includes(t)))return false;
+    if(v.conflicts&&v.conflicts.some(word=>situation.includes(word)))return false;
+    return true;
+  });
+
+  // 범용 변수만 남아도 최소 후보 수를 확보하되 세계관 전용 변수는 다른 세계관으로 새지 않게 한다.
+  if(pool.length<5){
+    pool=VARIABLE_BANK.filter(v=>
+      (!v.groups||v.groups.includes(group)) &&
+      !v.types && !v.worlds && !v.tags &&
+      (!v.stages||v.stages.includes(stage)) &&
+      !(v.conflicts&&v.conflicts.some(word=>situation.includes(word)))
+    );
+  }
+  return pick(pool);
+}
+
 const WEAKS=[["praise","칭찬에 유독 약함"],["title","특정 호칭에 약함"],["ignore","무시당하는 걸 견디기 어려움"],["wait","기다리는 시간을 못 견딤"],["gaze","눈이 마주치면 오히려 더 흔들림"],["disappoint","상대가 실망하는 걸 더 무서워함"],["recognition","버티는 척하지만 인정받고 싶어함"],["aftercare","플레이보다 애프터케어에서 더 크게 흔들림"],["seen","자기 반응을 정확히 지적당하면 당황함"]];
 const HUMS=[{"text":"거울 앞에서 자세를 유지하며 횟수를 직접 센다","need":"mirror"},{"text":"바지를 직접 내리고 자세를 잡은 채 기다린다"},{"text":"정장 차림을 유지한 채 엉덩이만 드러낸다","need":"formal"},{"text":"자세가 흐트러질 때마다 스스로 처음 자세로 돌아간다"},{"text":"도구를 직접 가져와 건넨다"},{"text":"왜 맞는지 자기 입으로 짧게 설명한다"},{"text":"맨손과 패들 중 하나를 직접 고른다"},{"text":"몇 대 받을지 스스로 정한 뒤 다시 말로 확인한다"},{"text":"도구를 고르는 동안 엉덩이를 내민 채 기다린다"},{"text":"맞기 전과 후의 상태를 거울로 직접 확인한다","need":"mirror"},{"text":"끝난 뒤 어느 쪽이 더 민감했는지 직접 말한다","need":"bilateral"},{"text":"칭찬을 들을 때마다 짧게 대답한다"},{"text":"평소 쓰지 않는 사적인 호칭을 유지한다"}];
 function isWorkRelation(relation,world=""){
@@ -608,9 +705,9 @@ function chooseObject(type,forced){if(forced)return forced;const common=["넥타
 function chooseTrigger(type){if(type==="work")return pick(["넥타이를 푸는 행동","휴대폰을 내려놓게 하는 말","안경을 벗는 순간","소매를 걷는 행동","의자를 방 중앙으로 옮기는 행동","평소 말투가 명령조로 바뀌는 순간","횟수를 먼저 알려 주는 말"]);return pick(DATA.triggers);}
 
 function buildResult(){
- const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type,relation,world,stage),variable=pick(VARS),weak=pick(WEAKS.filter(w=>w[0]!==variable[0])),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),sceneObject=chooseSceneObject(type,hum.forcedObject),smPlay=chooseSMPlay(type),sexScene=chooseSexScene(type),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=pick(DATA.rhythms),strength=pick(DATA.strengths),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
- const result={설정:`${world} · ${chooseBase(world,profile,relation)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${rule}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’다.`,변수:variable[1],성향:`공: ${tendencies.top} / 수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${rhythm} · ${strength} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${receiver+"은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
- result._ctx={world,type,place,relation,stage,role:role.label,tendencies,situation,variable:variable[1],impact,toolText,posture,rhythm,strength,restraint,smPlay,sexScene,rule};
+ const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type,relation,world,stage),variable=chooseVariable(group,type,relation,world,stage,situation),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),sceneObject=chooseSceneObject(type,hum.forcedObject),smPlay=chooseSMPlay(type),sexScene=chooseSexScene(type),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=pick(DATA.rhythms),strength=pick(DATA.strengths),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
+ const result={설정:`${world} · ${chooseBase(world,profile,relation)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${rule}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’다.`,변수:variable.text,성향:`공: ${tendencies.top} / 수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${rhythm} · ${strength} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${receiver+"은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
+ result._ctx={world,type,place,relation,stage,role:role.label,tendencies,situation,variable:variable.text,impact,toolText,posture,rhythm,strength,restraint,smPlay,sexScene,rule};
  return result;
 }
 
