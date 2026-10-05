@@ -101,7 +101,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.6.2</span>
+  <span class="version">v0.6.3</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -203,7 +203,7 @@ const DATA={
     {giver:"공",receiver:"수",label:"공 스팽커 / 수 스팽키",weight:1},
     {giver:"수",receiver:"공",label:"수 스팽커 / 공 스팽키",weight:1}
   ],
-  tendencies:["돔","섭","스위치","사디스트","마조히스트","브랫","브랫 테이머","스팽커","스팽키","서비스 돔","서비스 섭","리거","로프 버니"],
+  
   impactAreas:["엉덩이 전체","엉덩이 위쪽","엉덩이 중앙","엉덩이 아래쪽","왼쪽 엉덩이 집중","오른쪽 엉덩이 집중","좌우 번갈아","엉덩이 바깥쪽","엉덩이 안쪽 가까운 부분","엉덩이와 허벅지 경계","허벅지 뒤쪽"],
   tools:["맨손","패들","가죽 패들","나무 패들","케인","라이딩 크롭","플로거","벨트","자","스트랩"],
   positions:["OTK","침대 끝에 엎드리기","책상에 상체 기대기","의자 등받이를 잡고 서기","벽에 손 짚고 상체 숙이기","무릎 꿇고 상체 숙이기","네발 자세","다리를 벌리고 서기","스팽킹 체어","스팽킹 벤치","스톡스"],
@@ -358,10 +358,16 @@ function chooseTool(type){const portable=["맨손","패들","가죽 패들","라
 
 const hasSuUpperHierarchy=r=>SU_UPPER_RELATIONS.has(r);
 
+
+const TENDENCY_POOLS={
+  dom:["사디스트","브랫 테이머","서비스 돔","리거"],
+  sub:["마조히스트","브랫","서비스 섭","로프 버니"]
+};
+
 function makeTendencies(role,relation){
   const topIsGiver=role.giver==="공";
-  const giverExtra=pick(["사디스트","브랫 테이머","서비스 돔","리거"]);
-  const receiverExtra=pick(["마조히스트","브랫","서비스 섭","로프 버니"]);
+  const giverExtra=pick(TENDENCY_POOLS.dom);
+  const receiverExtra=pick(TENDENCY_POOLS.sub);
   return {
     top:topIsGiver?"스팽커 · 돔 · "+giverExtra:"스팽키 · 섭 · "+receiverExtra,
     bottom:topIsGiver?"스팽키 · 섭 · "+receiverExtra:"스팽커 · 돔 · "+giverExtra
