@@ -80,7 +80,7 @@ button{font:inherit}
 
     <aside class="panel side">
       <div class="actions">
-        <button id="reroll" class="action-btn primary">다시 뽑기</button>
+        <button id="reroll" class="action-btn primary">한끗 더</button>
         <button id="copy" class="action-btn">결과 복사</button>
       </div>
       <div class="side-title">최근 결과</div>
@@ -296,7 +296,13 @@ function renderRecent(){
   const el=document.getElementById("recent");
   if(!recent.length){el.innerHTML='<div class="empty">아직 저장된 결과가 없어.</div>';return}
   el.innerHTML=recent.map((r,i)=>`<button class="recent-item" data-i="${i}"><strong>${escapeHtml(r.관계)} · ${escapeHtml(r.변수)}</strong><span>${escapeHtml(r.상황)}</span></button>`).join("");
-  el.querySelectorAll(".recent-item").forEach(b=>b.onclick=()=>render(recent[+b.dataset.i]));
+  el.querySelectorAll(".recent-item").forEach(b=>b.onclick=()=>{ render(recent[+b.dataset.i]); scrollToResult(); });
+}
+
+function scrollToResult(){
+  const target=document.querySelector("main.panel");
+  const top=target.getBoundingClientRect().top+window.scrollY-74;
+  window.scrollTo({top,behavior:"smooth"});
 }
 
 function generate(){
@@ -320,8 +326,9 @@ function toast(msg){
 document.getElementById("generate").onclick=generate;
 document.getElementById("reroll").onclick=generate;
 document.getElementById("copy").onclick=copyCurrent;
-renderRecent();
-render(buildResult());
+const initialResult=buildResult();
+render(initialResult);
+saveRecent(initialResult);
 </script>
 </body>
 </html>
