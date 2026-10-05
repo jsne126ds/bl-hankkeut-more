@@ -101,7 +101,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.6.3</span>
+  <span class="version">v0.6.4</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -168,11 +168,11 @@ const DATA={
     "서로 같은 취향이라는 사실을 처음 확인한다","익명 커뮤니티에서 만나던 상대가 아는 사람이었다는 걸 알게 된다",
     "오늘만 하기로 합의했던 플레이가 두 번째 약속으로 이어진다","임시 계약의 첫날이다","계약 종료 직전 마지막 플레이를 준비한다",
     "처음으로 둘만의 규칙을 정한다","규칙 위반이 들킨 직후다","새로운 규칙을 하나 추가한다","기존 규칙 하나를 완화하기로 한다",
-    "처음으로 역할을 바꿔 보기로 한다","연애와 플레이를 분리하기로 다시 합의한다",
+    "연애와 플레이를 분리하기로 다시 합의한다",
     "플레이 관계에 감정이 섞였다는 사실이 처음 드러난다","다른 파트너 이야기가 나오며 관계가 흔들린다",
     "회사에서 크게 충돌한 뒤 사적으로 다시 만난다","퇴근 후 약속된 플레이를 위해 상대의 집으로 간다",
     "야근 후 둘만 남은 사무실에서 평소와 다른 호칭이 나온다","출장 마지막 밤, 다음 약속을 정할지 말지 결정해야 한다",
-    "한동안 플레이를 쉬었다가 처음 재개한다","새 도구를 처음 써 보는 날이다","스팽만 하기로 합의한 날이다",
+    "한동안 플레이를 쉬었다가 처음 재개한다","새 도구를 처음 써 보는 날이다",
     "받는 쪽이 먼저 오늘의 횟수를 정하겠다고 나선다","일부러 규칙을 어긴 사람이 벌을 기다리고 있다"
   ],
   variables:[
@@ -460,19 +460,44 @@ function chooseObject(type,forced){if(forced)return forced;const common=["넥타
 function chooseTrigger(type){if(type==="work")return pick(["넥타이를 푸는 행동","휴대폰을 내려놓게 하는 말","안경을 벗는 순간","소매를 걷는 행동","의자를 방 중앙으로 옮기는 행동","평소 말투가 명령조로 바뀌는 순간","횟수를 먼저 알려 주는 말"]);return pick(DATA.triggers);}
 
 function buildResult(){
- const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type),variable=pick(VARS),weak=pick(WEAKS.filter(w=>w[0]!==variable[0])),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),sceneObject=chooseSceneObject(type),smPlay=chooseSMPlay(type),sexScene=chooseSexScene(type),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
- const result={설정:`${world} · ${chooseBase(world,profile,relation)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${chooseRule(relation)}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’다.`,변수:variable[1],성향:`공: ${tendencies.top} / 수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${pick(DATA.rhythms)} · ${pick(DATA.strengths)} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${receiver+"은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
- result._ctx={world,type,place,relation,stage,role:role.label,tendencies,situation,variable:variable[1],impact};
+ const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type),variable=pick(VARS),weak=pick(WEAKS.filter(w=>w[0]!==variable[0])),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),sceneObject=chooseSceneObject(type),smPlay=chooseSMPlay(type),sexScene=chooseSexScene(type),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=pick(DATA.rhythms),strength=pick(DATA.strengths),rule=chooseRule(relation),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
+ const result={설정:`${world} · ${chooseBase(world,profile,relation)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${rule}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’다.`,변수:variable[1],성향:`공: ${tendencies.top} / 수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${rhythm} · ${strength} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${receiver+"은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
+ result._ctx={world,type,place,relation,stage,role:role.label,tendencies,situation,variable:variable[1],impact,toolText,posture,rhythm,strength,restraint,smPlay,sexScene,rule};
  return result;
 }
 
 const order=["설정","성향","관계","오브제","상황","변수","플레이","받는 사람 감정선","하는 사람 감정선","음성 반응"];
 const SCENE_STARTS=["기존에 정한 플레이 날짜가 되어 자연스럽게 시작한다","직전 대화에서 드러난 감정을 정리하기 위해 둘만의 규칙 안에서 플레이를 시작한다","한쪽이 평소와 다른 반응을 보여 상대가 상태를 확인한 뒤 플레이를 제안한다","둘 사이에 쌓인 긴장을 익숙한 플레이 방식으로 정리하기로 한다","이전에 정한 규칙 하나를 다시 확인하는 과정에서 자연스럽게 플레이로 이어진다","평소라면 넘겼을 작은 행동이 오늘은 둘만의 신호가 되어 플레이가 시작된다","먼저 요구하지 않던 쪽이 오늘은 직접 플레이를 요청한다","직전의 갈등이나 어색함을 남겨 둔 채 시작해 평소보다 감정이 많이 실린다"];
 const SCENE_ENDINGS=["정해 둔 횟수를 채우고 마지막 한 대를 분명하게 구분한 뒤 끝낸다","받는 쪽이 더 버틸 수 있다고 말하지만 하는 쪽이 먼저 종료를 선언한다","처음 정한 강도보다 한 단계 낮춰 마지막 몇 대를 마무리 신호로 사용한다","도구를 내려놓고 맨손 한 대로 마지막을 구분한다","받는 쪽이 스스로 끝났다는 대답을 한 뒤 자세를 풀게 한다","감정이 예상보다 커진 순간 횟수보다 상태 확인을 우선해 끝낸다","처음 합의한 기준에 도달하면 더 욕심내지 않고 바로 종료한다"];
-const SCENE_EMOTION_SHIFTS=["시작할 때는 규칙을 확인하려는 장면이었지만 끝날 때는 서로의 감정을 눈치챈다","처음에는 벌이나 교정의 명분이 강하지만 끝날 때는 상대를 안심시키는 쪽으로 분위기가 바뀐다","받는 쪽은 버티는 데 집중하다가 끝에는 먼저 애프터케어를 요구할 만큼 솔직해진다","하는 쪽은 통제하려고 시작하지만 끝에는 자기 감정이 더 크게 흔들렸다는 걸 깨닫는다","둘 다 가볍게 시작했지만 끝에는 평소 피하던 관계 이야기를 꺼내게 된다","현실의 위계가 강하게 느껴졌던 시작과 달리 끝에는 사적인 역할이 더 선명해진다","처음엔 익숙한 루틴처럼 시작하지만 끝에는 한쪽의 예상 밖 반응 때문에 관계의 의미가 달라진다","시작할 때는 거리를 두려 했지만 끝날 때는 먼저 떨어지는 사람이 없어진다"];
-const ONE_MORE_POINTS=["현실에서 더 높은 위치인 사람이 사적인 공간에서는 먼저 허락을 구하게 만든다","평소 쓰는 공적인 호칭을 끝까지 유지해 현실 관계와 사적 통제를 겹친다","맞는 횟수보다 기다리는 시간을 더 길게 잡아 긴장을 만든다","스팽을 잘 버티던 인물이 SM 규칙 하나에는 의외로 크게 흔들리게 한다","플레이가 끝난 뒤가 아니라 시작 직전에 가장 솔직한 말을 하게 한다","도구보다 맨손으로 바뀌는 순간 감정적인 의미가 커지게 한다","상대가 원한 방식과 실제로 가장 잘 맞는 방식이 다르다는 걸 장면 중간에 발견하게 한다","끝내는 권한을 가진 쪽이 예상보다 일찍 멈춰 상대를 더 흔들리게 한다","섹스로 넘어가는 순간에도 플레이용 호칭 하나만큼은 바꾸지 않는다","평소 통제받는 쪽이 마지막 선택 하나만 직접 하게 해 관계의 균형을 살짝 흔든다"];
-function getSceneContext(r){const ctx=(r&&r._ctx)||{};return {type:ctx.type||"home",relation:(r&&r.관계)||ctx.relation||"플레이 파트너",situation:(r&&r.상황)||"",variable:(r&&r.변수)||""};}
-function buildSceneResult(base){const ctx=getSceneContext(base),posture=choosePosition(ctx.type),restraint=chooseRestraint(posture,ctx.type),tool1=chooseTool(ctx.type),tool2=maybe(.34)?chooseTool(ctx.type):null,toolText=(tool2&&tool2!==tool1)?tool1+" → "+tool2:tool1,smCount=maybe(.42)?2:1,smPool=SM_PLAYS.filter(x=>x.types.includes(ctx.type)),smChoices=sample(smPool.length?smPool:SM_PLAYS,smCount).map(x=>x.text),start=pick(SCENE_STARTS),end=pick(SCENE_ENDINGS),emotion=pick(SCENE_EMOTION_SHIFTS),oneMore=pick(ONE_MORE_POINTS),why=ctx.situation?ctx.situation.replace(/\s*분위기를 바꾸는 작은 신호는[\s\S]*$/,""):start;return {"현재 장면":why+" "+start+".","스팽 진행":posture+" → "+toolText+" → "+pick(DATA.rhythms)+" → "+pick(DATA.strengths)+" → "+end+". "+restraint+".","SM 추가":smChoices.join(" + ")+".","섹스 연결":chooseSexScene(ctx.type)+" 이때 앞에서 정한 호칭·허락·자세 규칙 중 하나는 그대로 유지한다.","감정 변화":emotion+" 현재 관계는 ‘"+ctx.relation+"’이므로 이 변화가 둘의 기존 관계와 사적인 관계 사이의 온도 차로 이어진다.","한 끗":oneMore+"."};}
+const SCENE_EMOTION_SHIFTS=["시작할 때는 규칙을 확인하려는 장면이었지만 끝날 때는 서로의 감정을 눈치챈다","처음에는 벌이나 교정의 명분이 강하지만 끝날 때는 상대를 안심시키는 쪽으로 분위기가 바뀐다","받는 쪽은 버티는 데 집중하다가 끝에는 먼저 애프터케어를 요구할 만큼 솔직해진다","하는 쪽은 통제하려고 시작하지만 끝에는 자기 감정이 더 크게 흔들렸다는 걸 깨닫는다","둘 다 가볍게 시작했지만 끝에는 평소 피하던 관계 이야기를 꺼내게 된다","처음엔 익숙한 루틴처럼 시작하지만 끝에는 한쪽의 예상 밖 반응 때문에 관계의 의미가 달라진다","시작할 때는 거리를 두려 했지만 끝날 때는 먼저 떨어지는 사람이 없어진다"];\nconst WORK_EMOTION_SHIFTS=["현실의 위계를 의식하며 시작하지만 끝에는 사적인 역할이 더 선명해진다","공적인 자리에서 유지하던 거리감이 플레이 뒤에는 이전과 다르게 느껴진다"];
+const ONE_MORE_POINTS=["맞는 횟수보다 기다리는 시간을 더 길게 잡아 긴장을 만든다","스팽을 잘 버티던 인물이 SM 규칙 하나에는 의외로 크게 흔들리게 한다","플레이가 끝난 뒤가 아니라 시작 직전에 가장 솔직한 말을 하게 한다","도구보다 맨손으로 바뀌는 순간 감정적인 의미가 커지게 한다","상대가 원한 방식과 실제로 가장 잘 맞는 방식이 다르다는 걸 장면 중간에 발견하게 한다","끝내는 권한을 가진 쪽이 예상보다 일찍 멈춰 상대를 더 흔들리게 한다","섹스로 넘어가는 순간에도 둘만의 규칙 하나만큼은 바꾸지 않는다","평소 통제받는 쪽이 마지막 선택 하나만 직접 하게 해 관계의 균형을 살짝 흔든다"];\nconst WORK_ONE_MORE_POINTS=["현실에서 더 높은 위치인 사람이 사적인 공간에서는 먼저 허락을 구하게 만든다","평소 쓰는 공적인 호칭을 끝까지 유지해 현실 관계와 사적 통제를 겹친다"];
+function getSceneContext(r){const ctx=(r&&r._ctx)||{};return {type:ctx.type||"home",relation:(r&&r.관계)||ctx.relation||"플레이 파트너",situation:(r&&r.상황)||"",variable:(r&&r.변수)||"",impact:ctx.impact||"",toolText:ctx.toolText||"",posture:ctx.posture||"",rhythm:ctx.rhythm||"",strength:ctx.strength||"",restraint:ctx.restraint||"",smPlay:ctx.smPlay||"",sexScene:ctx.sexScene||"",rule:ctx.rule||""};}
+function buildSceneResult(base){
+  const ctx=getSceneContext(base);
+  const posture=ctx.posture||choosePosition(ctx.type);
+  const restraint=ctx.restraint||chooseRestraint(posture,ctx.type);
+  const toolText=ctx.toolText||chooseTool(ctx.type);
+  const rhythm=ctx.rhythm||pick(DATA.rhythms);
+  const strength=ctx.strength||pick(DATA.strengths);
+  const smPool=SM_PLAYS.filter(x=>x.types.includes(ctx.type)&&x.text!==ctx.smPlay);
+  const smChoices=[ctx.smPlay||chooseSMPlay(ctx.type)];
+  if(maybe(.42)&&smPool.length)smChoices.push(pick(smPool).text);
+  const start=pick(SCENE_STARTS);
+  const end=pick(SCENE_ENDINGS);
+  const emotionPool=isWorkRelation(ctx.relation)?SCENE_EMOTION_SHIFTS.concat(WORK_EMOTION_SHIFTS):SCENE_EMOTION_SHIFTS;
+  const pointPool=isWorkRelation(ctx.relation)?ONE_MORE_POINTS.concat(WORK_ONE_MORE_POINTS):ONE_MORE_POINTS;
+  const why=ctx.situation?ctx.situation.replace(/\s*분위기를 바꾸는 작은 신호는[\s\S]*$/,""):start;
+  const sexBase=ctx.sexScene||chooseSexScene(ctx.type);
+  const ruleCarry=ctx.rule?" 이때 첫 탭에서 정한 ‘"+ctx.rule+"’ 규칙은 그대로 유지한다.":"";
+  return {
+    "현재 장면":why+" "+start+".",
+    "스팽 진행":(ctx.impact?ctx.impact+" · ":"")+posture+" → "+toolText+" → "+rhythm+" → "+strength+" → "+end+". "+restraint+".",
+    "SM 추가":smChoices.join(" + ")+".",
+    "섹스 연결":sexBase+ruleCarry,
+    "감정 변화":pick(emotionPool)+" 현재 관계는 ‘"+ctx.relation+"’이므로 이 변화가 둘의 기존 관계와 사적인 관계 사이의 온도 차로 이어진다.",
+    "한 끗":pick(pointPool)+"."
+  };
+}
 const sceneOrder=["현재 장면","스팽 진행","SM 추가","섹스 연결","감정 변화","한 끗"];
 let current=null;
 let currentScene=null;
@@ -480,13 +505,13 @@ let activeTab="idea";
 let recent=JSON.parse(localStorage.getItem("hankkeutMoreRecent")||"[]");
 function renderCards(r,keys){const el=document.getElementById("result");el.innerHTML=keys.map(k=>`<section class="card ${["설정","상황","플레이","받는 사람 감정선","하는 사람 감정선","음성 반응","현재 장면","스팽 진행","SM 추가","섹스 연결","감정 변화","한 끗"].includes(k)?"wide":""}"><div class="label"><span class="dot"></span>${k}</div><div class="value">${escapeHtml(r[k])}</div></section>`).join("");}
 function render(r){current=r;renderCards(r,order);}
-function renderScene(){if(!current)return;currentScene=buildSceneResult(current);renderCards(currentScene,sceneOrder);}
+function renderScene(force=false){if(!current)return;if(force||!currentScene)currentScene=buildSceneResult(current);renderCards(currentScene,sceneOrder);}
 function escapeHtml(s){return String(s??"").replace(/[&<>"\']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","\'":"&#39;"}[m]))}
 function saveRecent(r){recent.unshift(r);recent=recent.slice(0,5);localStorage.setItem("hankkeutMoreRecent",JSON.stringify(recent));renderRecent();}
-function renderRecent(){const el=document.getElementById("recent");if(!recent.length){el.innerHTML='<div class="empty">아직 저장된 결과가 없어.</div>';return}el.innerHTML=recent.map((r,i)=>`<button class="recent-item" data-i="${i}"><strong>${escapeHtml(r.관계)} · ${escapeHtml(r.변수)}</strong><span>${escapeHtml(r.상황)}</span></button>`).join("");el.querySelectorAll(".recent-item").forEach(b=>b.onclick=()=>{current=recent[+b.dataset.i];activeTab==="scene"?renderScene():render(current);scrollToResult();});}
+function renderRecent(){const el=document.getElementById("recent");if(!recent.length){el.innerHTML='<div class="empty">아직 저장된 결과가 없어.</div>';return}el.innerHTML=recent.map((r,i)=>`<button class="recent-item" data-i="${i}"><strong>${escapeHtml(r.관계)} · ${escapeHtml(r.변수)}</strong><span>${escapeHtml(r.상황)}</span></button>`).join("");el.querySelectorAll(".recent-item").forEach(b=>b.onclick=()=>{current=recent[+b.dataset.i];currentScene=null;activeTab==="scene"?renderScene():render(current);scrollToResult();});}
 function scrollToResult(){const target=document.querySelector("main.panel"),top=target.getBoundingClientRect().top+window.scrollY-74;window.scrollTo({top,behavior:"smooth"});}
 function setTab(tab){activeTab=tab;const idea=tab==="idea";document.getElementById("ideaTab").classList.toggle("active",idea);document.getElementById("sceneTab").classList.toggle("active",!idea);document.getElementById("ideaTab").setAttribute("aria-selected",String(idea));document.getElementById("sceneTab").setAttribute("aria-selected",String(!idea));document.querySelector(".section-title").textContent=idea?"오늘의 한 끗":"장면 한끗";document.getElementById("generate").textContent=idea?"한끗 더 ✦":"장면 한끗 더 ✦";document.getElementById("contextNote").textContent=idea?"소재를 먼저 뽑으면 장면 한끗이 이 설정을 이어서 확장해.":"현재 소재의 설정·성향·관계·상황을 유지한 채 장면만 확장해.";idea?render(current):renderScene();}
-function generate(){if(activeTab==="scene"){renderScene();window.scrollTo({top:0,behavior:"smooth"});return}const r=buildResult();render(r);currentScene=null;saveRecent(r);window.scrollTo({top:0,behavior:"smooth"});}
+function generate(){if(activeTab==="scene"){renderScene(true);window.scrollTo({top:0,behavior:"smooth"});return}const r=buildResult();render(r);currentScene=null;saveRecent(r);window.scrollTo({top:0,behavior:"smooth"});}
 function copyCurrent(){const isScene=activeTab==="scene",r=isScene?currentScene:current;if(!r)return;const keys=isScene?sceneOrder:order,title=isScene?"BL 한끗 더 · 장면 한끗":"BL 한끗 더 · 소재 한끗",text=title+"\n\n"+keys.map(k=>`[${k}]\n${r[k]}`).join("\n\n");navigator.clipboard.writeText(text).then(()=>toast("결과를 복사했어")).catch(()=>toast("복사에 실패했어"));}
 function copyAll(){
   if(!current)return;
