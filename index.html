@@ -124,7 +124,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.12.2</span>
+  <span class="version">v0.12.3</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -924,7 +924,7 @@ const OBJECTS=[
 ];
 function chooseSceneObject(type,forcedName,ctx={}){
   const text=[ctx.smPlay,ctx.sexScene,...(ctx.humTexts||[]),ctx.weak].filter(Boolean).join(" ");
-  const speechNeeded=/(질문에는 대답|준비됐다고 직접 말|특정 호칭을 유지|칭찬을 들을 때마다 짧게 대답|왜 맞는지 자기 입으로|몇 대 받을지 스스로 정한 뒤 다시 말|끝난 뒤.*직접 말|먼저 원하는 걸 말|원하는 속도나 분위기를 직접 말|스스로 끝났다는 대답)/.test(text);
+  const speechNeeded=/(질문에는 대답|호칭과 대답|대답만 쓰게|준비됐다고 직접 말|특정 호칭을 유지|칭찬을 들을 때마다 짧게 대답|왜 맞는지 자기 입으로|몇 대 받을지 스스로 정한 뒤 다시 말|끝난 뒤.*직접 말|먼저 원하는 걸 말|원하는 속도나 분위기를 직접 말|스스로 끝났다는 대답)/.test(text);
   const visualNeeded=/(거울 앞에서|거울로 직접 확인|눈이 마주치면)/.test(text);
   const bedPlace=/침대|호텔|숙소|레지던스|펜트하우스|별장|오피스텔/.test(ctx.place||"");
   let pool=OBJECTS.filter(o=>{
