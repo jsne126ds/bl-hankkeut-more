@@ -195,7 +195,7 @@ h2{font-size:22px;margin:0 0 8px;font-weight:var(--fw-extrabold);letter-spacing:
 
 <footer class="site-footer">
   <div>BL 한끗 더 · © 2026 미녹음</div>
-  <div><span class="version-badge">v0.23.2</span></div>
+  <div><span class="version-badge">v0.24.0</span></div>
 </footer>
 
 <script>
@@ -417,6 +417,48 @@ const SITUATION_BANK=[
   {text:"동거 생활 규칙과 플레이 규칙이 충돌하면서 평소 누가 더 많이 양보하고 있었는지가 드러난다.",groups:["ongoing"],tags:["cohabit"]},
   {text:"비혈연 가족이라는 공적인 관계를 의식해 밖에서는 더 거리를 두지만 둘만 남으면 오히려 그 긴장이 커진다.",groups:["ongoing"],tags:["fakefamily"]},
 
+  // 관계별 전용 상황 — 일반 상황보다 해당 관계에서 우선 등장
+  {text:"퇴근 직전까지 업무 지시를 주고받다가 사적인 약속 시간이 되자 어느 호칭부터 바꿀지가 먼저 어색해진다.",groups:["first","ongoing"],tags:["boss"],weight:2},
+  {text:"회의에서 크게 부딪친 뒤에도 사적인 약속은 취소하지 않기로 해 감정을 업무와 플레이 중 어디까지 분리할지가 문제가 된다.",groups:["ongoing"],tags:["boss"],weight:2},
+  {text:"부하 쪽이 업무에서는 순순히 따르던 지시를 사적인 공간에서는 일부러 한 번 되묻고 상대 반응을 살핀다.",groups:["first","ongoing"],tags:["boss"]},
+  {text:"업무 평가나 인사 이야기가 나온 날이라 사적인 역할이 보상이나 불이익처럼 느껴지지 않도록 둘이 선을 다시 확인한다.",groups:["contract","ongoing"],tags:["boss"],weight:2},
+  {text:"회사에서 평소보다 차갑게 굴었던 이유가 사적인 감정을 숨기기 위해서였다는 사실이 플레이 직전에 드러난다.",groups:["ongoing"],tags:["boss"]},
+
+  {text:"대표실에서는 늘 실무 보고를 받던 사람이 문이 잠긴 뒤 오히려 먼저 오늘의 규칙을 확인받는다.",groups:["first","ongoing"],tags:["executive"],weight:2},
+  {text:"공식 일정표에는 없는 시간이 둘만의 약속으로 비워져 있다는 사실을 한쪽이 뒤늦게 알아챈다.",groups:["ongoing"],tags:["executive"]},
+  {text:"비서나 실장이 평소 관리하던 일정·복장·동선을 사적인 순간에는 전혀 다른 의미로 의식하게 된다.",groups:["ongoing"],tags:["executive"]},
+  {text:"가족이나 이사회 일정이 갑자기 잡혀 둘만의 약속이 밀리자 누가 더 아쉬워하는지가 예상보다 선명하게 드러난다.",groups:["ongoing"],tags:["executive"],weight:2},
+  {text:"회사에서는 대표가 최종 결정을 내리지만 사적인 규칙 하나만큼은 상대가 먼저 정하도록 맡긴다.",groups:["contract","ongoing"],tags:["executive"],weight:2},
+
+  {text:"경기나 훈련 결과가 좋지 않은 날에도 플레이를 벌이나 보상처럼 쓰지 않기로 했던 약속을 다시 확인한다.",groups:["ongoing"],tags:["sports"],weight:2},
+  {text:"원정이 끝난 뒤 같은 호텔에 머물게 되면서 평소 훈련장에서 숨기던 거리감이 갑자기 사라진다.",groups:["ongoing"],tags:["sports"],types:["hotel"],weight:2},
+  {text:"부상 관리 때문에 평소보다 몸 상태를 세밀하게 확인해야 해서 강도보다 컨디션 확인이 먼저가 된다.",groups:["ongoing"],tags:["sports"]},
+  {text:"시즌 중에는 사적인 관계가 경기 집중력에 영향을 주지 않도록 연락 규칙까지 더 엄격하게 정한다.",groups:["contract","ongoing"],tags:["sports"]},
+  {text:"라이벌 관계에서는 지기 싫어하던 사람이 사적인 공간에서는 먼저 멈추거나 쉬겠다고 말해야 하는 순간을 어려워한다.",groups:["first","ongoing"],tags:["sports","rival"]},
+
+  {text:"촬영장에서 하루 종일 타인의 시선을 받다가 숙소에 돌아와서야 둘만의 말투로 돌아간다.",groups:["ongoing"],tags:["celebrity"],weight:2},
+  {text:"스캔들 가능성 때문에 밖에서는 가까이 서지도 못했는데 사적인 공간에서는 그 거리감이 오히려 더 크게 의식된다.",groups:["first","ongoing"],tags:["celebrity"],weight:2},
+  {text:"매니저가 평소 챙기던 컨디션 확인이 사적인 순간에도 이어져 어디까지가 업무이고 어디부터가 애정인지 애매해진다.",groups:["ongoing"],tags:["celebrity"]},
+  {text:"촬영용 스타일링이나 의상이 그대로 남아 있어 공적인 이미지와 실제 관계의 차이가 유난히 크게 느껴진다.",groups:["ongoing"],tags:["celebrity"]},
+  {text:"새 작품이나 투어 일정 때문에 당분간 만날 수 없다는 사실이 정해지자 평소 미루던 관계 이야기가 먼저 나온다.",groups:["ongoing","ending"],tags:["celebrity"],weight:2},
+
+  {text:"업무상 가이딩을 끝낸 뒤에도 손을 놓지 못해 둘 다 사적인 접촉과 업무 접촉의 경계를 의식한다.",groups:["first","ongoing"],tags:["guidepair"],weight:2},
+  {text:"동조율 수치가 평소보다 높게 나온 날이라 감정 때문인지 컨디션 때문인지 서로 먼저 확인하려 든다.",groups:["ongoing"],tags:["guidepair"]},
+  {text:"센터에서는 접촉이 자연스러운 관계라 오히려 둘만 있을 때 어떤 접촉이 사적인지 별도의 신호가 필요해진다.",groups:["contract","ongoing"],tags:["guidepair"],weight:2},
+  {text:"가이딩 요청이 잦아진 이유가 업무상 필요인지 보고 싶어서인지 스스로도 구분하기 어려워진다.",groups:["ongoing"],tags:["guidepair"]},
+  {text:"담당 변경 가능성이 생기자 업무 관계가 끝나도 사적인 관계까지 끝낼 생각이 있는지를 처음 묻는다.",groups:["ongoing","ending"],tags:["guidepair"],weight:2},
+
+  {text:"임무 직후 흥분이 가라앉지 않은 상태라 바로 플레이하지 않고 능력 반응과 평소 감정을 먼저 구분한다.",groups:["ongoing"],tags:["hunterpair"],weight:2},
+  {text:"길드에서는 전투 호흡이 너무 잘 맞는 두 사람이 사적인 공간에서는 오히려 누가 먼저 선택권을 넘길지 오래 망설인다.",groups:["first","ongoing"],tags:["hunterpair"]},
+  {text:"합숙 훈련이 끝나면 각자 다른 팀으로 갈 수 있다는 얘기가 나와 다음 약속을 지금 정할지 고민한다.",groups:["ongoing","ending"],tags:["hunterpair"]},
+  {text:"능력 폭주를 막기 위해 평소보다 통제를 많이 받았던 날이라 사적인 통제까지 이어 가도 괜찮은지 다시 묻는다.",groups:["ongoing"],tags:["hunterpair"],weight:2},
+  {text:"임무에서는 한쪽이 상대를 지켜 줬지만 사적인 관계에서는 그 빚을 이유로 어떤 요구도 하지 않기로 한다.",groups:["contract","ongoing"],tags:["hunterpair"]},
+
+  {text:"상담이나 관리 업무에서 알게 된 취향을 사적인 관계에 함부로 가져오지 않기로 처음 선을 정한다.",groups:["first","contract"],tags:["client"],weight:2},
+  {text:"공식 상담이 끝난 뒤에도 개인 연락이 이어지면서 어느 시점부터 업무가 아닌 관계가 되었는지 애매해진다.",groups:["ongoing"],tags:["client"]},
+  {text:"계약이 종료되면 더 이상 업무상 만날 이유가 없어져 사적인 약속만 남길지를 결정해야 한다.",groups:["ending"],tags:["client"],weight:2},
+  {text:"전문적인 조언과 사적인 요구가 같은 말투로 들리지 않도록 둘만의 호칭과 신호를 따로 정한다.",groups:["contract","ongoing"],tags:["client"]},
+
   // 짭근친 — 혈연이 전혀 없는 법적·생활상 가족 관계
   {text:"부모의 재혼 뒤 형제 호칭이 먼저 생겼지만 서로를 가족으로 받아들이기 전부터 이미 이성적인 긴장이 있었다는 걸 인정한다.",groups:["first"],tags:["fakefamily"],weight:2},
   {text:"가족이 된 뒤 처음으로 둘만 남은 밤, 평소 쓰던 형제 호칭을 그대로 유지할지부터 어색해진다.",groups:["first"],tags:["fakefamily"],weight:2},
@@ -480,7 +522,14 @@ function relationSituationTags(relation,world){
   if(/플레이 파트너/.test(relation))tags.push("partner");
   if(/전 연인|전 플레이 파트너|재회/.test(relation))tags.push("ex","partner");
   if(/룸메이트|동거인/.test(relation))tags.push("cohabit");
-  if(/의붓|입양|비혈연 형제/.test(relation))tags.push("fakefamily");
+  if(/의붓|입양|친자|비혈연 형제/.test(relation))tags.push("fakefamily");
+  if(/상사 × 부하|부하 × 상사|팀장 × 팀원|팀원 × 팀장/.test(relation))tags.push("boss");
+  if(/대표 × 실장|실장 × 대표|대표 × 비서|비서 × 대표|후계자 × 전담 관리자|전담 관리자 × 후계자/.test(relation))tags.push("executive");
+  if(/코치 × 선수|선수 × 코치|선수 × 선수|트레이너 × 회원|회원 × 트레이너/.test(relation))tags.push("sports");
+  if(/배우 × 배우|연예인 × 매니저|매니저 × 연예인/.test(relation))tags.push("celebrity");
+  if(world==="현대판타지 · 가이드버스"&&/가이드 × 에스퍼|에스퍼 × 가이드|훈련 담당자 × 에스퍼|에스퍼 × 훈련 담당자|센터 동료/.test(relation))tags.push("guidepair");
+  if(world==="현대판타지 · 헌터/능력자"&&/길드 선배 × 후배|후배 × 길드 선배|팀장 × 팀원|팀원 × 팀장|훈련 담당자 × 능력자|능력자 × 훈련 담당자|라이벌 동료/.test(relation))tags.push("hunterpair");
+  if(/고객 × 전담 컨설턴트|전담 컨설턴트 × 고객/.test(relation))tags.push("client");
   return [...new Set(tags)];
 }
 
@@ -596,6 +645,41 @@ const VARIABLE_BANK=[
   {key:"jealous_rule",text:"질투를 인정하기 싫어 평소보다 규칙적인 태도를 고집하다가 오히려 감정이 더 티 난다.",groups:["ongoing","reunion"],category:"story",tags:["partner","friend"]},
   {key:"secret_skill",text:"평소에는 서툰 척하던 사람이 상대가 힘들어지는 순간에만 정확한 대처를 보여 준다.",groups:["first","contract","ongoing"],category:"story"},
   {key:"public_choice",text:"둘만의 관계를 계속 숨길지, 최소한 가까운 사람 한 명에게는 알릴지 처음으로 의견이 갈린다.",groups:["contract","ongoing","ending"],category:"story",tags:["partner","work","fakefamily"]},
+
+  // 관계별 전용 변수
+  {key:"boss_title_slip",text:"회사에서 쓰던 직급 호칭이 사적인 순간에도 무심코 튀어나와 둘 다 잠깐 멈춘다.",groups:["first","contract","ongoing"],category:"relationship",tags:["boss"]},
+  {key:"boss_eval",text:"오늘 업무 평가 이야기가 있었던 탓에 사적인 지시가 평가처럼 들리지 않도록 한 번 더 선을 확인한다.",groups:["ongoing"],category:"rule",tags:["boss"]},
+  {key:"boss_reverse",text:"업무에서는 지시받는 쪽이 오늘 사적인 선택 하나만큼은 먼저 정하겠다고 한다.",groups:["contract","ongoing"],category:"control",tags:["boss"]},
+  {key:"boss_message",text:"업무 메신저에 평소보다 짧은 답장이 온 것만으로 사적인 감정까지 잘못 읽을 뻔한다.",groups:["ongoing"],category:"emotion",tags:["boss"]},
+
+  {key:"exec_schedule",text:"비워 둔 일정이 갑자기 공식 일정으로 채워져 둘만의 약속을 다시 잡아야 한다.",groups:["ongoing"],category:"relationship",tags:["executive"]},
+  {key:"exec_public",text:"사람들 앞에서는 완벽하게 공적인 태도를 유지한 사람이 문이 닫히자 먼저 가까이 다가온다.",groups:["first","ongoing"],category:"emotion",tags:["executive"]},
+  {key:"exec_control",text:"평소 일정을 관리하던 쪽이 오늘은 사적인 시간의 종료 시점까지 직접 정하겠다고 한다.",groups:["contract","ongoing"],category:"control",tags:["executive"]},
+  {key:"exec_family",text:"가족 일정이 예상보다 길어져 늦게 돌아온 뒤에도 약속을 지키겠다고 먼저 연락한다.",groups:["ongoing"],category:"relationship",tags:["executive"]},
+
+  {key:"sports_condition",text:"훈련 때 드러나지 않던 피로가 플레이 준비 중에야 보여 강도를 처음부터 낮춰 잡는다.",groups:["ongoing"],category:"reaction",tags:["sports"]},
+  {key:"sports_match",text:"경기 결과 때문에 감정이 과열된 날이라 승패와 사적인 관계를 섞지 않기로 다시 확인한다.",groups:["ongoing"],category:"rule",tags:["sports"]},
+  {key:"sports_trip",text:"원정 일정이 하루 늘어나 예상하지 못한 둘만의 시간이 생긴다.",groups:["ongoing"],category:"relationship",tags:["sports"],types:["hotel"]},
+  {key:"sports_rival",text:"평소 경쟁심이 강한 쪽이 오늘은 먼저 힘들다고 인정해야 하는 순간을 유난히 어려워한다.",groups:["first","ongoing"],category:"emotion",tags:["sports","rival"]},
+
+  {key:"celeb_calltime",text:"새벽 콜타임 때문에 오래 이어 갈 수 없어 시작 전에 종료 시간을 먼저 정한다.",groups:["first","ongoing"],category:"rule",tags:["celebrity"]},
+  {key:"celeb_camera",text:"카메라 앞에서는 자연스럽게 붙어 있던 두 사람이 촬영이 끝난 뒤 오히려 서로를 더 의식한다.",groups:["ongoing"],category:"emotion",tags:["celebrity"]},
+  {key:"celeb_scandal",text:"열애설 기사가 뜬 날이라 평소보다 연락 하나에도 둘 다 예민하게 반응한다.",groups:["ongoing"],category:"leak",tags:["celebrity"]},
+  {key:"celeb_costume",text:"촬영 의상을 갈아입지 못한 채 만나 공적인 역할의 흔적이 사적인 공간까지 따라온다.",groups:["ongoing"],category:"relationship",tags:["celebrity"]},
+
+  {key:"guide_sync",text:"동조율이 평소보다 높아 작은 긴장 변화도 서로 너무 빨리 알아챈다.",groups:["ongoing"],category:"world",tags:["guidepair"],worlds:["현대판타지 · 가이드버스"]},
+  {key:"guide_contact",text:"업무상 접촉이 많았던 날이라 사적인 접촉은 시작 전에 별도로 허락을 확인한다.",groups:["first","contract","ongoing"],category:"rule",tags:["guidepair"],worlds:["현대판타지 · 가이드버스"]},
+  {key:"guide_change",text:"담당 변경 얘기가 나온 뒤 평소보다 먼저 다음 사적인 약속을 잡는다.",groups:["ongoing","ending"],category:"relationship",tags:["guidepair"],worlds:["현대판타지 · 가이드버스"]},
+  {key:"guide_fatigue",text:"가이딩 피로가 남아 강한 자극보다 짧은 접촉에 더 크게 반응한다.",groups:["ongoing"],category:"reaction",tags:["guidepair"],worlds:["현대판타지 · 가이드버스"]},
+
+  {key:"hunter_aftermission",text:"임무 직후라 통증을 늦게 느낄 수 있어 평소보다 상태 확인을 더 자주 한다.",groups:["ongoing"],category:"world",tags:["hunterpair"],worlds:["현대판타지 · 헌터/능력자"]},
+  {key:"hunter_transfer",text:"다른 팀으로 이동할 가능성이 생겨 합숙이 끝난 뒤에도 관계를 이어 갈지 먼저 묻게 된다.",groups:["ongoing","ending"],category:"relationship",tags:["hunterpair"],worlds:["현대판타지 · 헌터/능력자"]},
+  {key:"hunter_control",text:"능력 제어 훈련에서 하루 종일 통제받은 쪽이 사적인 순간에는 선택권 하나를 꼭 직접 갖겠다고 한다.",groups:["ongoing"],category:"control",tags:["hunterpair"],worlds:["현대판타지 · 헌터/능력자"]},
+  {key:"hunter_rescue",text:"임무에서 상대를 구한 일을 사적인 요구의 명분으로 삼지 않기로 다시 확인한다.",groups:["contract","ongoing"],category:"rule",tags:["hunterpair"],worlds:["현대판타지 · 헌터/능력자"]},
+
+  {key:"client_boundary",text:"상담 중 알게 된 정보를 사적인 자리에서는 먼저 꺼내지 않기로 정한다.",groups:["first","contract","ongoing"],category:"rule",tags:["client"]},
+  {key:"client_contract_end",text:"공식 계약 종료일이 다가와 업무가 끝난 뒤에도 연락할지를 직접 정해야 한다.",groups:["ongoing","ending"],category:"relationship",tags:["client"]},
+  {key:"client_tone",text:"전문적인 조언처럼 들리는 말투가 사적인 순간에도 나와 둘만의 말투를 다시 맞춘다.",groups:["first","ongoing"],category:"relationship",tags:["client"]},
 
   // 짭근친 — 혈연 없음
   {key:"fakefamily_title",text:"둘만 있을 때도 평소의 형제 호칭을 그대로 쓰기로 했는데 오늘은 그 호칭이 유난히 낯설게 들린다.",groups:["first","contract","ongoing"],category:"relationship",tags:["fakefamily"]},
