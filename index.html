@@ -195,7 +195,7 @@ h2{font-size:22px;margin:0 0 8px;font-weight:var(--fw-extrabold);letter-spacing:
 
 <footer class="site-footer">
   <div>BL 한끗 더 · © 2026 미녹음</div>
-  <div><span class="version-badge">v0.22.1</span></div>
+  <div><span class="version-badge">v0.23.0</span></div>
 </footer>
 
 <script>
@@ -508,7 +508,7 @@ function chooseSituation(group,type,relation,world,stage,role){
   if(!pool.length)pool=SITUATION_BANK.filter(s=>s.groups.includes(group)&&s.tags&&s.tags.includes("general")&&!s.worlds&&!s.types&&situationStageCompatible(s.text,stage));
   if(!pool.length)pool=SITUATION_BANK.filter(s=>s.groups.includes(group)&&situationStageCompatible(s.text,stage));
   if(!pool.length)pool=SITUATION_BANK.filter(s=>s.tags&&s.tags.includes("general")&&!s.worlds&&!s.types);
-  return weightedPick(pool.map(s=>({...s,weight:s.weight||1}))).text;
+  return weightedPick(pool.map(s=>({...s,weight:qualityWeight(s,tags,world,type)}))).text;
 }
 
 const VARIABLE_BANK=[
@@ -649,11 +649,11 @@ function chooseVariable(group,type,relation,world,stage,situation,role){
       !(v.conflicts&&v.conflicts.some(word=>situation.includes(word)))
     );
   }
-  return pick(pool);
+  return weightedPick(pool.map(v=>({...v,weight:qualityWeight(v,tags,world,type)})));
 }
 
 const WEAKS=[["praise","칭찬에 유독 약함"],["title","특정 호칭에 약함"],["ignore","무시당하는 걸 견디기 어려움"],["wait","기다리는 시간을 못 견딤"],["gaze","눈이 마주치면 오히려 더 흔들림"],["disappoint","상대가 실망하는 걸 더 무서워함"],["recognition","버티는 척하지만 인정받고 싶어함"],["aftercare","플레이보다 애프터케어에서 더 크게 흔들림"],["seen","자기 반응을 정확히 지적당하면 당황함"]];
-const HUMS=[{"text":"거울 앞에서 자세를 유지하며 횟수를 직접 센다","need":"mirror"},{"text":"바지를 직접 내리고 자세를 잡은 채 기다린다"},{"text":"정장 차림을 유지한 채 엉덩이만 드러낸다","need":"formal"},{"text":"자세가 흐트러질 때마다 스스로 처음 자세로 돌아간다"},{"text":"도구를 직접 가져와 건넨다"},{"text":"왜 맞는지 자기 입으로 짧게 설명한다"},{"text":"맨손과 패들 중 하나를 직접 고른다"},{"text":"몇 대 받을지 스스로 정한 뒤 다시 말로 확인한다"},{"text":"도구를 고르는 동안 엉덩이를 내민 채 기다린다"},{"text":"맞기 전과 후의 상태를 거울로 직접 확인한다","need":"mirror"},{"text":"끝난 뒤 어느 쪽이 더 민감했는지 직접 말한다","need":"bilateral"},{"text":"칭찬을 들을 때마다 짧게 대답한다"},{"text":"평소 쓰지 않는 사적인 호칭을 유지한다"}];
+const HUMS=[{"text":"거울 앞에서 자세를 유지하며 횟수를 직접 센다","need":"mirror"},{"text":"바지를 직접 내리고 자세를 잡은 채 기다린다"},{"text":"정장 차림을 유지한 채 엉덩이만 드러낸다","need":"formal"},{"text":"자세가 흐트러질 때마다 스스로 처음 자세로 돌아간다"},{"text":"도구를 직접 가져와 건넨다"},{"text":"왜 맞는지 자기 입으로 짧게 설명한다"},{"text":"맨손과 패들 중 하나를 직접 고른다"},{"text":"몇 대 맞을지 스스로 정한 뒤 다시 말로 확인한다"},{"text":"도구를 고르는 동안 엉덩이를 내민 채 기다린다"},{"text":"맞기 전과 후의 상태를 거울로 직접 확인한다","need":"mirror"},{"text":"끝난 뒤 어느 쪽이 더 민감했는지 직접 말한다","need":"bilateral"},{"text":"칭찬을 들을 때마다 짧게 대답한다"},{"text":"평소 쓰지 않는 사적인 호칭을 유지한다"}];
 function isWorkRelation(relation,world=""){
   const r=canonicalRelation(relation);
   const alwaysFormal=new Set([
@@ -735,6 +735,48 @@ const chooseRelationForProfile=profile=>{
   const base=pick(profile.relations);
   return REVERSE_HIERARCHY[base]&&maybe(.5)?REVERSE_HIERARCHY[base]:base;
 };
+function choosePlaceForRelation(profile,relation,world){
+  const fake=/의붓|입양|친자|비혈연 형제/.test(relation);
+  const work=isWorkRelation(relation,world);
+  const cohabit=/룸메이트|동거인/.test(relation);
+  const partner=/플레이 파트너|전 연인|재회/.test(relation);
+  const friend=/친구/.test(relation);
+  const weighted=profile.places.map(([place,type])=>{
+    let weight=1;
+    if(fake){
+      if(type==="home")weight*=4.2;
+      else if(type==="hotel")weight*=2;
+      else if(type==="playroom")weight*=1.3;
+      else if(type==="institution"||type==="fantasy")weight*=.55;
+      else if(type==="work")weight*=.35;
+    }else if(work){
+      if(type==="work")weight*=3.4;
+      else if(type==="hotel")weight*=2;
+      else if(type==="institution"||type==="fantasy")weight*=2.2;
+      else if(type==="home")weight*=1.15;
+    }else if(cohabit||friend||partner){
+      if(type==="home")weight*=3;
+      else if(type==="hotel")weight*=1.8;
+      else if(type==="playroom")weight*=1.7;
+      else if(type==="work"||type==="institution"||type==="fantasy")weight*=.75;
+    }
+    if(/^현대판타지/.test(world)&&!fake&&(type==="fantasy"||type==="institution"))weight*=1.35;
+    return {pair:[place,type],weight};
+  });
+  return weightedPick(weighted).pair;
+}
+function qualityWeight(entry,tags,world,type){
+  let weight=entry.weight||1;
+  if(entry.tags){
+    const specific=entry.tags.filter(t=>t!=="general"&&tags.includes(t));
+    if(specific.length)weight*=1+specific.length*1.35;
+    if(specific.includes("fakefamily"))weight*=1.45;
+  }
+  if(entry.worlds&&entry.worlds.includes(world))weight*=1.75;
+  if(entry.types&&entry.types.includes(type))weight*=1.2;
+  return weight;
+}
+
 const canonicalRelation=r=>BASE_RELATION[r]||r;
 function realWorldUpperRole(relation){
   if(REVERSE_HIERARCHY[relation])return "공";
@@ -1233,7 +1275,7 @@ function chooseBodySetting(world){
   return weightedPick(INTERSEX_BODY_VARIANTS);
 }
 function buildResult(){
- const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),bodySetting=chooseBodySetting(world),sensorySetting=chooseWorldSensorySetting(world),situation=chooseSituation(group,type,relation,world,stage,role),variable=chooseVariable(group,type,relation,world,stage,situation,role),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),posture=choosePosition(type),restraint=chooseRestraint(posture,type),smPlay=chooseCompatibleSMPlay(type,restraint,tendencies),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1,smPlay),sexScene=chooseSexScene(type,world,bodySetting,smPlay),sceneObject=chooseSceneObject(type,hum.forcedObject,{smPlay,sexScene,humTexts:hum.texts,weak:weak[1],posture,place}),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=chooseTendencyRhythm(tendencies),strength=chooseTendencyStrength(tendencies),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
+ const world=pick(DATA.worlds),profile=PROFILES[world],relation=chooseRelationForProfile(profile),[place,type]=choosePlaceForRelation(profile,relation,world),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),bodySetting=chooseBodySetting(world),sensorySetting=chooseWorldSensorySetting(world),situation=chooseSituation(group,type,relation,world,stage,role),variable=chooseVariable(group,type,relation,world,stage,situation,role),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),posture=choosePosition(type),restraint=chooseRestraint(posture,type),smPlay=chooseCompatibleSMPlay(type,restraint,tendencies),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1,smPlay),sexScene=chooseSexScene(type,world,bodySetting,smPlay),sceneObject=chooseSceneObject(type,hum.forcedObject,{smPlay,sexScene,humTexts:hum.texts,weak:weak[1],posture,place}),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=chooseTendencyRhythm(tendencies),strength=chooseTendencyStrength(tendencies),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
  const aftermathText=/^플레이가 끝난 뒤/.test(aftermath)?aftermath:`플레이가 끝난 뒤에는 ${aftermath}`;
  const bodyText=bodySetting?` 신체 설정 — ${bodySetting.text}`:"";\n const sensoryText=sensorySetting?` 감각 설정 — ${sensorySetting}.`:"";
  const result={설정:`${world} · ${chooseBase(world,profile,relation,role)}. ${arrangement}.${bodyText}${sensoryText} ${chooseTiming(type,stage,relation)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${rule}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:(()=>{const trigger=chooseTrigger(type);return `${situation} 분위기를 바꾸는 작은 신호는 ‘${trigger}’${copulaEnding(trigger)}.`;})(),변수:variable.text,성향:`공: ${tendencies.top}\n수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${rhythm} · ${strength} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${topic(receiver)} ${receiverEmotion} ${aftermathText}.`,"하는 사람 감정선":`${topic(giver)} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
