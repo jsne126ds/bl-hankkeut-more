@@ -195,7 +195,7 @@ h2{font-size:22px;margin:0 0 8px;font-weight:var(--fw-extrabold);letter-spacing:
 
 <footer class="site-footer">
   <div>BL 한끗 더 · © 2026 미녹음</div>
-  <div><span class="version-badge">v0.20.0</span></div>
+  <div><span class="version-badge">v0.21.0</span></div>
 </footer>
 
 <script>
@@ -858,7 +858,14 @@ const SM_PLAYS=[
   {text:"다음 자극을 받기 전 준비됐다고 직접 말하게 한다",types:["home","hotel","playroom","work","institution"]},
   {text:"정해 둔 자세가 흐트러지면 처음 자세로 돌아가 다시 시작한다",types:["home","hotel","playroom","work","institution","fantasy"]},
   {text:"로프로 손목과 상체를 묶어 움직임 범위를 줄인다",types:["home","hotel","playroom"]},
-  {text:"도구를 직접 고르게 한 뒤 그 선택을 끝까지 유지하게 한다",types:["home","hotel","playroom","work","institution"]}
+  {text:"도구를 직접 고르게 한 뒤 그 선택을 끝까지 유지하게 한다",types:["home","hotel","playroom","work","institution"]},
+  {text:"본디지 테이프로 손목을 묶어 금속 장비보다 가벼운 구속감으로 시작한다",types:["home","hotel","playroom"]},
+  {text:"발목 커프를 채운 뒤 보폭을 제한해 서 있는 자세를 오래 유지하게 한다",types:["home","hotel","playroom"]},
+  {text:"스프레더 바로 다리 간격을 일정하게 유지한 채 자세가 흐트러지지 않게 한다",types:["home","hotel","playroom"]},
+  {text:"커프 연결 체인으로 손목과 고정점을 이어 움직일 수 있는 범위를 짧게 제한한다",types:["home","hotel","playroom"]},
+  {text:"포지셔닝 벨트로 허리와 허벅지 각도를 잡아 같은 자세를 안정적으로 유지하게 한다",types:["home","hotel","playroom"]},
+  {text:"이어플러그로 주변 소리를 줄이고 가까운 거리에서 들리는 지시에만 집중하게 한다",types:["home","hotel","playroom"]},
+  {text:"니플 클램프를 짧게 사용해 스팽과 다른 종류의 자극을 한 구간만 섞는다",types:["home","hotel","playroom"]}
 ];
 
 const SEX_SCENES=[
@@ -1086,7 +1093,14 @@ const OBJECTS=[
   {name:"위생 장갑",text:"직접적인 접촉과 일부러 거리를 두는 느낌을 동시에 만들어 준비된 플레이의 인상을 준다.",types:["home","hotel","playroom"]},
   {name:"클리닝 티슈",text:"플레이 뒤 정리와 돌봄을 현실적으로 이어 주며 장면을 부드럽게 마무리한다.",types:["home","hotel","playroom"]},
   {name:"보디 마커",text:"횟수·규칙·표시를 피부 위에 남기는 시각적인 놀이 장치로 활용한다.",types:["home","hotel","playroom"]},
-  {name:"체인 목걸이",text:"칼라보다 일상적인 형태로 소유감이나 관계의 표식을 은근하게 드러낸다.",types:["home","hotel","playroom","work"]}
+  {name:"본디지 테이프",text:"피부나 털에 직접 달라붙지 않는 테이프형 구속 장비로 가벼운 고정에 쓴다.",types:["home","hotel","playroom"]},
+  {name:"커프 연결 체인",text:"커프와 고정점을 이어 움직일 수 있는 범위를 눈에 보이게 제한한다.",types:["home","hotel","playroom"]},
+  {name:"앵커 스트랩",text:"침대나 가구에 커프를 연결할 고정점을 만들 때 쓰는 보조 장비다.",types:["home","hotel","playroom"]},
+  {name:"포지셔닝 벨트",text:"허리나 허벅지 각도를 잡아 특정 자세를 오래 유지할 때 보조한다.",types:["home","hotel","playroom"]},
+  {name:"이어플러그",text:"주변 소리를 줄여 상대의 가까운 목소리와 신체 감각에 더 집중하게 한다.",types:["home","hotel","playroom"]},
+  {name:"세이프티 시어",text:"로프나 테이프를 빠르게 잘라야 할 때 대비해 가까이에 두는 안전용 가위다.",types:["home","hotel","playroom"]},
+  {name:"로프 백",text:"굵기와 길이가 다른 로프를 정리해 두고 필요한 것만 꺼내 쓰는 보관 장비다.",types:["home","hotel","playroom"]},
+    {name:"체인 목걸이",text:"칼라보다 일상적인 형태로 소유감이나 관계의 표식을 은근하게 드러낸다.",types:["home","hotel","playroom","work"]}
 ];
 function chooseSceneObject(type,forcedName,ctx={}){
   const text=[ctx.smPlay,ctx.sexScene,...(ctx.humTexts||[]),ctx.weak].filter(Boolean).join(" ");
@@ -1367,6 +1381,13 @@ const EQUIPMENT_TOOLTIPS={
   "커프":"손목이나 발목 등에 채우는 띠형 구속 장비.",
   "칼라":"목에 착용하는 BDSM 장비. 역할 관계의 표식이나 리드줄 연결점으로 쓰인다.",
   "로프":"신체 일부를 묶거나 자세를 유지하는 데 사용하는 구속용 줄.",
+  "본디지 테이프":"피부나 털에 잘 달라붙지 않도록 만든 테이프형 구속 장비. 손목·발목 등을 가볍게 묶을 때 쓴다.",
+  "커프 연결 체인":"커프와 커프, 또는 커프와 고정점을 연결하는 체인형 부속 장비.",
+  "앵커 스트랩":"가구나 침대에 감아 커프·로프를 연결할 고정점을 만드는 스트랩.",
+  "포지셔닝 벨트":"허리나 허벅지 등에 둘러 특정 자세와 각도를 유지하도록 돕는 벨트형 장비.",
+  "이어플러그":"청각 정보를 줄여 주변 소리를 덜 들리게 하는 감각 제한 장비.",
+  "세이프티 시어":"로프·테이프 등을 빠르게 절단할 수 있도록 만든 안전용 가위.",
+  "로프 백":"여러 종류의 로프를 정리하고 보관하는 전용 가방.",
   "안대":"시야를 가려 시각 정보를 제한하는 장비."
 };
 const EQUIPMENT_TERMS=Object.keys(EQUIPMENT_TOOLTIPS).sort((a,b)=>b.length-a.length);
