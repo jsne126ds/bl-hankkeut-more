@@ -195,7 +195,7 @@ h2{font-size:22px;margin:0 0 8px;font-weight:var(--fw-extrabold);letter-spacing:
 
 <footer class="site-footer">
   <div>BL 한끗 더 · © 2026 미녹음</div>
-  <div><span class="version-badge">v0.21.0</span></div>
+  <div><span class="version-badge">v0.22.0</span></div>
 </footer>
 
 <script>
@@ -975,6 +975,9 @@ function chooseSexScene(type,world,bodySetting=null,smPlay=""){
     if(/볼 개그/.test(smPlay))bodyPool=bodyPool.filter(x=>!/말|호칭|알려 주/.test(x.text));
     if(bodyPool.length&&maybe(.72))return pick(bodyPool).text;
   }
+  let worldPool=WORLD_SEX_SCENES.filter(x=>x.world===world&&x.types.includes(type));
+  if(/볼 개그/.test(smPlay))worldPool=worldPool.filter(x=>!/말|대화|신호/.test(x.text));
+  if(worldPool.length&&maybe(.38))return pick(worldPool).text;
   let hardPool=HARDCORE_SEX_SCENES.filter(x=>(!x.types||x.types.includes(type))&&(!x.worlds||x.worlds.includes(world)));
   if(/볼 개그/.test(smPlay))hardPool=hardPool.filter(x=>!/말|대사|직접적.*표현/.test(x.text));
   if(hardPool.length&&maybe(.62))return pick(hardPool).text;
@@ -1135,6 +1138,57 @@ const MODERN_FANTASY_WORLDS=new Set([
   "현대판타지 · 수인"
 ]);
 
+
+const WORLD_SENSORY_SETTINGS={
+  "현대판타지 · 오메가버스":[
+    "형질 향에 예민한 날에는 평소보다 가까운 거리와 목 주변 접촉에 먼저 반응한다",
+    "히트·러트 전후에는 같은 자극도 평소보다 강하게 느껴져 강도를 다시 맞춰야 한다",
+    "억제제나 컨디션에 따라 향을 느끼는 정도가 달라져 상대의 반응을 다시 확인해야 한다",
+    "형질 반응이 올라오면 체온과 호흡 변화가 평소보다 빠르게 드러난다",
+    "특정 상대의 향에만 유독 안정되거나 긴장하는 체질이 있다"
+  ],
+  "현대판타지 · 가이드버스":[
+    "가이딩 직후에는 접촉 감각이 평소보다 선명하게 남아 작은 자극에도 반응이 빠르다",
+    "동조율이 높아질수록 상대의 긴장이나 호흡 변화를 몸으로 먼저 알아챈다",
+    "과도한 가이딩 뒤에는 접촉 피로가 남아 강한 자극보다 짧은 접촉에 더 예민하다",
+    "가이딩이 부족한 날에는 평소보다 상대에게 가까이 붙으려는 반응이 먼저 나온다",
+    "정신적 연결이 강한 날에는 말보다 손끝이나 호흡 변화가 더 직접적으로 느껴진다"
+  ],
+  "현대판타지 · 헌터/능력자":[
+    "능력을 많이 쓴 날에는 감각이 과민해져 평소와 같은 강도도 다르게 느껴진다",
+    "회복 능력이 활성화된 직후에는 피부 감각이 빠르게 돌아와 자극의 잔상이 짧고 선명하다",
+    "능력 제어가 흔들리면 긴장할수록 체온이나 근육 반응이 눈에 띄게 달라진다",
+    "임무 직후에는 아드레날린이 남아 평소보다 통증과 긴장을 늦게 자각한다",
+    "능력 억제 장치를 벗은 뒤에는 작은 접촉에도 신경이 곤두서는 시간이 생긴다"
+  ],
+  "현대판타지 · 수인":[
+    "귀나 꼬리처럼 감정이 드러나는 부위가 있어 숨기려 해도 긴장과 기대가 먼저 티 난다",
+    "후각이 예민해 상대의 체온이나 땀 냄새 변화로 긴장 상태를 빨리 알아챈다",
+    "종족에 따라 귀·꼬리·목덜미 중 유독 예민한 부위가 하나씩 다르다",
+    "큰 소리나 갑작스러운 접촉에 민감해 익숙한 상대의 신호를 먼저 확인하는 습관이 있다",
+    "편안해질수록 본능적인 몸짓이 먼저 나와 말보다 상태를 알아보기 쉽다"
+  ]
+};
+function chooseWorldSensorySetting(world){
+  const pool=WORLD_SENSORY_SETTINGS[world];
+  return pool&&maybe(.58)?pick(pool):null;
+}
+
+const WORLD_SEX_SCENES=[
+  {world:"현대판타지 · 오메가버스",text:"형질 향이 강해질수록 접촉을 더 가까이 유지하되, 히트·러트 반응과 실제로 원하는 자극을 구분해 중간마다 확인한다.",types:["home","hotel","playroom"]},
+  {world:"현대판타지 · 오메가버스",text:"목 주변이나 향이 진하게 느껴지는 부위에 반응이 몰리면 그 자극만 계속 밀지 않고 다른 접촉과 번갈아 진행한다.",types:["home","hotel","playroom"]},
+  {world:"현대판타지 · 오메가버스",text:"형질 반응이 평소보다 약한 날에는 억지로 분위기를 끌어올리지 않고 일반적인 접촉과 대화에서 천천히 시작한다.",types:["home","hotel","playroom"]},
+  {world:"현대판타지 · 가이드버스",text:"가이딩 직후 예민해진 감각을 이용해 강한 움직임보다 손끝과 밀착을 먼저 늘리고, 반응이 안정된 뒤 속도를 올린다.",types:["home","hotel","playroom"]},
+  {world:"현대판타지 · 가이드버스",text:"동조가 깊어질수록 상대의 호흡 변화를 빠르게 알아채는 설정을 살려 말로 묻기 전에도 속도를 한 번 낮춘다.",types:["home","hotel","playroom"]},
+  {world:"현대판타지 · 가이드버스",text:"업무상 가이딩과 사적인 접촉이 섞이지 않도록 성관계가 시작되기 전 둘만의 신호로 경계를 다시 확인한다.",types:["home","hotel","playroom"]},
+  {world:"현대판타지 · 헌터/능력자",text:"능력 사용 직후 감각이 과민한 날에는 평소보다 짧고 느린 접촉부터 시작해 몸이 안정되는 속도에 맞춰 진행한다.",types:["home","hotel","playroom"]},
+  {world:"현대판타지 · 헌터/능력자",text:"회복력이 빠른 인물이라도 피로 자체는 남아 있다는 전제로 중간 휴식과 체력 확인을 장면에 넣는다.",types:["home","hotel","playroom"]},
+  {world:"현대판타지 · 헌터/능력자",text:"능력 억제 장치를 벗은 직후 작은 접촉에도 반응이 커지는 날이라 자극보다 진정시키는 접촉을 먼저 길게 둔다.",types:["home","hotel","playroom"]},
+  {world:"현대판타지 · 수인",text:"귀나 꼬리에 반응이 바로 드러나는 설정을 이용해 숨기려는 말과 몸의 반응이 다르게 보이게 한다.",types:["home","hotel","playroom"]},
+  {world:"현대판타지 · 수인",text:"후각이 예민한 쪽이 상대의 체온과 향 변화를 먼저 알아채면서 속도보다 밀착과 거리 변화에 크게 반응한다.",types:["home","hotel","playroom"]},
+  {world:"현대판타지 · 수인",text:"종족별로 예민한 부위가 다르다는 설정을 두고, 익숙한 파트너라면 그 부위를 바로 건드리지 않고 반응을 보며 천천히 접근한다.",types:["home","hotel","playroom"]}
+];
+
 const INTERSEX_BODY_VARIANTS=[
   {role:"수",text:"수: 양성구유. 두 성기의 감각이 모두 존재하며 어느 쪽을 사용할지는 장면마다 합의한다.",weight:4},
   {role:"수",text:"수: 양성구유. 형질이나 능력 반응이 강해질수록 평소보다 두 부위의 감각 차이가 선명해진다.",weight:3},
@@ -1179,11 +1233,11 @@ function chooseBodySetting(world){
   return weightedPick(INTERSEX_BODY_VARIANTS);
 }
 function buildResult(){
- const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),bodySetting=chooseBodySetting(world),situation=chooseSituation(group,type,relation,world,stage,role),variable=chooseVariable(group,type,relation,world,stage,situation,role),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),posture=choosePosition(type),restraint=chooseRestraint(posture,type),smPlay=chooseCompatibleSMPlay(type,restraint,tendencies),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1,smPlay),sexScene=chooseSexScene(type,world,bodySetting,smPlay),sceneObject=chooseSceneObject(type,hum.forcedObject,{smPlay,sexScene,humTexts:hum.texts,weak:weak[1],posture,place}),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=chooseTendencyRhythm(tendencies),strength=chooseTendencyStrength(tendencies),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
+ const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),bodySetting=chooseBodySetting(world),sensorySetting=chooseWorldSensorySetting(world),situation=chooseSituation(group,type,relation,world,stage,role),variable=chooseVariable(group,type,relation,world,stage,situation,role),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),posture=choosePosition(type),restraint=chooseRestraint(posture,type),smPlay=chooseCompatibleSMPlay(type,restraint,tendencies),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1,smPlay),sexScene=chooseSexScene(type,world,bodySetting,smPlay),sceneObject=chooseSceneObject(type,hum.forcedObject,{smPlay,sexScene,humTexts:hum.texts,weak:weak[1],posture,place}),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=chooseTendencyRhythm(tendencies),strength=chooseTendencyStrength(tendencies),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
  const aftermathText=/^플레이가 끝난 뒤/.test(aftermath)?aftermath:`플레이가 끝난 뒤에는 ${aftermath}`;
- const bodyText=bodySetting?` 신체 설정 — ${bodySetting.text}`:"";
- const result={설정:`${world} · ${chooseBase(world,profile,relation,role)}. ${arrangement}.${bodyText} ${chooseTiming(type,stage,relation)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${rule}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:(()=>{const trigger=chooseTrigger(type);return `${situation} 분위기를 바꾸는 작은 신호는 ‘${trigger}’${copulaEnding(trigger)}.`;})(),변수:variable.text,성향:`공: ${tendencies.top}\n수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${rhythm} · ${strength} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${topic(receiver)} ${receiverEmotion} ${aftermathText}.`,"하는 사람 감정선":`${topic(giver)} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
- result._ctx={world,type,place,relation,stage,role:role.label,hierarchyMode:hierarchyMode(relation,role),tendencies,bodySetting:bodySetting?bodySetting.text:null,situation,variable:variable.text,impact,toolText,posture,rhythm,strength,restraint,smPlay,sexScene,rule};
+ const bodyText=bodySetting?` 신체 설정 — ${bodySetting.text}`:"";\n const sensoryText=sensorySetting?` 감각 설정 — ${sensorySetting}.`:"";
+ const result={설정:`${world} · ${chooseBase(world,profile,relation,role)}. ${arrangement}.${bodyText}${sensoryText} ${chooseTiming(type,stage,relation)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${rule}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:(()=>{const trigger=chooseTrigger(type);return `${situation} 분위기를 바꾸는 작은 신호는 ‘${trigger}’${copulaEnding(trigger)}.`;})(),변수:variable.text,성향:`공: ${tendencies.top}\n수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${rhythm} · ${strength} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${topic(receiver)} ${receiverEmotion} ${aftermathText}.`,"하는 사람 감정선":`${topic(giver)} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
+ result._ctx={world,type,place,relation,stage,role:role.label,hierarchyMode:hierarchyMode(relation,role),tendencies,bodySetting:bodySetting?bodySetting.text:null,sensorySetting,situation,variable:variable.text,impact,toolText,posture,rhythm,strength,restraint,smPlay,sexScene,rule};
  return result;
 }
 
