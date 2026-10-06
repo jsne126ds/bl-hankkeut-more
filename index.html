@@ -26,15 +26,16 @@ button{font:inherit}
 .context-note{font-size:12px;color:var(--muted);margin:0 2px 12px;line-height:1.55}
 .hero-btn{width:100%;border:0;border-radius:18px;background:var(--accent);color:white;font-weight:800;font-size:17px;padding:16px 18px;box-shadow:0 8px 22px rgba(139,104,184,.22);cursor:pointer}
 .hero-btn:active{transform:translateY(1px)}
-.layout{display:grid;grid-template-columns:280px minmax(0,1fr) 280px;gap:18px;margin-top:18px;align-items:start;min-width:0;max-width:100%}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 280px;gap:18px;margin-top:18px;align-items:start;min-width:0;max-width:100%}
 .panel{background:rgba(255,255,255,.9);border:1px solid rgba(214,205,221,.95);border-radius:28px;padding:22px;box-shadow:0 12px 34px rgba(60,45,72,.08);backdrop-filter:blur(8px);min-width:0;max-width:100%}
-.mode-panel,.side{position:sticky;top:18px}
-.mode-title,.side-heading{font-size:18px;font-weight:900;margin:0 2px 8px;letter-spacing:-.5px}
-.mode-title::before{content:"✦";color:var(--accent);font-size:15px;margin-right:7px}
+.side{position:sticky;top:18px}
+.side-heading{font-size:18px;font-weight:900;margin:0 2px 8px;letter-spacing:-.5px}
 .mode-panel .tabs{grid-template-columns:1fr;gap:8px;margin-bottom:12px}
-.mode-panel .context-note,.side-desc{margin:0 2px 16px;font-size:12px;line-height:1.55;color:var(--muted)}
+.side-desc{margin:0 2px 16px;font-size:12px;line-height:1.55;color:var(--muted)}
 .mode-panel .hero-btn{margin-top:2px}
 .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 14px}
+.panel-reroll{border:1px solid var(--line);background:white;color:var(--accent-3);border-radius:12px;padding:9px 11px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
+.panel-reroll:active{transform:translateY(1px)}
 .section-title{margin:0;font-size:24px;font-weight:900;letter-spacing:-.9px}
 .result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;min-width:0;max-width:100%}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:15px 16px;min-width:0;max-width:100%;overflow:visible}
@@ -61,7 +62,7 @@ button{font:inherit}
 .site-footer .version{margin-left:6px;font-weight:700;color:#8a8490}
 @media(min-width:901px) and (max-width:1300px){
   .wrap{max-width:1280px;padding:18px 20px 64px}
-  .layout{grid-template-columns:230px minmax(0,1fr) 250px;gap:14px}
+  .layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 240px;gap:14px}
   .panel{padding:18px;border-radius:24px}
   .section-title{font-size:22px}
   .result-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -69,9 +70,8 @@ button{font:inherit}
 }
 @media(max-width:900px){
   .layout{grid-template-columns:1fr}
-  .mode-panel{position:static}
-  .mode-panel .tabs{grid-template-columns:1fr 1fr}
-  .result-panel{order:2}
+  .idea-panel{order:1}
+  .scene-panel{order:2}
   .side{order:3;position:static}
 }
 @media(max-width:640px){
@@ -80,9 +80,6 @@ button{font:inherit}
   .hero-btn{position:sticky;top:10px;z-index:5;border-radius:16px;padding:15px}
   .layout{margin-top:12px;gap:12px;width:100%;min-width:0}
   .panel{padding:14px;border-radius:20px;width:100%;min-width:0}
-  .mode-panel{background:transparent;border:0;box-shadow:none;padding:0}
-  .mode-title{display:none}
-  .mode-panel .tabs{margin-bottom:12px}
   .section-title{font-size:18px}
   .result-grid{grid-template-columns:minmax(0,1fr);gap:9px;width:100%;min-width:0}
   .card,.card.wide{grid-column:auto;padding:14px 15px;border-radius:16px}
@@ -101,28 +98,28 @@ button{font:inherit}
   <div class="brand">BL 한끗 더</div>
 
   <div class="layout">
-    <aside class="panel mode-panel">
-      <div class="mode-title">한끗 선택</div>
-      <div class="tabs" role="tablist" aria-label="생성 모드">
-        <button id="ideaTab" class="tab-btn active" role="tab" aria-selected="true">소재 한끗</button>
-        <button id="sceneTab" class="tab-btn" role="tab" aria-selected="false">장면 한끗</button>
-      </div>
-      <div id="contextNote" class="context-note">소재를 먼저 뽑으면 장면 한끗이 이 설정을 이어서 확장해.</div>
-      <button id="generate" class="hero-btn">한끗 더 ✦</button>
-    </aside>
-
-    <main class="panel result-panel">
+    <section class="panel idea-panel">
       <div class="section-head">
-        <h1 class="section-title">오늘의 한 끗</h1>
+        <h1 class="section-title">오늘의 한끗</h1>
+        <button id="generateIdea" class="panel-reroll">다시 뽑기 ↻</button>
       </div>
-      <div id="result" class="result-grid"></div>
-    </main>
+      <div id="ideaResult" class="result-grid"></div>
+    </section>
+
+    <section class="panel scene-panel">
+      <div class="section-head">
+        <h1 class="section-title">장면 한끗</h1>
+        <button id="generateScene" class="panel-reroll">장면 다시 ↻</button>
+      </div>
+      <div id="sceneResult" class="result-grid"></div>
+    </section>
 
     <aside class="panel side">
       <div class="side-heading">액션</div>
-      <div class="side-desc">현재 결과를 복사하거나 최근 조합을 다시 불러올 수 있어.</div>
+      <div class="side-desc">왼쪽 소재와 가운데 장면을 각각 복사하거나 한 번에 복사할 수 있어.</div>
       <div class="actions">
-        <button id="copy" class="action-btn primary">결과 복사</button>
+        <button id="copyIdea" class="action-btn primary">오늘의 한끗 복사</button>
+        <button id="copyScene" class="action-btn">장면 한끗 복사</button>
         <button id="copyAll" class="action-btn">전체 복사</button>
       </div>
       <div class="side-title">최근 결과</div>
@@ -132,7 +129,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.12.4</span>
+  <span class="version">v0.13.0</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -1122,34 +1119,85 @@ function buildSceneResult(base){
 const sceneOrder=["현재 장면","스팽 진행","플레이 변주","섹스 연결","감정 변화","관계 전환","한 끗"];
 let current=null;
 let currentScene=null;
-let activeTab="idea";
 let recent=JSON.parse(localStorage.getItem("hankkeutMoreRecent")||"[]");
-function renderCards(r,keys){const el=document.getElementById("result");el.innerHTML=keys.map(k=>`<section class="card ${["설정","상황","변수","플레이","받는 사람 감정선","하는 사람 감정선","음성 반응","오브제","현재 장면","스팽 진행","플레이 변주","섹스 연결","감정 변화","관계 전환","한 끗"].includes(k)?"wide":""}"><div class="label"><span class="dot"></span>${k}</div><div class="value">${escapeHtml(r[k])}</div></section>`).join("");}
-function render(r){current=r;renderCards(r,order);}
-function renderScene(force=false){if(!current)return;if(force||!currentScene)currentScene=buildSceneResult(current);renderCards(currentScene,sceneOrder);}
-function escapeHtml(s){return String(s??"").replace(/[&<>"\']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","\'":"&#39;"}[m]))}
+
+function renderCardsTo(id,r,keys){
+  const el=document.getElementById(id);
+  el.innerHTML=keys.map(k=>`<section class="card ${["설정","상황","변수","플레이","받는 사람 감정선","하는 사람 감정선","음성 반응","오브제","현재 장면","스팽 진행","플레이 변주","섹스 연결","감정 변화","관계 전환","한 끗"].includes(k)?"wide":""}"><div class="label"><span class="dot"></span>${k}</div><div class="value">${escapeHtml(r[k])}</div></section>`).join("");
+}
+function renderIdea(r){current=r;renderCardsTo("ideaResult",r,order);}
+function renderScene(force=false){
+  if(!current)return;
+  if(force||!currentScene)currentScene=buildSceneResult(current);
+  renderCardsTo("sceneResult",currentScene,sceneOrder);
+}
+function escapeHtml(s){return String(s??"").replace(/[&<>"\']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function saveRecent(r){recent.unshift(r);recent=recent.slice(0,5);localStorage.setItem("hankkeutMoreRecent",JSON.stringify(recent));renderRecent();}
-function renderRecent(){const el=document.getElementById("recent");if(!recent.length){el.innerHTML='<div class="empty">아직 저장된 결과가 없어.</div>';return}el.innerHTML=recent.map((r,i)=>`<button class="recent-item" data-i="${i}"><strong>${escapeHtml(r.관계)} · ${escapeHtml(r.변수)}</strong><span>${escapeHtml(r.상황)}</span></button>`).join("");el.querySelectorAll(".recent-item").forEach(b=>b.onclick=()=>{current=recent[+b.dataset.i];currentScene=null;activeTab==="scene"?renderScene():render(current);scrollToResult();});}
-function scrollToResult(){const target=document.querySelector("main.panel"),top=target.getBoundingClientRect().top+window.scrollY-74;window.scrollTo({top,behavior:"smooth"});}
-function setTab(tab){activeTab=tab;const idea=tab==="idea";document.getElementById("ideaTab").classList.toggle("active",idea);document.getElementById("sceneTab").classList.toggle("active",!idea);document.getElementById("ideaTab").setAttribute("aria-selected",String(idea));document.getElementById("sceneTab").setAttribute("aria-selected",String(!idea));document.querySelector(".section-title").textContent=idea?"오늘의 한 끗":"장면 한끗";document.getElementById("generate").textContent=idea?"한끗 더 ✦":"장면 한끗 더 ✦";document.getElementById("contextNote").textContent=idea?"소재를 먼저 뽑으면 장면 한끗이 이 설정을 이어서 확장해.":"현재 소재의 설정·성향·관계·상황을 유지한 채 장면만 확장해.";idea?render(current):renderScene();}
-function generate(){if(activeTab==="scene"){renderScene(true);window.scrollTo({top:0,behavior:"smooth"});return}const r=buildResult();render(r);currentScene=null;saveRecent(r);window.scrollTo({top:0,behavior:"smooth"});}
-function copyCurrent(){const isScene=activeTab==="scene",r=isScene?currentScene:current;if(!r)return;const keys=isScene?sceneOrder:order,title=isScene?"BL 한끗 더 · 장면 한끗":"BL 한끗 더 · 소재 한끗",text=title+"\n\n"+keys.map(k=>`[${k}]\n${r[k]}`).join("\n\n");navigator.clipboard.writeText(text).then(()=>toast("결과를 복사했어")).catch(()=>toast("복사에 실패했어"));}
+function renderRecent(){
+  const el=document.getElementById("recent");
+  if(!recent.length){el.innerHTML='<div class="empty">아직 저장된 결과가 없어.</div>';return}
+  el.innerHTML=recent.map((r,i)=>`<button class="recent-item" data-i="${i}"><strong>${escapeHtml(r.관계)} · ${escapeHtml(r.변수)}</strong><span>${escapeHtml(r.상황)}</span></button>`).join("");
+  el.querySelectorAll(".recent-item").forEach(b=>b.onclick=()=>{
+    current=recent[+b.dataset.i];
+    currentScene=buildSceneResult(current);
+    renderIdea(current);
+    renderScene();
+    scrollToResults();
+  });
+}
+function scrollToResults(){
+  const target=document.querySelector(".idea-panel");
+  const top=target.getBoundingClientRect().top+window.scrollY-74;
+  window.scrollTo({top,behavior:"smooth"});
+}
+function generateIdea(){
+  const r=buildResult();
+  currentScene=null;
+  renderIdea(r);
+  renderScene(true);
+  saveRecent(r);
+  scrollToResults();
+}
+function generateScene(){
+  renderScene(true);
+  if(window.innerWidth<=900){
+    const target=document.querySelector(".scene-panel");
+    const top=target.getBoundingClientRect().top+window.scrollY-74;
+    window.scrollTo({top,behavior:"smooth"});
+  }
+}
+function copyBlock(title,r,keys){
+  if(!r)return Promise.reject();
+  const text=title+"\n\n"+keys.map(k=>`[${k}]\n${r[k]}`).join("\n\n");
+  return navigator.clipboard.writeText(text);
+}
+function copyIdea(){
+  copyBlock("BL 한끗 더 · 오늘의 한끗",current,order).then(()=>toast("오늘의 한끗을 복사했어")).catch(()=>toast("복사에 실패했어"));
+}
+function copyScene(){
+  if(!currentScene&&current)currentScene=buildSceneResult(current);
+  copyBlock("BL 한끗 더 · 장면 한끗",currentScene,sceneOrder).then(()=>toast("장면 한끗을 복사했어")).catch(()=>toast("복사에 실패했어"));
+}
 function copyAll(){
   if(!current)return;
   if(!currentScene)currentScene=buildSceneResult(current);
-  const ideaText="BL 한끗 더 · 소재 한끗\n\n"+order.map(k=>`[${k}]\n${current[k]}`).join("\n\n");
+  const ideaText="BL 한끗 더 · 오늘의 한끗\n\n"+order.map(k=>`[${k}]\n${current[k]}`).join("\n\n");
   const sceneText="BL 한끗 더 · 장면 한끗\n\n"+sceneOrder.map(k=>`[${k}]\n${currentScene[k]}`).join("\n\n");
   navigator.clipboard.writeText(ideaText+"\n\n--------------------\n\n"+sceneText)
-    .then(()=>toast("두 탭 결과를 모두 복사했어"))
+    .then(()=>toast("두 결과를 모두 복사했어"))
     .catch(()=>toast("복사에 실패했어"));
 }
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),1400);}
-document.getElementById("ideaTab").onclick=()=>setTab("idea");
-document.getElementById("sceneTab").onclick=()=>setTab("scene");
-document.getElementById("generate").onclick=generate;
-document.getElementById("copy").onclick=copyCurrent;
+document.getElementById("generateIdea").onclick=generateIdea;
+document.getElementById("generateScene").onclick=generateScene;
+document.getElementById("copyIdea").onclick=copyIdea;
+document.getElementById("copyScene").onclick=copyScene;
 document.getElementById("copyAll").onclick=copyAll;
-const initialResult=buildResult();render(initialResult);saveRecent(initialResult);
+const initialResult=buildResult();
+renderIdea(initialResult);
+currentScene=buildSceneResult(initialResult);
+renderScene();
+saveRecent(initialResult);
 </script>
 </body>
 </html>
