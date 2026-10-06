@@ -124,7 +124,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.9.1</span>
+  <span class="version">v0.9.2</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -297,7 +297,7 @@ const SITUATION_BANK=[
   {text:"원래 친구였던 두 사람이 술기운이나 장난이 아니라는 걸 확인한 뒤 처음으로 규칙을 정한다.",groups:["first"],tags:["friend"],weight:2},
   {text:"같이 살기 시작한 뒤 숨겨 두던 도구나 체크리스트를 우연히 발견하면서 취향이 드러난다.",groups:["first"],tags:["cohabit"]},
   {text:"업무상 지시를 주고받던 사이가 퇴근 뒤에는 전혀 다른 방식으로 허락을 확인해야 한다는 사실을 처음 체감한다.",groups:["first"],tags:["work","hierarchy"],weight:2},
-  {text:"평소 명령하던 사람이 사적인 공간에서는 먼저 규칙을 묻고 기다리는 모습을 처음 보여 준다.",groups:["first"],tags:["hierarchy"],weight:2},
+  {text:"평소 명령하던 사람이 사적인 공간에서는 먼저 규칙을 묻고 기다리는 모습을 처음 보여 준다.",groups:["first"],tags:["hierarchy"],hierarchyModes:["inverted"],weight:2},
   {text:"경쟁 관계였던 두 사람이 승부와 무관한 영역에서 상대에게 통제를 맡겨 보고 싶다는 욕구를 인정한다.",groups:["first"],tags:["rival"]},
   {text:"서로를 오래 알고 지낸 만큼 취향까지 안다고 생각했지만 실제 플레이 선호는 예상과 정반대였다는 걸 알게 된다.",groups:["first"],tags:["friend","cohabit"]},
 
@@ -330,7 +330,7 @@ const SITUATION_BANK=[
   {text:"평소에는 끝내는 신호를 잘 지키던 사람이 오늘은 한 번 더를 요구하고 이유를 설명하지 못한다.",groups:["ongoing"],tags:["general"]},
   {text:"공적인 역할에서 크게 충돌한 뒤 사적으로 만났지만 그 감정을 플레이에 섞지 않기로 한 약속이 시험대에 오른다.",groups:["ongoing"],tags:["work"],weight:2},
   {text:"공적인 일정이 끝난 뒤 둘만 남은 공간에서 공적인 호칭을 유지한 채 사적인 약속 시간을 확인한다.",groups:["ongoing"],tags:["work"],weight:2},
-  {text:"현실에서 더 높은 위치인 사람이 사적으로는 먼저 허락을 구해야 하는 순간이 유난히 길어진다.",groups:["ongoing"],tags:["hierarchy"],weight:2},
+  {text:"현실에서 더 높은 위치인 사람이 사적으로는 먼저 허락을 구해야 하는 순간이 유난히 길어진다.",groups:["ongoing"],tags:["hierarchy"],hierarchyModes:["inverted"],weight:2},
   {text:"담당 변경이나 함께하던 공식 일정의 종료가 확정되면서 지금의 비밀 관계도 계속 이어 갈지 처음 진지하게 이야기한다.",groups:["ongoing"],tags:["work"]},
   {text:"소속이나 담당이 바뀔 수 있다는 소식이 나오자 평소 감정을 드러내지 않던 쪽이 먼저 다음 약속을 잡는다.",groups:["ongoing"],tags:["work"]},
   {text:"경쟁에서 이긴 쪽이 평소처럼 우위를 과시하지 않고 오히려 상대에게 선택권을 넘긴다.",groups:["ongoing"],tags:["rival"]},
@@ -383,7 +383,7 @@ function relationSituationTags(relation,world){
   const r=canonicalRelation(relation);
   const tags=["general"];
   if(isWorkRelation(relation,world))tags.push("work");
-  if(REVERSE_HIERARCHY[r]||REVERSE_HIERARCHY[relation]||BASE_RELATION[relation]||/(상사|부하|팀장|팀원|대표|실장|비서|코치|선수|트레이너|회원|후계자|담당자)/.test(relation))tags.push("hierarchy");
+  if(realWorldUpperRole(relation))tags.push("hierarchy");
   if(/친구/.test(relation))tags.push("friend");
   if(/라이벌|선수 × 선수|배우 × 배우/.test(relation))tags.push("rival");
   if(/플레이 파트너/.test(relation))tags.push("partner");
@@ -402,13 +402,15 @@ function situationStageCompatible(text,stage){
   return true;
 }
 
-function chooseSituation(group,type,relation,world,stage){
+function chooseSituation(group,type,relation,world,stage,role){
   const tags=relationSituationTags(relation,world);
+  const hMode=hierarchyMode(relation,role);
   let pool=SITUATION_BANK.filter(s=>{
     if(!s.groups.includes(group))return false;
     if(s.types&&!s.types.includes(type))return false;
     if(s.worlds&&!s.worlds.includes(world))return false;
     if(s.tags&&!s.tags.some(t=>tags.includes(t)))return false;
+    if(s.hierarchyModes&&!s.hierarchyModes.includes(hMode))return false;
     if(!situationStageCompatible(s.text,stage))return false;
     return true;
   });
@@ -437,8 +439,8 @@ const VARIABLE_BANK=[
   {key:"stop",text:"계속할 수 있는 상태인데도 하는 쪽이 먼저 끝내겠다고 결정한다.",groups:["contract","ongoing","reunion","ending"],category:"control"},
   {key:"request",text:"늘 기다리던 쪽이 오늘은 먼저 정확한 요구를 말한다.",groups:["contract","ongoing","reunion"],category:"control"},
   {key:"permission",text:"평소 쉽게 내주던 허락 하나를 오늘은 일부러 바로 주지 않는다.",groups:["ongoing","reunion"],category:"control"},
-  {key:"power",text:"현실에서 지시하던 사람이 사적인 순간에는 먼저 허락을 구해야 한다.",groups:["first","contract","ongoing","reunion"],category:"control",tags:["hierarchy"],conflicts:["먼저 허락을 구해야"]},
-  {key:"reverse_choice",text:"현실에서는 아랫사람인 쪽이 사적인 규칙을 정하는 순간에만 단호해진다.",groups:["first","contract","ongoing"],category:"control",tags:["hierarchy"]},
+  {key:"power",text:"현실에서 지시하던 사람이 사적인 순간에는 먼저 허락을 구해야 한다.",groups:["first","contract","ongoing","reunion"],category:"control",tags:["hierarchy"],hierarchyModes:["inverted"],conflicts:["먼저 허락을 구해야"]},
+  {key:"reverse_choice",text:"현실에서는 아랫사람인 쪽이 사적인 규칙을 정하는 순간에만 단호해진다.",groups:["first","contract","ongoing"],category:"control",tags:["hierarchy"],hierarchyModes:["inverted"]},
 
   // 감정 — 장면의 해석이 바뀜
   {key:"giver",text:"하는 쪽이 예상보다 먼저 감정적으로 흔들려 잠깐 말을 잃는다.",groups:["first","contract","ongoing","reunion","ending"],category:"emotion"},
@@ -518,14 +520,16 @@ const VARIABLE_BANK=[
   {key:"beast_signal",text:"평소 감추던 귀나 꼬리 같은 반응이 먼저 드러나 말보다 몸이 감정을 먼저 보여 준다.",groups:["first","contract","ongoing"],category:"world",worlds:["현대판타지 · 수인"]}
 ];
 
-function chooseVariable(group,type,relation,world,stage,situation){
+function chooseVariable(group,type,relation,world,stage,situation,role){
   const tags=relationSituationTags(relation,world);
+  const hMode=hierarchyMode(relation,role);
   let pool=VARIABLE_BANK.filter(v=>{
     if(v.groups&&!v.groups.includes(group))return false;
     if(v.types&&!v.types.includes(type))return false;
     if(v.worlds&&!v.worlds.includes(world))return false;
     if(v.stages&&!v.stages.includes(stage))return false;
     if(v.tags&&!v.tags.some(t=>tags.includes(t)))return false;
+    if(v.hierarchyModes&&!v.hierarchyModes.includes(hMode))return false;
     if(v.conflicts&&v.conflicts.some(word=>situation.includes(word)))return false;
     const vt=v.text;
     if(/다른 파트너/.test(situation)&&/다른 파트너/.test(vt))return false;
@@ -540,7 +544,7 @@ function chooseVariable(group,type,relation,world,stage,situation){
   if(pool.length<5){
     pool=VARIABLE_BANK.filter(v=>
       (!v.groups||v.groups.includes(group)) &&
-      !v.types && !v.worlds && !v.tags &&
+      !v.types && !v.worlds && !v.tags && !v.hierarchyModes &&
       (!v.stages||v.stages.includes(stage)) &&
       !(v.conflicts&&v.conflicts.some(word=>situation.includes(word)))
     );
@@ -582,7 +586,19 @@ const NONWORK_BASES={
   "현대판타지 · 헌터/능력자":["같은 헌터 사회에 속하지만 사적인 인연으로 먼저 가까워졌다","길드나 임무 관계와 별개로 둘만의 플레이 규칙을 만들었다","능력자 생활권은 겹치지만 공식적인 지휘 관계는 아니다"],
   "현대판타지 · 수인":["현대 사회에서 생활하는 성인 수인과 인간 또는 수인끼리 사적으로 가까워졌다","수인 사회의 생활 습관과 플레이 관계를 서로 별개의 문제로 다룬다","지원 제도나 직업 관계가 아니라 개인적인 인연으로 관계가 시작됐다"]
 };
-const chooseBase=(world,profile,relation)=>isWorkRelation(relation,world)?pick(profile.bases):pick(NONWORK_BASES[world]||profile.bases);
+function chooseBase(world,profile,relation,role){
+  const base=isWorkRelation(relation,world)?pick(profile.bases):pick(NONWORK_BASES[world]||profile.bases);
+  if(base==="집안과 회사에서는 위계가 분명하지만 사적인 통제 관계는 다르다"){
+    const upper=realWorldUpperRole(relation);
+    if(!upper)return "가문과 회사의 공적인 역할과 둘만의 플레이 규칙을 분리해 유지한다";
+    const lower=upper==="공"?"수":"공";
+    if(role&&role.giver===upper){
+      return `가문과 회사에서는 ${upper}가 ${lower}보다 높은 위치에 있고, 사적으로도 ${upper}가 통제권을 갖지만 공적인 지시와 플레이 규칙은 철저히 구분한다`;
+    }
+    return `가문과 회사에서는 ${upper}가 ${lower}보다 높은 위치에 있지만, 둘만 있을 때는 ${lower}가 통제권을 갖는다`;
+  }
+  return base;
+}
 
 const REVERSE_HIERARCHY={
   "상사 × 부하":"부하 × 상사",
@@ -604,6 +620,16 @@ const chooseRelationForProfile=profile=>{
   return REVERSE_HIERARCHY[base]&&maybe(.5)?REVERSE_HIERARCHY[base]:base;
 };
 const canonicalRelation=r=>BASE_RELATION[r]||r;
+function realWorldUpperRole(relation){
+  if(REVERSE_HIERARCHY[relation])return "공";
+  if(BASE_RELATION[relation])return "수";
+  return null;
+}
+function hierarchyMode(relation,role){
+  const upper=realWorldUpperRole(relation);
+  if(!upper||!role)return null;
+  return role.giver===upper?"aligned":"inverted";
+}
 
 const REL_STAGE={
 "상사 × 부하":["처음 몇 번 만나는 단계","서로 반응을 익혀 가는 단계","익숙한 장기 파트너","연애 직전","막 연애를 시작한 단계","오래된 연인","관계 종료 직전"],
@@ -768,9 +794,9 @@ function chooseObject(type,forced){if(forced)return forced;const common=["넥타
 function chooseTrigger(type){if(type==="work")return pick(["넥타이를 푸는 행동","휴대폰을 내려놓게 하는 말","안경을 벗는 순간","소매를 걷는 행동","의자를 방 중앙으로 옮기는 행동","평소 말투가 명령조로 바뀌는 순간","횟수를 먼저 알려 주는 말"]);return pick(DATA.triggers);}
 
 function buildResult(){
- const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type,relation,world,stage),variable=chooseVariable(group,type,relation,world,stage,situation),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),sceneObject=chooseSceneObject(type,hum.forcedObject),smPlay=chooseSMPlay(type),sexScene=chooseSexScene(type),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=pick(DATA.rhythms),strength=pick(DATA.strengths),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
- const result={설정:`${world} · ${chooseBase(world,profile,relation)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${rule}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’다.`,변수:variable.text,성향:`공: ${tendencies.top} / 수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${rhythm} · ${strength} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${receiver==="수"?"수는":"공은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
- result._ctx={world,type,place,relation,stage,role:role.label,tendencies,situation,variable:variable.text,impact,toolText,posture,rhythm,strength,restraint,smPlay,sexScene,rule};
+ const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type,relation,world,stage,role),variable=chooseVariable(group,type,relation,world,stage,situation,role),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),sceneObject=chooseSceneObject(type,hum.forcedObject),smPlay=chooseSMPlay(type),sexScene=chooseSexScene(type),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=pick(DATA.rhythms),strength=pick(DATA.strengths),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
+ const result={설정:`${world} · ${chooseBase(world,profile,relation,role)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${rule}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’다.`,변수:variable.text,성향:`공: ${tendencies.top} / 수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${rhythm} · ${strength} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${receiver==="수"?"수는":"공은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
+ result._ctx={world,type,place,relation,stage,role:role.label,hierarchyMode:hierarchyMode(relation,role),tendencies,situation,variable:variable.text,impact,toolText,posture,rhythm,strength,restraint,smPlay,sexScene,rule};
  return result;
 }
 
@@ -784,8 +810,9 @@ const SCENE_ENDINGS=["정해 둔 횟수를 채우고 마지막 한 대를 분명
 const SCENE_EMOTION_SHIFTS=["시작할 때는 규칙을 확인하려는 장면이었지만 끝날 때는 서로의 감정을 눈치챈다","처음에는 벌이나 교정의 명분이 강하지만 끝날 때는 상대를 안심시키는 쪽으로 분위기가 바뀐다","받는 쪽은 버티는 데 집중하다가 끝에는 먼저 애프터케어를 요구할 만큼 솔직해진다","하는 쪽은 통제하려고 시작하지만 끝에는 자기 감정이 더 크게 흔들렸다는 걸 깨닫는다","둘 다 가볍게 시작했지만 끝에는 평소 피하던 관계 이야기를 꺼내게 된다","처음엔 익숙한 루틴처럼 시작하지만 끝에는 한쪽의 예상 밖 반응 때문에 관계의 의미가 달라진다","시작할 때는 거리를 두려 했지만 끝날 때는 먼저 떨어지는 사람이 없어진다"];
 const WORK_EMOTION_SHIFTS=["현실의 위계를 의식하며 시작하지만 끝에는 사적인 역할이 더 선명해진다","공적인 자리에서 유지하던 거리감이 플레이 뒤에는 이전과 다르게 느껴진다"];
 const ONE_MORE_POINTS=["맞는 횟수보다 기다리는 시간을 더 길게 잡아 긴장을 만든다","스팽을 잘 버티던 인물이 SM 규칙 하나에는 의외로 크게 흔들리게 한다","플레이가 끝난 뒤가 아니라 시작 직전에 가장 솔직한 말을 하게 한다","도구보다 맨손으로 바뀌는 순간 감정적인 의미가 커지게 한다","상대가 원한 방식과 실제로 가장 잘 맞는 방식이 다르다는 걸 장면 중간에 발견하게 한다","끝내는 권한을 가진 쪽이 예상보다 일찍 멈춰 상대를 더 흔들리게 한다","섹스로 넘어가는 순간에도 둘만의 규칙 하나만큼은 바꾸지 않는다","평소 통제받는 쪽이 마지막 선택 하나만 직접 하게 해 관계의 균형을 살짝 흔든다"];
-const WORK_ONE_MORE_POINTS=["현실에서 더 높은 위치인 사람이 사적인 공간에서는 먼저 허락을 구하게 만든다","평소 쓰는 공적인 호칭을 끝까지 유지해 현실 관계와 사적 통제를 겹친다"];
-function getSceneContext(r){const ctx=(r&&r._ctx)||{};return {world:ctx.world||"",type:ctx.type||"home",relation:(r&&r.관계)||ctx.relation||"플레이 파트너",stage:ctx.stage||"",situation:(r&&r.상황)||"",variable:(r&&r.변수)||"",impact:ctx.impact||"",toolText:ctx.toolText||"",posture:ctx.posture||"",rhythm:ctx.rhythm||"",strength:ctx.strength||"",restraint:ctx.restraint||"",smPlay:ctx.smPlay||"",sexScene:ctx.sexScene||"",rule:ctx.rule||""};}
+const WORK_ONE_MORE_POINTS=["평소 쓰는 공적인 호칭을 끝까지 유지해 현실 관계와 사적 통제를 겹친다"];
+const INVERTED_HIERARCHY_ONE_MORE_POINTS=["현실에서 더 높은 위치인 사람이 사적인 공간에서는 먼저 허락을 구하게 만든다"];
+function getSceneContext(r){const ctx=(r&&r._ctx)||{};return {world:ctx.world||"",type:ctx.type||"home",relation:(r&&r.관계)||ctx.relation||"플레이 파트너",stage:ctx.stage||"",hierarchyMode:ctx.hierarchyMode||null,situation:(r&&r.상황)||"",variable:(r&&r.변수)||"",impact:ctx.impact||"",toolText:ctx.toolText||"",posture:ctx.posture||"",rhythm:ctx.rhythm||"",strength:ctx.strength||"",restraint:ctx.restraint||"",smPlay:ctx.smPlay||"",sexScene:ctx.sexScene||"",rule:ctx.rule||""};}
 function buildSceneResult(base){
   const ctx=getSceneContext(base);
   const posture=ctx.posture||choosePosition(ctx.type);
@@ -801,7 +828,8 @@ function buildSceneResult(base){
   const start=pick(startPool);
   const end=pick(SCENE_ENDINGS);
   const emotionPool=isWorkRelation(ctx.relation,ctx.world)?SCENE_EMOTION_SHIFTS.concat(WORK_EMOTION_SHIFTS):SCENE_EMOTION_SHIFTS;
-  const pointPool=isWorkRelation(ctx.relation,ctx.world)?ONE_MORE_POINTS.concat(WORK_ONE_MORE_POINTS):ONE_MORE_POINTS;
+  let pointPool=isWorkRelation(ctx.relation,ctx.world)?ONE_MORE_POINTS.concat(WORK_ONE_MORE_POINTS):ONE_MORE_POINTS;
+  if(ctx.hierarchyMode==="inverted")pointPool=pointPool.concat(INVERTED_HIERARCHY_ONE_MORE_POINTS);
   const why=ctx.situation?ctx.situation.replace(/\s*분위기를 바꾸는 작은 신호는[\s\S]*$/,""):start;
   const sexBase=ctx.sexScene||chooseSexScene(ctx.type);
   const ruleCarry=ctx.rule?" 이때 첫 탭에서 정한 ‘"+ctx.rule+"’ 규칙은 그대로 유지한다.":"";
