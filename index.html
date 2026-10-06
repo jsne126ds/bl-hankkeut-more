@@ -195,7 +195,7 @@ h2{font-size:22px;margin:0 0 8px;font-weight:var(--fw-extrabold);letter-spacing:
 
 <footer class="site-footer">
   <div>BL 한끗 더 · © 2026 미녹음</div>
-  <div><span class="version-badge">v0.19.1</span></div>
+  <div><span class="version-badge">v0.19.2</span></div>
 </footer>
 
 <script>
@@ -817,9 +817,11 @@ function makeTendencies(role,relation){
     bottom:topIsGiver?"스팽키 · 섭 · "+receiverExtra:"스팽커 · 돔 · "+giverExtra
   };
 }
-function chooseHumiliations(impact,type,count){
+function chooseHumiliations(impact,type,count,smPlay=""){
   const bilateral=/전체|좌우 번갈아/.test(impact),formal=(type==="work"||type==="hotel"),mirrorAvailable=["home","hotel","playroom"].includes(type);
   let pool=HUMS.filter(h=>!h.need||(h.need==="mirror"&&mirrorAvailable)||(h.need==="bilateral"&&bilateral)||(h.need==="formal"&&formal));
+  if(/안대/.test(smPlay))pool=pool.filter(h=>h.need!=="mirror"&&!/거울/.test(h.text));
+  if(/볼 개그/.test(smPlay))pool=pool.filter(h=>!/직접 말|대답|설명|횟수를 직접 센다/.test(h.text));
   // 거울 수치 요소는 체감 중복이 커서 일반 수치 요소보다 낮은 확률로 후보에 남긴다.
   pool=pool.filter(h=>h.need!=="mirror"||maybe(.24));
   const chosen=sample(pool,count);
@@ -1119,7 +1121,7 @@ function chooseBodySetting(world){
   return weightedPick(INTERSEX_BODY_VARIANTS);
 }
 function buildResult(){
- const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),bodySetting=chooseBodySetting(world),situation=chooseSituation(group,type,relation,world,stage,role),variable=chooseVariable(group,type,relation,world,stage,situation,role),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),posture=choosePosition(type),restraint=chooseRestraint(posture,type),smPlay=chooseCompatibleSMPlay(type,restraint),sexScene=chooseSexScene(type,world,bodySetting,smPlay),sceneObject=chooseSceneObject(type,hum.forcedObject,{smPlay,sexScene,humTexts:hum.texts,weak:weak[1],posture,place}),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=pick(DATA.rhythms),strength=pick(DATA.strengths),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
+ const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),bodySetting=chooseBodySetting(world),situation=chooseSituation(group,type,relation,world,stage,role),variable=chooseVariable(group,type,relation,world,stage,situation,role),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),posture=choosePosition(type),restraint=chooseRestraint(posture,type),smPlay=chooseCompatibleSMPlay(type,restraint),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1,smPlay),sexScene=chooseSexScene(type,world,bodySetting,smPlay),sceneObject=chooseSceneObject(type,hum.forcedObject,{smPlay,sexScene,humTexts:hum.texts,weak:weak[1],posture,place}),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=pick(DATA.rhythms),strength=pick(DATA.strengths),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
  const aftermathText=/^플레이가 끝난 뒤/.test(aftermath)?aftermath:`플레이가 끝난 뒤에는 ${aftermath}`;
  const bodyText=bodySetting?` 신체 설정 — ${bodySetting.text}`:"";
  const result={설정:`${world} · ${chooseBase(world,profile,relation,role)}. ${arrangement}.${bodyText} ${chooseTiming(type,stage,relation)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${rule}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:(()=>{const trigger=chooseTrigger(type);return `${situation} 분위기를 바꾸는 작은 신호는 ‘${trigger}’${copulaEnding(trigger)}.`;})(),변수:variable.text,성향:`공: ${tendencies.top}\n수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${rhythm} · ${strength} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${topic(receiver)} ${receiverEmotion} ${aftermathText}.`,"하는 사람 감정선":`${topic(giver)} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
