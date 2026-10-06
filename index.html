@@ -18,7 +18,7 @@
 html{background:var(--bg)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nanum Gothic",system-ui,sans-serif;line-height:1.65;max-width:100%}
 button{font:inherit}
-.wrap{width:100%;max-width:1180px;margin:0 auto;padding:20px 18px 80px}
+.wrap{width:100%;max-width:1500px;margin:0 auto;padding:24px 28px 84px}
 .brand{font-weight:900;font-size:26px;letter-spacing:-1.2px;margin:2px 0 14px;color:#2b2531}
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}
 .tab-btn{border:1px solid var(--line);background:white;color:var(--muted);border-radius:14px;padding:11px 14px;font-weight:800;cursor:pointer}
@@ -26,15 +26,16 @@ button{font:inherit}
 .context-note{font-size:12px;color:var(--muted);margin:0 2px 12px;line-height:1.55}
 .hero-btn{width:100%;border:0;border-radius:18px;background:var(--accent);color:white;font-weight:800;font-size:17px;padding:16px 18px;box-shadow:0 8px 22px rgba(139,104,184,.22);cursor:pointer}
 .hero-btn:active{transform:translateY(1px)}
-.layout{display:grid;grid-template-columns:250px minmax(0,1fr) 270px;gap:14px;margin-top:16px;align-items:start;min-width:0;max-width:100%}
-.panel{background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:26px;padding:18px;box-shadow:var(--shadow);backdrop-filter:blur(6px);min-width:0;max-width:100%}
-.mode-panel{position:sticky;top:18px}
-.mode-title{font-size:16px;font-weight:900;margin:0 2px 10px}
+.layout{display:grid;grid-template-columns:280px minmax(0,1fr) 280px;gap:18px;margin-top:18px;align-items:start;min-width:0;max-width:100%}
+.panel{background:rgba(255,255,255,.9);border:1px solid rgba(214,205,221,.95);border-radius:28px;padding:22px;box-shadow:0 12px 34px rgba(60,45,72,.08);backdrop-filter:blur(8px);min-width:0;max-width:100%}
+.mode-panel,.side{position:sticky;top:18px}
+.mode-title,.side-heading{font-size:18px;font-weight:900;margin:0 2px 8px;letter-spacing:-.5px}
+.mode-title::before{content:"✦";color:var(--accent);font-size:15px;margin-right:7px}
 .mode-panel .tabs{grid-template-columns:1fr;gap:8px;margin-bottom:12px}
-.mode-panel .context-note{margin:0 2px 14px}
+.mode-panel .context-note,.side-desc{margin:0 2px 16px;font-size:12px;line-height:1.55;color:var(--muted)}
 .mode-panel .hero-btn{margin-top:2px}
 .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 14px}
-.section-title{margin:0;font-size:20px;font-weight:900;letter-spacing:-.7px}
+.section-title{margin:0;font-size:24px;font-weight:900;letter-spacing:-.9px}
 .result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;min-width:0;max-width:100%}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:15px 16px;min-width:0;max-width:100%;overflow:visible}
 .card.wide{grid-column:1/-1}
@@ -43,6 +44,8 @@ button{font:inherit}
 .value{font-size:14.5px;letter-spacing:-.2px;white-space:pre-line;word-break:keep-all;overflow-wrap:anywhere;max-width:100%}
 .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .chip{background:var(--accent-2);color:var(--accent-3);border-radius:999px;padding:4px 8px;font-size:11.5px;font-weight:700}
+.side-heading{display:flex;align-items:center;gap:8px}
+.side-heading::before{content:"✦";color:var(--accent);font-size:16px}
 .actions{display:grid;gap:8px}
 .action-btn{width:100%;border:1px solid var(--line);border-radius:14px;background:white;color:var(--ink);padding:13px 12px;font-weight:800;cursor:pointer}
 .action-btn.primary{background:#2f2937;color:#fff;border-color:#2f2937}
@@ -58,8 +61,9 @@ button{font:inherit}
 .site-footer .version{margin-left:6px;font-weight:700;color:#8a8490}
 @media(min-width:901px) and (max-width:1300px){
   .wrap{max-width:1280px;padding:18px 20px 64px}
-  .layout{grid-template-columns:220px minmax(0,1fr) 240px;gap:12px}
-  .panel{padding:16px;border-radius:22px}
+  .layout{grid-template-columns:230px minmax(0,1fr) 250px;gap:14px}
+  .panel{padding:18px;border-radius:24px}
+  .section-title{font-size:22px}
   .result-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .value{font-size:14px}
 }
@@ -68,7 +72,7 @@ button{font:inherit}
   .mode-panel{position:static}
   .mode-panel .tabs{grid-template-columns:1fr 1fr}
   .result-panel{order:2}
-  .side{order:3}
+  .side{order:3;position:static}
 }
 @media(max-width:640px){
   .wrap{padding:16px 14px 64px;max-width:100%;width:100%}
@@ -83,7 +87,9 @@ button{font:inherit}
   .result-grid{grid-template-columns:minmax(0,1fr);gap:9px;width:100%;min-width:0}
   .card,.card.wide{grid-column:auto;padding:14px 15px;border-radius:16px}
   .value{font-size:14px}
-  .side{background:transparent;border:0;box-shadow:none;padding:0}
+  .side{background:transparent;border:0;box-shadow:none;padding:0;position:static}
+  .side-heading{display:none}
+  .side-desc{display:none}
   .actions{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
   .side-title{margin-top:16px}
 }
@@ -96,7 +102,7 @@ button{font:inherit}
 
   <div class="layout">
     <aside class="panel mode-panel">
-      <div class="mode-title">생성 모드</div>
+      <div class="mode-title">한끗 선택</div>
       <div class="tabs" role="tablist" aria-label="생성 모드">
         <button id="ideaTab" class="tab-btn active" role="tab" aria-selected="true">소재 한끗</button>
         <button id="sceneTab" class="tab-btn" role="tab" aria-selected="false">장면 한끗</button>
@@ -113,6 +119,8 @@ button{font:inherit}
     </main>
 
     <aside class="panel side">
+      <div class="side-heading">액션</div>
+      <div class="side-desc">현재 결과를 복사하거나 최근 조합을 다시 불러올 수 있어.</div>
       <div class="actions">
         <button id="copy" class="action-btn primary">결과 복사</button>
         <button id="copyAll" class="action-btn">전체 복사</button>
@@ -124,7 +132,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.12.3</span>
+  <span class="version">v0.12.4</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
