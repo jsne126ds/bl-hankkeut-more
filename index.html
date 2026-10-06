@@ -124,7 +124,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.10.1</span>
+  <span class="version">v0.10.2</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -712,7 +712,15 @@ function makeTendencies(role,relation){
     bottom:topIsGiver?"스팽키 · 섭 · "+receiverExtra:"스팽커 · 돔 · "+giverExtra
   };
 }
-function chooseHumiliations(impact,type,count){const bilateral=/전체|좌우 번갈아/.test(impact),formal=(type==="work"||type==="hotel"),mirrorAvailable=["home","hotel","playroom"].includes(type);let pool=HUMS.filter(h=>!h.need||(h.need==="mirror"&&mirrorAvailable)||(h.need==="bilateral"&&bilateral)||(h.need==="formal"&&formal));const chosen=sample(pool,count);const forcedObject=chosen.some(h=>h.need==="mirror")?"거울":null;return{texts:chosen.map(h=>h.text),forcedObject};}
+function chooseHumiliations(impact,type,count){
+  const bilateral=/전체|좌우 번갈아/.test(impact),formal=(type==="work"||type==="hotel"),mirrorAvailable=["home","hotel","playroom"].includes(type);
+  let pool=HUMS.filter(h=>!h.need||(h.need==="mirror"&&mirrorAvailable)||(h.need==="bilateral"&&bilateral)||(h.need==="formal"&&formal));
+  // 거울 수치 요소는 체감 중복이 커서 일반 수치 요소보다 낮은 확률로 후보에 남긴다.
+  pool=pool.filter(h=>h.need!=="mirror"||maybe(.24));
+  const chosen=sample(pool,count);
+  const forcedObject=chosen.some(h=>h.need==="mirror")?"거울":null;
+  return{texts:chosen.map(h=>h.text),forcedObject};
+}
 
 
 const SM_PLAYS=[
@@ -893,7 +901,9 @@ function chooseSceneObject(type,forcedName,ctx={}){
     const forced=pool.find(o=>o.name===forcedName);
     if(forced)return forced;
   }
-  return pick(pool.length?pool:OBJECTS.filter(o=>o.types.includes(type)));
+  const finalPool=pool.length?pool:OBJECTS.filter(o=>o.types.includes(type));
+  // 강제 거울이 아닌 일반 오브제 선택에서는 거울 자체도 낮은 가중치를 준다.
+  return weightedPick(finalPool.map(o=>({...o,weight:o.name==="거울"?.35:1})));
 }
 
 function chooseObject(type,forced){if(forced)return forced;const common=["넥타이","벨트","계약서","태블릿","휴대폰","타이머","안경","거울","의자","책상","칼라","커프","도구 케이스"];if(type==="work")return pick(["넥타이","사원증","계약서","태블릿","휴대폰","안경","의자","책상"]);if(type==="playroom")return pick(["타이머","거울","칼라","커프","도구 케이스","의자"]);return pick(common);}
