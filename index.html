@@ -195,7 +195,7 @@ h2{font-size:22px;margin:0 0 8px;font-weight:var(--fw-extrabold);letter-spacing:
 
 <footer class="site-footer">
   <div>BL 한끗 더 · © 2026 미녹음</div>
-  <div><span class="version-badge">v0.23.1</span></div>
+  <div><span class="version-badge">v0.23.2</span></div>
 </footer>
 
 <script>
@@ -1001,7 +1001,7 @@ function chooseSMPlay(type){
 function chooseCompatibleSMPlay(type,restraint,tendencies=null,seed=null){
   let pool=SM_PLAYS.filter(x=>x.types.includes(type));
   if(/구속 없음|물리적 구속은 하지 않음/.test(restraint)){
-    pool=pool.filter(x=>!/구속|커프|스프레더 바|로프로|고정/.test(x.text));
+    pool=pool.filter(x=>!/구속|커프|스프레더 바|로프로|고정|본디지 테이프|연결 체인|포지셔닝 벨트|앵커 스트랩/.test(x.text));
   }
   if(seed&&pool.some(x=>x.text===seed))return seed;
   return tendencyWeightedText(pool.length?pool:SM_PLAYS.filter(x=>x.types.includes(type)),tendencies).text;
