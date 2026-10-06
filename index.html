@@ -11,7 +11,7 @@
 <style>
 @font-face{
   font-family:'Isamanru';
-  src:url('https://cdn.jsdelivr.net/gh/yellopencil/yellopencil-webfonts@v1.8.0/fonts/isamanru/esamanru%20Bold.ttf') format('truetype');
+  src:url('https://cdn.jsdelivr.net/gh/yellopencil/yellopencil-webfonts@v1.8.1/fonts/isamanru/esamanru%20Bold.ttf') format('truetype');
   font-weight:700;
   font-style:normal;
   font-display:swap;
@@ -23,8 +23,11 @@ body{margin:0;background:radial-gradient(circle at 15% 5%,#f3edff 0,transparent 
 button{font-family:inherit}
 .shell{max-width:1580px;margin:0 auto;padding:24px 28px 34px}
 header{height:74px;display:flex;align-items:flex-start;justify-content:space-between;padding:0 12px 10px}
-.brand-lockup{display:flex;align-items:center;min-width:0;height:70px}
-.brand-text{font-family:'Isamanru',sans-serif;font-size:50px;font-weight:700;line-height:1;letter-spacing:-2.4px;color:#2b2531;white-space:nowrap}
+.brand-lockup{display:flex;align-items:center;min-width:0;height:70px;gap:10px}
+.brand-spark{font-size:22px;line-height:1;color:#9b62da;transform:translateY(-1px)}
+.brand-text{font-family:'Isamanru',sans-serif;font-size:43px;font-weight:700;line-height:1;letter-spacing:-2px;color:#2b2531;white-space:nowrap}
+.brand-divider{width:1px;height:30px;background:#c9c1d8;margin:0 3px 0 5px}
+.brand-tagline{font-family:'Isamanru',sans-serif;font-size:17px;font-weight:700;letter-spacing:-.7px;color:#3f3855;white-space:nowrap}
 .head-right{display:flex;align-items:center;gap:18px;padding-top:4px}
 .quote{font-size:12px;line-height:1.45;background:#f0e9ff;border-radius:10px;padding:10px 15px;color:#655890;max-width:190px}
 .grid{display:grid;grid-template-columns:minmax(420px,.9fr) minmax(560px,1.2fr) 350px;gap:18px;align-items:start}
@@ -111,8 +114,11 @@ h2{font-size:22px;margin:0 0 8px;font-weight:800;letter-spacing:-.03em}
 <body>
 <div class="shell">
 <header>
-  <div class="brand-lockup" aria-label="BL 한끗 더">
+  <div class="brand-lockup" aria-label="BL 한끗 더 — 막히는 순간, 한 끗만 더">
+    <span class="brand-spark">✦</span>
     <div class="brand-text">BL 한끗 더</div>
+    <span class="brand-divider" aria-hidden="true"></span>
+    <div class="brand-tagline">막히는 순간, 한 끗만 더</div>
   </div>
   <div class="head-right">
     <div class="quote">좋은 이야기는,<br>언제나 한끗에서 시작되니까.</div>
