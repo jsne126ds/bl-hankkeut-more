@@ -124,7 +124,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.9.4</span>
+  <span class="version">v0.10.0</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -839,7 +839,42 @@ const OBJECTS=[
   {name:"우산",text:"같이 이동하게 되는 사소한 계기로 플레이 밖의 관계를 드러낸다.",types:["work","hotel","institution"]},
   {name:"차 키",text:"누가 데려다주고 돌아갈지를 정하는 행동으로 플레이 이후의 거리감을 보여 준다.",types:["work","home","hotel"]},
   {name:"주차권",text:"얼마나 오래 머물렀는지 예상치 못하게 드러나는 현실적인 흔적이 된다.",types:["work","hotel"]},
-  {name:"엘리베이터 카드",text:"공적인 공간에서 사적인 공간으로 이동하는 경계를 명확하게 만든다.",types:["work","hotel","institution"]}
+  {name:"엘리베이터 카드",text:"공적인 공간에서 사적인 공간으로 이동하는 경계를 명확하게 만든다.",types:["work","hotel","institution"]},
+  {name:"러브젤",text:"준비 과정 자체를 장면에 드러내며 플레이에서 성관계로 넘어가는 전환을 자연스럽게 만든다.",types:["home","hotel","playroom"]},
+  {name:"콘돔",text:"즉흥적인 분위기 속에서도 합의와 준비가 선명하게 보이는 현실적인 소품으로 쓴다.",types:["home","hotel","playroom"]},
+  {name:"방수 시트",text:"평범한 침대나 소파가 의도적으로 준비된 플레이 공간으로 바뀌었다는 느낌을 준다.",types:["home","hotel","playroom"]},
+  {name:"실리콘 플러그",text:"플레이 전 준비나 기다림을 시각적으로 보여 주는 성인용품 오브제로 활용한다.",types:["home","hotel","playroom"]},
+  {name:"진동 플러그",text:"직접적인 접촉 없이도 상대 반응을 조절하거나 기다리게 하는 장치로 쓴다.",types:["home","hotel","playroom"]},
+  {name:"전립선 마사지기",text:"평소와 다른 자극을 시도하는 날이라는 사실을 단번에 보여 주는 장치가 된다.",types:["home","hotel","playroom"]},
+  {name:"소형 바이브레이터",text:"손에 쥐거나 숨기기 쉬워 일상 공간에서도 사적인 긴장을 만드는 소품으로 쓴다.",types:["home","hotel","playroom"]},
+  {name:"완드형 마사지기",text:"도구의 존재감 자체가 커서 장면의 기대감과 압박감을 동시에 높인다.",types:["home","hotel","playroom"]},
+  {name:"진동 링",text:"성관계 장면에서 평소와 다른 규칙이나 보조 자극을 추가하는 계기로 사용한다.",types:["home","hotel","playroom"]},
+  {name:"콕링",text:"허락·착용·해제 시점을 정하는 규칙과 연결해 통제감을 시각화한다.",types:["home","hotel","playroom"]},
+  {name:"정조대",text:"착용과 해제 권한을 둘 사이의 장기 규칙이나 보상 구조와 연결한다.",types:["home","hotel","playroom"]},
+  {name:"니플 클램프",text:"스팽과 다른 종류의 통증 자극을 추가해 반응 차이를 드러내는 데 쓴다.",types:["home","hotel","playroom"]},
+  {name:"체인형 니플 클램프",text:"움직임에 따라 자극이 달라져 자세 유지나 움직임 제한과 연결하기 좋다.",types:["home","hotel","playroom"]},
+  {name:"스프레더 바",text:"다리 간격을 일정하게 유지해 자세와 통제감을 시각적으로 강조한다.",types:["home","hotel","playroom"]},
+  {name:"볼 개그",text:"대답 방식이나 소리의 제한을 명확하게 보여 주는 장치로 사용한다.",types:["home","hotel","playroom"]},
+  {name:"리드줄",text:"칼라와 연결해 이동·대기·거리 조절을 시각적으로 보여 주는 소품이 된다.",types:["home","hotel","playroom"]},
+  {name:"바디 하네스",text:"몸의 선과 구속 위치를 한눈에 보이게 해 장면의 시각적 인상을 강화한다.",types:["home","hotel","playroom"]},
+  {name:"허벅지 스트랩",text:"자세 유지와 움직임 제한을 보조하면서 신체에 남는 압박감을 강조한다.",types:["home","hotel","playroom"]},
+  {name:"발목 커프",text:"손목 구속과 다른 방식으로 이동 범위를 제한해 자세 변화에 활용한다.",types:["home","hotel","playroom"]},
+  {name:"손목·발목 커프 세트",text:"구속 위치를 조합해 자세와 이동 가능 범위를 단계적으로 바꿀 수 있게 한다.",types:["home","hotel","playroom"]},
+  {name:"침대 구속 스트랩",text:"평범한 숙박 공간을 즉석에서 플레이 공간으로 바꾸는 장치가 된다.",types:["home","hotel"]},
+  {name:"포지셔닝 쿠션",text:"자세를 오래 유지하거나 특정 각도를 만들 때 쓰는 실용적인 보조 오브제다.",types:["home","hotel","playroom"]},
+  {name:"섹스 웨지",text:"자세와 각도를 바꾸는 것 자체를 새로운 시도의 신호로 사용한다.",types:["home","hotel","playroom"]},
+  {name:"마사지 오일",text:"플레이의 강한 긴장을 부드러운 접촉으로 전환하거나 애프터케어와 연결한다.",types:["home","hotel","playroom"]},
+  {name:"페더 티저",text:"강한 자극과 반대로 아주 가벼운 감각을 섞어 반응 차이를 드러낸다.",types:["home","hotel","playroom"]},
+  {name:"저온 왁스 캔들",text:"온도 자극과 기다림을 함께 사용해 장면의 리듬을 바꾸는 소품으로 쓴다.",types:["home","hotel","playroom"]},
+  {name:"감각 휠",text:"가벼운 압력 자극으로 스팽과 전혀 다른 반응을 끌어내는 보조 도구로 사용한다.",types:["home","hotel","playroom"]},
+  {name:"클립 세트",text:"작은 부위별 자극 강도를 다르게 주며 상대의 민감한 지점을 탐색하는 데 쓴다.",types:["home","hotel","playroom"]},
+  {name:"실크 스카프",text:"안대나 가벼운 구속처럼 활용하면서 거친 장비보다 부드러운 분위기를 만든다.",types:["home","hotel"]},
+  {name:"토이 파우치",text:"여러 도구 중 무엇을 꺼낼지 모르는 기다림과 선택의 긴장을 만든다.",types:["home","hotel","playroom"]},
+  {name:"잠금 케이스",text:"도구의 보관과 사용 권한을 누가 갖는지 보여 주는 통제 장치가 된다.",types:["home","hotel","playroom"]},
+  {name:"위생 장갑",text:"직접적인 접촉과 일부러 거리를 두는 느낌을 동시에 만들어 준비된 플레이의 인상을 준다.",types:["home","hotel","playroom"]},
+  {name:"클리닝 티슈",text:"플레이 뒤 정리와 돌봄을 현실적으로 이어 주며 장면을 부드럽게 마무리한다.",types:["home","hotel","playroom"]},
+  {name:"보디 마커",text:"횟수·규칙·표시를 피부 위에 남기는 시각적인 놀이 장치로 활용한다.",types:["home","hotel","playroom"]},
+  {name:"체인 목걸이",text:"칼라보다 일상적인 형태로 소유감이나 관계의 표식을 은근하게 드러낸다.",types:["home","hotel","playroom","work"]}
 ];
 function chooseSceneObject(type,forcedName){
   const pool=OBJECTS.filter(o=>o.types.includes(type));
