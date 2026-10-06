@@ -124,7 +124,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.10.0</span>
+  <span class="version">v0.10.1</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -876,20 +876,31 @@ const OBJECTS=[
   {name:"보디 마커",text:"횟수·규칙·표시를 피부 위에 남기는 시각적인 놀이 장치로 활용한다.",types:["home","hotel","playroom"]},
   {name:"체인 목걸이",text:"칼라보다 일상적인 형태로 소유감이나 관계의 표식을 은근하게 드러낸다.",types:["home","hotel","playroom","work"]}
 ];
-function chooseSceneObject(type,forcedName){
-  const pool=OBJECTS.filter(o=>o.types.includes(type));
+function chooseSceneObject(type,forcedName,ctx={}){
+  const text=[ctx.smPlay,ctx.sexScene,...(ctx.humTexts||[]),ctx.weak].filter(Boolean).join(" ");
+  const speechNeeded=/(질문에는 대답|준비됐다고 직접 말|특정 호칭을 유지|칭찬을 들을 때마다 짧게 대답|왜 맞는지 자기 입으로|몇 대 받을지 스스로 정한 뒤 다시 말|끝난 뒤.*직접 말|먼저 원하는 걸 말|원하는 속도나 분위기를 직접 말|스스로 끝났다는 대답)/.test(text);
+  const visualNeeded=/(거울 앞에서|거울로 직접 확인|눈이 마주치면)/.test(text);
+  const bedPlace=/침대|호텔|숙소|레지던스|펜트하우스|별장|오피스텔/.test(ctx.place||"");
+  let pool=OBJECTS.filter(o=>{
+    if(!o.types.includes(type))return false;
+    if(o.name==="볼 개그"&&speechNeeded)return false;
+    if(o.name==="안대"&&visualNeeded)return false;
+    if(o.name==="스프레더 바"&&ctx.posture==="OTK")return false;
+    if(o.name==="침대 구속 스트랩"&&!bedPlace)return false;
+    return true;
+  });
   if(forcedName){
     const forced=pool.find(o=>o.name===forcedName);
     if(forced)return forced;
   }
-  return pick(pool.length?pool:OBJECTS);
+  return pick(pool.length?pool:OBJECTS.filter(o=>o.types.includes(type)));
 }
 
 function chooseObject(type,forced){if(forced)return forced;const common=["넥타이","벨트","계약서","태블릿","휴대폰","타이머","안경","거울","의자","책상","칼라","커프","도구 케이스"];if(type==="work")return pick(["넥타이","사원증","계약서","태블릿","휴대폰","안경","의자","책상"]);if(type==="playroom")return pick(["타이머","거울","칼라","커프","도구 케이스","의자"]);return pick(common);}
 function chooseTrigger(type){if(type==="work")return pick(["넥타이를 푸는 행동","휴대폰을 내려놓게 하는 말","안경을 벗는 순간","소매를 걷는 행동","의자를 방 중앙으로 옮기는 행동","평소 말투가 명령조로 바뀌는 순간","횟수를 먼저 알려 주는 말"]);return pick(DATA.triggers);}
 
 function buildResult(){
- const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type,relation,world,stage,role),variable=chooseVariable(group,type,relation,world,stage,situation,role),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),sceneObject=chooseSceneObject(type,hum.forcedObject),smPlay=chooseSMPlay(type),sexScene=chooseSexScene(type),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=pick(DATA.rhythms),strength=pick(DATA.strengths),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
+ const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type,relation,world,stage,role),variable=chooseVariable(group,type,relation,world,stage,situation,role),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),smPlay=chooseSMPlay(type),sexScene=chooseSexScene(type),posture=choosePosition(type),sceneObject=chooseSceneObject(type,hum.forcedObject,{smPlay,sexScene,humTexts:hum.texts,weak:weak[1],posture,place}),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=pick(DATA.rhythms),strength=pick(DATA.strengths),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
  const aftermathText=/^플레이가 끝난 뒤/.test(aftermath)?aftermath:`플레이가 끝난 뒤에는 ${aftermath}`;
  const result={설정:`${world} · ${chooseBase(world,profile,relation,role)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${rule}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:(()=>{const trigger=chooseTrigger(type);return `${situation} 분위기를 바꾸는 작은 신호는 ‘${trigger}’${copulaEnding(trigger)}.`;})(),변수:variable.text,성향:`공: ${tendencies.top} / 수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${rhythm} · ${strength} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${topic(receiver)} ${receiverEmotion} ${aftermathText}.`,"하는 사람 감정선":`${topic(giver)} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
  result._ctx={world,type,place,relation,stage,role:role.label,hierarchyMode:hierarchyMode(relation,role),tendencies,situation,variable:variable.text,impact,toolText,posture,rhythm,strength,restraint,smPlay,sexScene,rule};
