@@ -189,7 +189,7 @@ h2{font-size:22px;margin:0 0 8px;font-weight:var(--fw-extrabold);letter-spacing:
 
 <footer class="site-footer">
   <div>BL 한끗 더 · © 2026 미녹음</div>
-  <div><span class="version-badge">v0.16.1</span></div>
+  <div><span class="version-badge">v0.16.2</span></div>
 </footer>
 
 <script>
@@ -1181,7 +1181,9 @@ let currentScene=null;
 let recent=JSON.parse(localStorage.getItem("hankkeutMoreRecent")||"[]");
 
 function renderCardsTo(id,r,keys){
-  const icons=["✦","♙","⌖","▤","⤨","♨","◇","◈","◎","↗"];
+  const ideaIcons=["✦","♙","⌖","▤","⤨","♨","◇","◈","◎","↗"];
+  const sceneIcons=["▣","↯","⌁","⇢","◐","⇄","✧"];
+  const icons=id==="sceneResult"?sceneIcons:ideaIcons;
   const el=document.getElementById(id);
   el.innerHTML=keys.map((k,i)=>`<div class="row ${(k==="상황"||k==="현재 장면")?"emphasis":""}"><div class="icon">${icons[i%icons.length]}</div><div class="label">${k}</div><div class="value">${escapeHtml(k==="성향"?String(r[k]).replace(" / 수: ","\n수: "):r[k])}</div></div>`).join("");
 }
