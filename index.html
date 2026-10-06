@@ -195,7 +195,7 @@ h2{font-size:22px;margin:0 0 8px;font-weight:var(--fw-extrabold);letter-spacing:
 
 <footer class="site-footer">
   <div>BL 한끗 더 · © 2026 미녹음</div>
-  <div><span class="version-badge">v0.19.3</span></div>
+  <div><span class="version-badge">v0.19.4</span></div>
 </footer>
 
 <script>
@@ -1218,7 +1218,7 @@ function chooseScenePlayTransition(type,objectName,smPlay=""){
   let pool=PLAY_TRANSITIONS.filter(x=>x.types.includes(type));
   const gagged=objectName==="볼 개그"||/볼 개그/.test(smPlay);
   const blindfolded=objectName==="안대"||/안대/.test(smPlay);
-  if(gagged)pool=pool.filter(x=>!/상대가 먼저 말|대답 방식|직접 말|말로 확인|직접 말하게/.test(x.text));
+  if(gagged)pool=pool.filter(x=>!/말|대답|호칭|질문|요청|설명|이야기/.test(x.text));
   if(blindfolded)pool=pool.filter(x=>!/말과 시선만으로/.test(x.text));
   return pick(pool.length?pool:PLAY_TRANSITIONS.filter(x=>x.types.includes(type))).text;
 }
