@@ -124,7 +124,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.11.0</span>
+  <span class="version">v0.12.0</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -758,16 +758,54 @@ const SEX_SCENES=[
   "플레이 도중 감정이 예상보다 커져 원래 없던 성관계까지 이어지되 시작 전에 다시 합의를 확인한다"
 ];
 
+const HARDCORE_SEX_SCENES=[
+  {text:"처음부터 속도를 올리지 않고 충분히 준비한 뒤 깊이와 리듬을 단계적으로 높여 강한 삽입감으로 이어 간다",types:["home","hotel","playroom"]},
+  {text:"한 자세를 오래 유지하기보다 몇 차례 자세를 바꾸면서 각도와 자극 지점이 달라지는 흐름으로 만든다",types:["home","hotel","playroom"]},
+  {text:"삽입만 반복하지 않고 손과 입을 함께 써서 서로 다른 자극이 끊기지 않게 겹친다",types:["home","hotel","playroom"]},
+  {text:"삽입 중간에 유두 자극을 더해 한 가지 감각에 익숙해질 틈을 주지 않는다",types:["home","hotel","playroom"]},
+  {text:"한 번 절정한 뒤 바로 장면을 끝내지 않고 짧게 호흡을 고른 다음 다시 이어 간다",types:["home","hotel","playroom"]},
+  {text:"처음보다 두 번째 흐름에서 속도와 깊이를 더 올려 같은 장면 안에서도 체감 강도를 바꾼다",types:["home","hotel","playroom"]},
+  {text:"뒤에서 끌어안은 자세로 시작해 몸이 맞닿는 면적을 넓힌 채 깊은 삽입 위주로 이어 간다",types:["home","hotel","playroom"]},
+  {text:"마주 보는 자세에서 표정과 호흡을 확인하다가 리듬이 무너질수록 움직임을 더 거칠게 바꾼다",types:["home","hotel","playroom"]},
+  {text:"침대 가장자리와 바닥 가까운 자세를 번갈아 써서 같은 삽입 장면의 각도와 긴장감을 바꾼다",types:["home","hotel","playroom"]},
+  {text:"상대를 들어 올리거나 허리를 받쳐 체중이 실리는 자세로 바꾸며 짧고 강한 구간을 만든다",types:["home","hotel","playroom"]},
+  {text:"러브젤을 충분히 보충하면서 오래 이어지는 장면으로 잡고, 중간중간 자극 위치를 바꿔 단조로움을 피한다",types:["home","hotel","playroom"]},
+  {text:"플러그나 소형 바이브레이터를 보조 자극으로 사용해 삽입과 별개의 감각을 동시에 겹친다",types:["home","hotel","playroom"]},
+  {text:"삽입 전 충분히 오럴로 달군 뒤 바로 같은 리듬으로 이어 가 반응이 끊기지 않게 만든다",types:["home","hotel","playroom"]},
+  {text:"오럴과 삽입을 한 번씩 교차해 어느 쪽에서 더 크게 반응하는지 장면 안에서 드러낸다",types:["home","hotel","playroom"]},
+  {text:"한쪽만 움직이는 구도에서 벗어나 중간부터 둘 다 적극적으로 움직여 리듬이 서로 맞아드는 방향으로 바꾼다",types:["home","hotel","playroom"]},
+  {text:"자세를 바꿀 때마다 완전히 끊지 않고 밀착을 유지해 장면이 한 호흡으로 이어지게 만든다",types:["home","hotel","playroom"]},
+  {text:"속도를 빠르게 올렸다가 갑자기 늦추는 식으로 리듬 차를 크게 만들어 신체 반응을 강조한다",types:["home","hotel","playroom"]},
+  {text:"깊은 삽입과 얕고 빠른 움직임을 번갈아 써 같은 강도로만 밀어붙이지 않는다",types:["home","hotel","playroom"]},
+  {text:"절정 직전마다 자세를 한 번씩 바꾸면서 쉽게 끝나지 않는 길고 진한 성관계로 만든다",types:["home","hotel","playroom"]},
+  {text:"한쪽이 먼저 절정한 뒤에도 상대의 반응을 맞춰 주면서 둘의 타이밍이 어긋나는 장면을 활용한다",types:["home","hotel","playroom"]},
+  {text:"서로의 손을 직접 이끌어 원하는 자극 위치를 알려 주면서 말보다 몸으로 취향을 확인한다",types:["home","hotel","playroom"]},
+  {text:"처음에는 침대에서 시작하지만 중간에 장소를 옮겨 벽이나 소파를 이용한 다른 자세로 이어 간다",types:["home","hotel"]},
+  {text:"짧게 끝내려던 성관계가 예상보다 오래 이어져 중간에 물과 휴식이 필요한 정도로 여러 번 흐름이 나뉜다",types:["home","hotel","playroom"]},
+  {text:"서로 체력이 남아 있는지 확인한 뒤 한 번 더 이어 가며 두 번째에는 완전히 다른 자세를 선택한다",types:["home","hotel","playroom"]},
+  {text:"강한 리듬 뒤에는 천천히 밀착하는 구간을 넣어 거친 장면과 다정한 접촉의 대비를 크게 만든다",types:["home","hotel","playroom"]},
+  {text:"목소리를 억누르기보다 호흡과 신음이 커지는 과정을 그대로 두어 신체 반응이 장면을 끌고 가게 한다",types:["home","hotel","playroom"]},
+  {text:"평소보다 노골적인 말을 주고받되 모욕이나 명령이 아니라 원하는 감각과 반응을 직접적으로 표현하는 쪽으로 간다",types:["home","hotel","playroom"]},
+  {text:"상대가 어떤 자세에서 더 크게 반응하는지 확인한 뒤 그 자세를 마지막 구간에 다시 가져와 반복한다",types:["home","hotel","playroom"]},
+  {text:"성관계 전후로 충분히 씻고 정리하는 시간을 두되 장면 중간의 뜨거운 흐름은 끊지 않게 연결한다",types:["home","hotel","playroom"]},
+  {text:"첫 절정 이후 민감해진 상태에서는 속도보다 작은 움직임과 반복 자극으로 두 번째 반응을 끌어낸다",types:["home","hotel","playroom"]},
+  {text:"오메가버스의 형질 반응이 강해진 상태에서 노팅 여부를 서로 확인하고 그에 맞춰 속도와 자세를 조절한다",worlds:["현대판타지 · 오메가버스"],types:["home","hotel","playroom"]},
+  {text:"히트나 러트에 휩쓸린 상태에서도 서로 상태를 확인하면서 평소보다 길고 체력 소모가 큰 성관계로 이어 간다",worlds:["현대판타지 · 오메가버스"],types:["home","hotel","playroom"]},
+  {text:"형질 향과 접촉에 민감해진 반응을 이용해 키스와 삽입 사이의 템포를 평소보다 촘촘하게 만든다",worlds:["현대판타지 · 오메가버스"],types:["home","hotel","playroom"]}
+];
+
 function chooseSMPlay(type){
   const pool=SM_PLAYS.filter(x=>x.types.includes(type));
   return pick(pool.length?pool:SM_PLAYS).text;
 }
-function chooseSexScene(type){
-  let pool=SEX_SCENES;
+function chooseSexScene(type,world){
+  let basePool=SEX_SCENES;
   if(type==="work"||type==="institution"||type==="fantasy"){
-    pool=SEX_SCENES.filter(x=>!x.includes("거울 앞"));
+    basePool=SEX_SCENES.filter(x=>!x.includes("거울 앞"));
   }
-  return pick(pool);
+  const hardPool=HARDCORE_SEX_SCENES.filter(x=>(!x.types||x.types.includes(type))&&(!x.worlds||x.worlds.includes(world)));
+  if(hardPool.length&&maybe(.62))return pick(hardPool).text;
+  return pick(basePool);
 }
 
 const OBJECTS=[
@@ -910,7 +948,7 @@ function chooseObject(type,forced){if(forced)return forced;const common=["넥타
 function chooseTrigger(type){if(type==="work")return pick(["넥타이를 푸는 행동","휴대폰을 내려놓게 하는 말","안경을 벗는 순간","소매를 걷는 행동","의자를 방 중앙으로 옮기는 행동","평소 말투가 명령조로 바뀌는 순간","횟수를 먼저 알려 주는 말"]);return pick(DATA.triggers);}
 
 function buildResult(){
- const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type,relation,world,stage,role),variable=chooseVariable(group,type,relation,world,stage,situation,role),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),smPlay=chooseSMPlay(type),sexScene=chooseSexScene(type),posture=choosePosition(type),sceneObject=chooseSceneObject(type,hum.forcedObject,{smPlay,sexScene,humTexts:hum.texts,weak:weak[1],posture,place}),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=pick(DATA.rhythms),strength=pick(DATA.strengths),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
+ const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type,relation,world,stage,role),variable=chooseVariable(group,type,relation,world,stage,situation,role),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),smPlay=chooseSMPlay(type),sexScene=chooseSexScene(type,world),posture=choosePosition(type),sceneObject=chooseSceneObject(type,hum.forcedObject,{smPlay,sexScene,humTexts:hum.texts,weak:weak[1],posture,place}),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=pick(DATA.rhythms),strength=pick(DATA.strengths),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
  const aftermathText=/^플레이가 끝난 뒤/.test(aftermath)?aftermath:`플레이가 끝난 뒤에는 ${aftermath}`;
  const result={설정:`${world} · ${chooseBase(world,profile,relation,role)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${rule}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:(()=>{const trigger=chooseTrigger(type);return `${situation} 분위기를 바꾸는 작은 신호는 ‘${trigger}’${copulaEnding(trigger)}.`;})(),변수:variable.text,성향:`공: ${tendencies.top} / 수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${rhythm} · ${strength} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${topic(receiver)} ${receiverEmotion} ${aftermathText}.`,"하는 사람 감정선":`${topic(giver)} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
  result._ctx={world,type,place,relation,stage,role:role.label,hierarchyMode:hierarchyMode(relation,role),tendencies,situation,variable:variable.text,impact,toolText,posture,rhythm,strength,restraint,smPlay,sexScene,rule};
@@ -967,6 +1005,23 @@ const SEX_TRANSITIONS=[
   {text:"끝까지 이어지는 대신 중간에 멈추고 서로의 상태를 확인하는 순간을 장면의 감정 포인트로 쓴다.",types:["home","hotel","playroom","work","institution","fantasy"]}
 ];
 
+const HARDCORE_SEX_TRANSITIONS=[
+  {text:"다음 구간에서는 자세를 완전히 바꿔 같은 자극이 반복되는 느낌을 피한다.",types:["home","hotel","playroom"]},
+  {text:"한 번 절정한 뒤에는 바로 끝내지 않고 짧게 물을 마시고 호흡을 고른 다음 두 번째 흐름으로 이어 간다.",types:["home","hotel","playroom"]},
+  {text:"삽입만 밀어붙이지 않고 중간에 오럴과 손 자극을 섞어 강한 장면 안에서도 리듬을 나눈다.",types:["home","hotel","playroom"]},
+  {text:"두 번째 자세에서는 속도보다 깊이와 밀착감을 강조해 첫 구간과 성격을 다르게 만든다.",types:["home","hotel","playroom"]},
+  {text:"마지막 구간에는 둘 다 적극적으로 움직이게 해 한쪽이 일방적으로 끌고 가는 장면에서 벗어난다.",types:["home","hotel","playroom"]},
+  {text:"첫 절정 뒤 민감해진 상태에서는 큰 움직임보다 작고 반복적인 자극으로 강도를 이어 간다.",types:["home","hotel","playroom"]},
+  {text:"장면 중간에 러브젤을 다시 보충하는 현실적인 동작을 넣어 오래 이어지는 성관계라는 느낌을 살린다.",types:["home","hotel","playroom"]},
+  {text:"소형 토이를 보조 자극으로 한 번만 추가해 체위 변화와 다른 방식으로 장면을 변주한다.",types:["home","hotel","playroom"]},
+  {text:"서로 가장 반응이 컸던 자세를 기억했다가 마지막에 다시 반복해 장면에 회수감을 준다.",types:["home","hotel","playroom"]},
+  {text:"거친 구간 뒤에는 바로 멈추지 않고 천천히 밀착하는 구간을 넣어 강약 차를 크게 만든다.",types:["home","hotel","playroom"]},
+  {text:"노골적인 대사를 쓰더라도 명령이나 모욕보다 현재 느끼는 감각과 원하는 움직임을 직접 말하게 한다.",types:["home","hotel","playroom"]},
+  {text:"한 번 끝날 때마다 같은 방식으로 재개하지 않고 자세·속도·보조 자극 중 하나를 반드시 바꾼다.",types:["home","hotel","playroom"]},
+  {text:"오메가버스라면 노팅이나 형질 반응이 생길 수 있는 시점에 잠깐 속도를 늦추고 상태를 확인한다.",worlds:["현대판타지 · 오메가버스"],types:["home","hotel","playroom"]},
+  {text:"오메가버스라면 히트·러트의 체력 소모를 반영해 여러 번 이어 가더라도 중간 휴식과 수분 보충을 넣는다.",worlds:["현대판타지 · 오메가버스"],types:["home","hotel","playroom"]}
+];
+
 const RELATION_TRANSITIONS=[
   {text:"플레이가 끝난 뒤 다음 약속을 누가 먼저 꺼내는지가 둘 사이의 감정 변화를 드러낸다.",groups:["first","contract","ongoing","reunion"]},
   {text:"끝난 뒤 평소처럼 헤어지지 않고 한쪽이 먼저 더 있다 가라고 말하면서 관계의 경계가 흔들린다.",groups:["ongoing","reunion"],tags:["partner","friend","cohabit"]},
@@ -989,7 +1044,9 @@ function chooseScenePlayTransition(type){
   const pool=PLAY_TRANSITIONS.filter(x=>x.types.includes(type));
   return pick(pool.length?pool:PLAY_TRANSITIONS).text;
 }
-function chooseSceneSexTransition(type){
+function chooseSceneSexTransition(type,world){
+  const hardPool=HARDCORE_SEX_TRANSITIONS.filter(x=>(!x.types||x.types.includes(type))&&(!x.worlds||x.worlds.includes(world)));
+  if(hardPool.length&&maybe(.58))return pick(hardPool).text;
   const pool=SEX_TRANSITIONS.filter(x=>x.types.includes(type));
   return pick(pool.length?pool:SEX_TRANSITIONS).text;
 }
@@ -1023,9 +1080,9 @@ function buildSceneResult(base){
   let pointPool=isWorkRelation(ctx.relation,ctx.world)?ONE_MORE_POINTS.concat(WORK_ONE_MORE_POINTS):ONE_MORE_POINTS;
   if(ctx.hierarchyMode==="inverted")pointPool=pointPool.concat(INVERTED_HIERARCHY_ONE_MORE_POINTS);
   const why=ctx.situation?ctx.situation.replace(/\s*분위기를 바꾸는 작은 신호는[\s\S]*$/,""):start;
-  const sexBase=ctx.sexScene||chooseSexScene(ctx.type);
+  const sexBase=ctx.sexScene||chooseSexScene(ctx.type,ctx.world);
   const playTransition=chooseScenePlayTransition(ctx.type);
-  const sexTransition=chooseSceneSexTransition(ctx.type);
+  const sexTransition=chooseSceneSexTransition(ctx.type,ctx.world);
   const relationTransition=chooseRelationTransition(ctx,sceneGroup);
   const ruleCarry=ctx.rule?" 이때 첫 탭에서 정한 ‘"+ctx.rule+"’ 규칙은 그대로 유지한다.":"";
   return {
