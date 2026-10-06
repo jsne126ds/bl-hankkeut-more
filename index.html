@@ -195,7 +195,7 @@ h2{font-size:22px;margin:0 0 8px;font-weight:var(--fw-extrabold);letter-spacing:
 
 <footer class="site-footer">
   <div>BL 한끗 더 · © 2026 미녹음</div>
-  <div><span class="version-badge">v0.17.0</span></div>
+  <div><span class="version-badge">v0.17.1</span></div>
 </footer>
 
 <script>
@@ -1218,7 +1218,7 @@ const EQUIPMENT_TOOLTIPS={
   "안대":"시야를 가려 시각 정보를 제한하는 장비."
 };
 const EQUIPMENT_TERMS=Object.keys(EQUIPMENT_TOOLTIPS).sort((a,b)=>b.length-a.length);
-const EQUIPMENT_PATTERN=new RegExp("("+EQUIPMENT_TERMS.map(t=>t.replace(/[.*+?^\x24{}()|[\]\\]/g,"\\function renderCardsTo(id,r,keys){")).join("|")+")","g");
+const EQUIPMENT_PATTERN=new RegExp("("+EQUIPMENT_TERMS.join("|")+")","g");
 function formatValueWithTooltips(value){
   const parts=String(value??"").split(EQUIPMENT_PATTERN);
   return parts.map(part=>{
