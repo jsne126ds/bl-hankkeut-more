@@ -195,7 +195,7 @@ h2{font-size:22px;margin:0 0 8px;font-weight:var(--fw-extrabold);letter-spacing:
 
 <footer class="site-footer">
   <div>BL 한끗 더 · © 2026 미녹음</div>
-  <div><span class="version-badge">v0.23.0</span></div>
+  <div><span class="version-badge">v0.23.1</span></div>
 </footer>
 
 <script>
@@ -1277,7 +1277,8 @@ function chooseBodySetting(world){
 function buildResult(){
  const world=pick(DATA.worlds),profile=PROFILES[world],relation=chooseRelationForProfile(profile),[place,type]=choosePlaceForRelation(profile,relation,world),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),bodySetting=chooseBodySetting(world),sensorySetting=chooseWorldSensorySetting(world),situation=chooseSituation(group,type,relation,world,stage,role),variable=chooseVariable(group,type,relation,world,stage,situation,role),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),posture=choosePosition(type),restraint=chooseRestraint(posture,type),smPlay=chooseCompatibleSMPlay(type,restraint,tendencies),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1,smPlay),sexScene=chooseSexScene(type,world,bodySetting,smPlay),sceneObject=chooseSceneObject(type,hum.forcedObject,{smPlay,sexScene,humTexts:hum.texts,weak:weak[1],posture,place}),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=chooseTendencyRhythm(tendencies),strength=chooseTendencyStrength(tendencies),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
  const aftermathText=/^플레이가 끝난 뒤/.test(aftermath)?aftermath:`플레이가 끝난 뒤에는 ${aftermath}`;
- const bodyText=bodySetting?` 신체 설정 — ${bodySetting.text}`:"";\n const sensoryText=sensorySetting?` 감각 설정 — ${sensorySetting}.`:"";
+ const bodyText=bodySetting?` 신체 설정 — ${bodySetting.text}`:"";
+ const sensoryText=sensorySetting?` 감각 설정 — ${sensorySetting}.`:"";
  const result={설정:`${world} · ${chooseBase(world,profile,relation,role)}. ${arrangement}.${bodyText}${sensoryText} ${chooseTiming(type,stage,relation)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${rule}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:(()=>{const trigger=chooseTrigger(type);return `${situation} 분위기를 바꾸는 작은 신호는 ‘${trigger}’${copulaEnding(trigger)}.`;})(),변수:variable.text,성향:`공: ${tendencies.top}\n수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${rhythm} · ${strength} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${topic(receiver)} ${receiverEmotion} ${aftermathText}.`,"하는 사람 감정선":`${topic(giver)} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
  result._ctx={world,type,place,relation,stage,role:role.label,hierarchyMode:hierarchyMode(relation,role),tendencies,bodySetting:bodySetting?bodySetting.text:null,sensorySetting,situation,variable:variable.text,impact,toolText,posture,rhythm,strength,restraint,smPlay,sexScene,rule};
  return result;
