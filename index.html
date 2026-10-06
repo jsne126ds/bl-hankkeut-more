@@ -124,7 +124,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.12.1</span>
+  <span class="version">v0.12.2</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -1079,7 +1079,13 @@ function buildSceneResult(base){
   const toolText=ctx.toolText||chooseTool(ctx.type);
   const rhythm=ctx.rhythm||pick(DATA.rhythms);
   const strength=ctx.strength||pick(DATA.strengths);
-  const smPool=SM_PLAYS.filter(x=>x.types.includes(ctx.type)&&x.text!==ctx.smPlay);
+  let smPool=SM_PLAYS.filter(x=>x.types.includes(ctx.type)&&x.text!==ctx.smPlay);
+  if(ctx.objectName==="볼 개그"){
+    smPool=smPool.filter(x=>!/대답|말을 꺼내|직접 말|호칭/.test(x.text));
+  }
+  if(ctx.objectName==="안대"){
+    smPool=smPool.filter(x=>!/거울 앞/.test(x.text));
+  }
   const smChoices=[ctx.smPlay||chooseSMPlay(ctx.type)];
   if(maybe(.42)&&smPool.length)smChoices.push(pick(smPool).text);
   const sceneGroup=ctx.stage?stageGroup(ctx.stage):"ongoing";
