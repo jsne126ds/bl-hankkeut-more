@@ -195,7 +195,7 @@ h2{font-size:22px;margin:0 0 8px;font-weight:var(--fw-extrabold);letter-spacing:
 
 <footer class="site-footer">
   <div>BL 한끗 더 · © 2026 미녹음</div>
-  <div><span class="version-badge">v0.17.1</span></div>
+  <div><span class="version-badge">v0.17.2</span></div>
 </footer>
 
 <script>
@@ -888,7 +888,7 @@ const OBJECTS=[
   {name:"칼라",text:"둘 사이에서만 통하는 역할 관계의 표식으로 사용한다.",types:["playroom","hotel","home"]},
   {name:"초커",text:"일상에서도 감출 수 있는 사적인 관계의 표식으로 쓴다.",types:["work","hotel","home","fantasy"]},
   {name:"책상",text:"공적인 공간을 사적인 관계로 전환하는 경계가 된다.",types:["work","home","institution"]},
-  {name:"의자",text:"기다리는 위치나 자세를 정하는 장면 장치로 활용한다.",types:["work","home","hotel","playroom","institution"]},
+  {name:"의자",text:"기다리거나 자세를 잡아 두는 위치를 정할 때 쓴다.",types:["work","home","hotel","playroom","institution"]},
   {name:"거울",text:"자기 자세와 상대의 반응을 동시에 의식하게 만든다.",types:["home","hotel","playroom"]},
   {name:"휴대폰",text:"연락 규칙·호칭·비밀이 일상으로 새어 나오는 장치가 된다.",types:["work","home","hotel","fantasy","institution"]},
   {name:"태블릿·체크리스트",text:"합의한 규칙과 선호를 다시 확인하는 도구로 쓴다.",types:["work","playroom","hotel","institution"]},
@@ -904,7 +904,7 @@ const OBJECTS=[
   {name:"반지",text:"관계의 약속이나 소유감을 직접 말하지 않고 암시한다.",types:["work","hotel","home","fantasy"]},
   {name:"얼음",text:"플레이 뒤 남은 감각이나 온도 차를 의식하게 만드는 소품이다.",types:["hotel","home","playroom"]},
   {name:"녹음기",text:"말과 호칭을 기록한다는 긴장감을 장면에 더한다.",types:["work","playroom","hotel"]},
-  {name:"리모컨",text:"거리를 둔 채 지시하거나 장치를 제어하는 이미지를 만든다.",types:["home","hotel","playroom"]},
+  {name:"리모컨",text:"거리를 둔 채 지시하거나 장치를 제어하는 느낌을 강조한다.",types:["home","hotel","playroom"]},
   {name:"노트",text:"규칙·횟수·반응을 손글씨로 남겨 둘 사이의 기록성을 강조한다.",types:["work","home","hotel","playroom","institution"]},
   {name:"만년필",text:"서명이나 기록을 통해 합의가 실제 약속으로 굳어지는 순간을 만든다.",types:["work","hotel","institution","home"]},
   {name:"서류철",text:"공적인 자료 사이에 사적인 메모가 섞여 있다는 긴장을 만든다.",types:["work","institution"]},
@@ -1031,7 +1031,7 @@ const FIRST_SCENE_STARTS=["첫 플레이 직전 서로의 상태와 중단 신�
 const CONTRACT_SCENE_STARTS=["정식 계약을 앞두고 임시 기간에서 확인한 규칙 하나를 다시 점검한 뒤 시작한다","계약 조건을 말로 확인한 뒤 실제로 가장 잘 맞았던 방식부터 시작한다"];
 const REUNION_SCENE_STARTS=["예전 방식이 지금도 맞는지 확인하기 위해 가장 익숙했던 규칙 하나부터 조심스럽게 다시 시작한다","오랜만에 마주한 만큼 예전의 합의를 당연하게 여기지 않고 현재의 상태부터 다시 확인한다"];
 const ENDING_SCENE_STARTS=["마지막으로 정한 약속이라는 사실을 의식한 채 평소보다 천천히 시작한다","끝내기로 한 이유를 남겨 둔 채 오늘 합의한 범위만 지키기로 하고 시작한다"];
-const SCENE_ENDINGS=["정해 둔 횟수를 채우고 마지막 한 대를 분명하게 구분한 뒤 끝낸다","받는 쪽이 더 버틸 수 있다고 말하지만 하는 쪽이 먼저 종료를 선언한다","처음 정한 강도보다 한 단계 낮춰 마지막 몇 대를 마무리 신호로 사용한다","도구를 내려놓고 맨손 한 대로 마지막을 구분한다","받는 쪽이 스스로 끝났다는 대답을 한 뒤 자세를 풀게 한다","감정이 예상보다 커진 순간 횟수보다 상태 확인을 우선해 끝낸다","처음 합의한 기준에 도달하면 더 욕심내지 않고 바로 종료한다"];
+const SCENE_ENDINGS=["정해 둔 횟수를 채우고 마지막 한 대를 분명하게 구분한 뒤 끝낸다","받는 쪽이 더 버틸 수 있다고 말하지만 하는 쪽이 먼저 종료를 선언한다","처음 정한 강도보다 한 단계 낮춰 마지막 몇 대를 천천히 마무리한다","도구를 내려놓고 맨손 한 대로 마지막을 구분한다","받는 쪽이 스스로 끝났다는 대답을 한 뒤 자세를 풀게 한다","감정이 예상보다 커진 순간 횟수보다 상태 확인을 우선해 끝낸다","처음 합의한 기준에 도달하면 더 욕심내지 않고 바로 종료한다"];
 const SCENE_EMOTION_SHIFTS=["시작할 때는 규칙을 확인하려는 장면이었지만 끝날 때는 서로의 감정을 눈치챈다","처음에는 벌이나 교정의 명분이 강하지만 끝날 때는 상대를 안심시키는 쪽으로 분위기가 바뀐다","받는 쪽은 버티는 데 집중하다가 끝에는 먼저 애프터케어를 요구할 만큼 솔직해진다","하는 쪽은 통제하려고 시작하지만 끝에는 자기 감정이 더 크게 흔들렸다는 걸 깨닫는다","둘 다 가볍게 시작했지만 끝에는 평소 피하던 관계 이야기를 꺼내게 된다","처음엔 익숙한 루틴처럼 시작하지만 끝에는 한쪽의 예상 밖 반응 때문에 관계의 의미가 달라진다","시작할 때는 거리를 두려 했지만 끝날 때는 먼저 떨어지는 사람이 없어진다"];
 const WORK_EMOTION_SHIFTS=["현실의 위계를 의식하며 시작하지만 끝에는 사적인 역할이 더 선명해진다","공적인 자리에서 유지하던 거리감이 플레이 뒤에는 이전과 다르게 느껴진다"];
 const ONE_MORE_POINTS=["맞는 횟수보다 기다리는 시간을 더 길게 잡아 긴장을 만든다","스팽을 잘 버티던 인물이 SM 규칙 하나에는 의외로 크게 흔들리게 한다","플레이가 끝난 뒤가 아니라 시작 직전에 가장 솔직한 말을 하게 한다","도구보다 맨손으로 바뀌는 순간 감정적인 의미가 커지게 한다","상대가 원한 방식과 실제로 가장 잘 맞는 방식이 다르다는 걸 장면 중간에 발견하게 한다","끝내는 권한을 가진 쪽이 예상보다 일찍 멈춰 상대를 더 흔들리게 한다","섹스로 넘어가는 순간에도 둘만의 규칙 하나만큼은 바꾸지 않는다","평소 통제받는 쪽이 마지막 선택 하나만 직접 하게 해 관계의 균형을 살짝 흔든다"];
@@ -1084,7 +1084,7 @@ const HARDCORE_SEX_TRANSITIONS=[
   {text:"첫 절정 뒤 민감해진 상태에서는 큰 움직임보다 작고 반복적인 자극으로 강도를 이어 간다.",types:["home","hotel","playroom"]},
   {text:"장면 중간에 러브젤을 다시 보충하는 현실적인 동작을 넣어 오래 이어지는 성관계라는 느낌을 살린다.",types:["home","hotel","playroom"]},
   {text:"소형 토이를 보조 자극으로 한 번만 추가해 체위 변화와 다른 방식으로 장면을 변주한다.",types:["home","hotel","playroom"]},
-  {text:"서로 가장 반응이 컸던 자세를 기억했다가 마지막에 다시 반복해 장면에 회수감을 준다.",types:["home","hotel","playroom"]},
+  {text:"서로 가장 반응이 컸던 자세를 기억했다가 마지막에 다시 돌아와 장면을 마무리한다.",types:["home","hotel","playroom"]},
   {text:"거친 구간 뒤에는 바로 멈추지 않고 천천히 밀착하는 구간을 넣어 강약 차를 크게 만든다.",types:["home","hotel","playroom"]},
   {text:"노골적인 대사를 쓰더라도 명령이나 모욕보다 현재 느끼는 감각과 원하는 움직임을 직접 말하게 한다.",types:["home","hotel","playroom"]},
   {text:"한 번 끝날 때마다 같은 방식으로 재개하지 않고 자세·속도·보조 자극 중 하나를 반드시 바꾼다.",types:["home","hotel","playroom"]},
