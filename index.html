@@ -63,6 +63,11 @@ h2{font-size:22px;margin:0 0 8px;font-weight:var(--fw-extrabold);letter-spacing:
 .icon{font-size:18px;text-align:center;color:#2f376e}
 .label{font-size:12px;color:#5f5c78;font-weight:var(--fw-bold);letter-spacing:-.015em;border-right:1px solid #ece8f3;height:100%;display:flex;align-items:center;padding-left:6px}
 .value{padding:13px 16px;font-weight:var(--fw-medium);font-size:14.5px;line-height:var(--lh-body);letter-spacing:-.012em;white-space:pre-line;word-break:keep-all;overflow-wrap:anywhere;min-width:0}
+.equipment-term{display:inline;border-bottom:1px dotted #8c6de3;color:#5f447f;font-weight:var(--fw-semibold);cursor:help;text-decoration:none;text-underline-offset:3px}
+.equipment-term:focus-visible{outline:2px solid rgba(112,85,217,.24);outline-offset:2px;border-radius:2px}
+.equipment-tooltip{position:fixed;left:0;top:0;z-index:80;max-width:280px;padding:9px 11px;border:1px solid #ded7eb;border-radius:7px;background:#2f2b3b;color:#fff;font-size:12px;line-height:1.55;font-weight:var(--fw-regular);letter-spacing:-.01em;box-shadow:0 10px 28px rgba(30,24,44,.2);opacity:0;visibility:hidden;pointer-events:none;transform:translateY(4px);transition:opacity .12s,transform .12s,visibility .12s}
+.equipment-tooltip.show{opacity:1;visibility:visible;transform:translateY(0)}
+
 .row:first-child .value{line-height:1.85;font-weight:var(--fw-semibold)}
 .row.emphasis .label{color:#b1376f}
 .row.emphasis .value{font-size:15.5px;line-height:1.68;color:#2d1f61;font-weight:var(--fw-bold)}
@@ -186,10 +191,11 @@ h2{font-size:22px;margin:0 0 8px;font-weight:var(--fw-extrabold);letter-spacing:
 </div>
 
 <div class="toast" id="toast">복사했어</div>
+<div class="equipment-tooltip" id="equipmentTooltip" role="tooltip"></div>
 
 <footer class="site-footer">
   <div>BL 한끗 더 · © 2026 미녹음</div>
-  <div><span class="version-badge">v0.16.3</span></div>
+  <div><span class="version-badge">v0.17.0</span></div>
 </footer>
 
 <script>
@@ -1180,12 +1186,53 @@ let current=null;
 let currentScene=null;
 let recent=JSON.parse(localStorage.getItem("hankkeutMoreRecent")||"[]");
 
+
+const EQUIPMENT_TOOLTIPS={
+  "체인형 니플 클램프":"양쪽 니플 클램프를 체인으로 연결한 장비. 움직임에 따라 당김과 압박감이 함께 달라진다.",
+  "손목·발목 커프":"손목과 발목에 함께 채워 움직임 범위를 줄이거나 다른 고정점과 연결하는 구속 장비.",
+  "소형 바이브레이터":"작은 진동 장치. 다른 자극과 함께 보조적으로 사용하기 쉬운 형태다.",
+  "스팽킹 체어":"스팽킹 자세를 안정적으로 유지하도록 몸을 받쳐 주는 전용 가구.",
+  "스팽킹 벤치":"엎드린 자세를 안정적으로 유지하도록 설계된 스팽킹용 벤치.",
+  "니플 클램프":"유두를 집어 압박하는 클램프형 장비. 압력 조절이 가능한 형태도 있다.",
+  "스프레더 바":"양끝에 커프 등을 연결해 다리나 팔의 간격을 일정하게 유지하는 막대형 구속 장비.",
+  "라이딩 크롭":"승마용 크롭에서 유래한 가늘고 탄성 있는 임팩트 도구.",
+  "허벅지 스트랩":"허벅지에 두르는 스트랩형 장비. 자세 유지나 다른 장비 연결에 쓴다.",
+  "바디 하네스":"몸통 여러 지점을 감싸는 스트랩·로프형 장비. 구속이나 장비 연결에 사용한다.",
+  "손목 커프":"손목에 채워 움직임을 제한하거나 다른 고정점과 연결하는 구속 장비.",
+  "발목 커프":"발목에 채워 보폭과 자세 변화를 제한하거나 다른 장비와 연결하는 구속 장비.",
+  "가죽 패들":"가죽 면으로 타격하는 패들. 재질과 두께에 따라 체감이 달라진다.",
+  "나무 패들":"단단한 목재로 만든 패들. 넓은 면으로 비교적 묵직한 충격을 준다.",
+  "볼 개그":"입에 물리는 구형 개그. 말하기를 어렵게 해 음성과 대답을 제한하는 장비.",
+  "스톡스":"손목·발목 등을 틀에 고정해 자세를 유지시키는 고정형 구속 장비.",
+  "정조대":"성기 접근이나 자극을 제한하도록 착용하는 잠금형 장비.",
+  "콕링":"성기 기저부 등에 착용하는 링 형태의 성인용 장비.",
+  "리드줄":"칼라나 하네스 등에 연결해 이동 거리나 방향을 조절하는 줄.",
+  "플러그":"삽입해 유지하는 형태의 성인용 장비. 크기와 재질이 다양하다.",
+  "플로거":"여러 가닥의 꼬리로 이루어진 임팩트 도구. 넓게 퍼지는 타격감을 만든다.",
+  "케인":"가늘고 탄성 있는 막대형 임팩트 도구. 좁고 선명한 자극이 특징이다.",
+  "스트랩":"납작하고 긴 띠 형태의 임팩트 또는 구속 도구.",
+  "패들":"넓고 평평한 면으로 타격하는 임팩트 도구.",
+  "커프":"손목이나 발목 등에 채우는 띠형 구속 장비.",
+  "칼라":"목에 착용하는 BDSM 장비. 역할 관계의 표식이나 리드줄 연결점으로 쓰인다.",
+  "로프":"신체 일부를 묶거나 자세를 유지하는 데 사용하는 구속용 줄.",
+  "안대":"시야를 가려 시각 정보를 제한하는 장비."
+};
+const EQUIPMENT_TERMS=Object.keys(EQUIPMENT_TOOLTIPS).sort((a,b)=>b.length-a.length);
+const EQUIPMENT_PATTERN=new RegExp("("+EQUIPMENT_TERMS.map(t=>t.replace(/[.*+?^\x24{}()|[\]\\]/g,"\\function renderCardsTo(id,r,keys){")).join("|")+")","g");
+function formatValueWithTooltips(value){
+  const parts=String(value??"").split(EQUIPMENT_PATTERN);
+  return parts.map(part=>{
+    const tip=EQUIPMENT_TOOLTIPS[part];
+    if(!tip)return escapeHtml(part);
+    return '<span class="equipment-term" tabindex="0" data-tip="'+escapeHtml(tip)+'">'+escapeHtml(part)+'</span>';
+  }).join("");
+}
 function renderCardsTo(id,r,keys){
   const ideaIcons=["✦","♙","⌖","▤","⤨","♨","◇","◈","◎","↗"];
   const sceneIcons=["◈","↯","⌁","⇢","◐","⇄","✧"];
   const icons=id==="sceneResult"?sceneIcons:ideaIcons;
   const el=document.getElementById(id);
-  el.innerHTML=keys.map((k,i)=>`<div class="row ${(k==="상황"||k==="현재 장면")?"emphasis":""}"><div class="icon">${icons[i%icons.length]}</div><div class="label">${k}</div><div class="value">${escapeHtml(k==="성향"?String(r[k]).replace(" / 수: ","\n수: "):r[k])}</div></div>`).join("");
+  el.innerHTML=keys.map((k,i)=>`<div class="row ${(k==="상황"||k==="현재 장면")?"emphasis":""}"><div class="icon">${icons[i%icons.length]}</div><div class="label">${k}</div><div class="value">${formatValueWithTooltips(k==="성향"?String(r[k]).replace(" / 수: ","\n수: "):r[k])}</div></div>`).join("");
 }
 function renderIdea(r){current=r;renderCardsTo("ideaResult",r,order);}
 function renderScene(force=false){
@@ -1250,6 +1297,53 @@ function copyAll(){
     .catch(()=>toast("복사에 실패했어"));
 }
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),1400);}
+
+const equipmentTooltip=document.getElementById("equipmentTooltip");
+let activeEquipmentTerm=null;
+function showEquipmentTooltip(el){
+  if(!el)return;
+  activeEquipmentTerm=el;
+  equipmentTooltip.textContent=el.dataset.tip||"";
+  equipmentTooltip.classList.add("show");
+  const r=el.getBoundingClientRect();
+  const tr=equipmentTooltip.getBoundingClientRect();
+  const pad=10;
+  const left=Math.min(Math.max(pad,r.left),window.innerWidth-tr.width-pad);
+  let top=r.bottom+8;
+  if(top+tr.height>window.innerHeight-pad)top=Math.max(pad,r.top-tr.height-8);
+  equipmentTooltip.style.left=left+"px";
+  equipmentTooltip.style.top=top+"px";
+}
+function hideEquipmentTooltip(){
+  activeEquipmentTerm=null;
+  equipmentTooltip.classList.remove("show");
+}
+document.addEventListener("pointerover",e=>{
+  const el=e.target.closest&&e.target.closest(".equipment-term");
+  if(el&&e.pointerType!=="touch")showEquipmentTooltip(el);
+});
+document.addEventListener("pointerout",e=>{
+  const el=e.target.closest&&e.target.closest(".equipment-term");
+  if(el&&e.pointerType!=="touch"&&!el.contains(e.relatedTarget))hideEquipmentTooltip();
+});
+document.addEventListener("focusin",e=>{
+  const el=e.target.closest&&e.target.closest(".equipment-term");
+  if(el)showEquipmentTooltip(el);
+});
+document.addEventListener("focusout",e=>{
+  if(e.target.closest&&e.target.closest(".equipment-term"))hideEquipmentTooltip();
+});
+document.addEventListener("click",e=>{
+  const el=e.target.closest&&e.target.closest(".equipment-term");
+  if(el){
+    e.preventDefault();
+    e.stopPropagation();
+    if(activeEquipmentTerm===el&&equipmentTooltip.classList.contains("show"))hideEquipmentTooltip();
+    else showEquipmentTooltip(el);
+  }else hideEquipmentTooltip();
+});
+window.addEventListener("scroll",hideEquipmentTooltip,{passive:true});
+window.addEventListener("resize",hideEquipmentTooltip);
 document.getElementById("generateIdea").onclick=generateIdea;
 document.getElementById("generateIdeaSide").onclick=generateIdea;
 document.getElementById("generateScene").onclick=generateScene;
