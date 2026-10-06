@@ -21,24 +21,24 @@ button{font:inherit}
 .wrap{width:100%;max-width:1500px;margin:0 auto;padding:24px 28px 84px}
 .brand{font-weight:900;font-size:26px;letter-spacing:-1.2px;margin:2px 0 14px;color:#2b2531}
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}
-.tab-btn{border:1px solid var(--line);background:white;color:var(--muted);border-radius:14px;padding:11px 14px;font-weight:800;cursor:pointer}
+.tab-btn{border:1px solid var(--line);background:white;color:var(--muted);border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer}
 .tab-btn.active{background:var(--accent-2);border-color:#d9c8ea;color:var(--accent-3)}
 .context-note{font-size:12px;color:var(--muted);margin:0 2px 12px;line-height:1.55}
-.hero-btn{width:100%;border:0;border-radius:18px;background:var(--accent);color:white;font-weight:800;font-size:17px;padding:16px 18px;box-shadow:0 8px 22px rgba(139,104,184,.22);cursor:pointer}
+.hero-btn{width:100%;border:0;border-radius:13px;background:var(--accent);color:white;font-weight:800;font-size:17px;padding:16px 18px;box-shadow:0 8px 20px rgba(99,51,174,.18);cursor:pointer}
 .hero-btn:active{transform:translateY(1px)}
 .layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 280px;gap:18px;margin-top:18px;align-items:start;min-width:0;max-width:100%}
-.panel{background:rgba(255,255,255,.9);border:1px solid rgba(214,205,221,.95);border-radius:28px;padding:22px;box-shadow:0 12px 34px rgba(60,45,72,.08);backdrop-filter:blur(8px);min-width:0;max-width:100%}
+.panel{background:rgba(255,255,255,.88);border:1px solid var(--line);border-radius:18px;padding:22px 24px 18px;box-shadow:var(--shadow);min-width:0;max-width:100%}
 .side{position:sticky;top:18px}
 .side-heading{font-size:18px;font-weight:900;margin:0 2px 8px;letter-spacing:-.5px}
 .mode-panel .tabs{grid-template-columns:1fr;gap:8px;margin-bottom:12px}
 .side-desc{margin:0 2px 16px;font-size:12px;line-height:1.55;color:var(--muted)}
 .mode-panel .hero-btn{margin-top:2px}
 .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 14px}
-.panel-reroll{border:1px solid var(--line);background:white;color:var(--accent-3);border-radius:12px;padding:9px 11px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
+.panel-reroll{border:1px solid #ded8ed;background:white;color:var(--accent-3);border-radius:12px;padding:9px 12px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
 .panel-reroll:active{transform:translateY(1px)}
 .section-title{margin:0;font-size:24px;font-weight:900;letter-spacing:-.9px}
-.result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;min-width:0;max-width:100%}
-.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:15px 16px;min-width:0;max-width:100%;overflow:visible}
+.result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0;max-width:100%}
+.card{background:#fff;border:1px solid #ece8f3;border-radius:13px;padding:14px 15px;min-width:0;max-width:100%;overflow:visible}
 .card.wide{grid-column:1/-1}
 .label{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:800;color:var(--accent-3);margin-bottom:7px}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
@@ -48,22 +48,22 @@ button{font:inherit}
 .side-heading{display:flex;align-items:center;gap:8px}
 .side-heading::before{content:"✦";color:var(--accent);font-size:16px}
 .actions{display:grid;gap:8px}
-.action-btn{width:100%;border:1px solid var(--line);border-radius:14px;background:white;color:var(--ink);padding:13px 12px;font-weight:800;cursor:pointer}
+.action-btn{width:100%;border:1px solid #d9d0ec;border-radius:12px;background:white;color:var(--ink);padding:13px 10px;font-weight:800;cursor:pointer}
 .action-btn.primary{background:#2f2937;color:#fff;border-color:#2f2937}
 .side-title{font-size:14px;font-weight:900;margin:19px 2px 9px}
 .recent{display:grid;gap:8px}
-.recent-item{border:1px solid var(--line);background:white;border-radius:14px;padding:11px 12px;cursor:pointer;text-align:left;min-width:0;max-width:100%;overflow:visible}
+.recent-item{border:1px solid #eeeaf4;background:white;border-radius:10px;padding:9px 11px;cursor:pointer;text-align:left;min-width:0;max-width:100%;overflow:visible}
 .recent-item strong{display:block;font-size:12.5px;margin-bottom:3px;white-space:normal;word-break:keep-all;overflow-wrap:anywhere;max-width:100%}
 .recent-item span{display:block;font-size:11.5px;color:var(--muted);white-space:normal;word-break:keep-all;overflow-wrap:anywhere;max-width:100%}
 .empty{font-size:12px;color:var(--muted);padding:10px 3px}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:#2f2937;color:white;padding:10px 14px;border-radius:999px;font-size:12px;font-weight:700;transition:.2s;z-index:10}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.site-footer{margin-top:28px;text-align:center;color:var(--muted);font-size:11.5px;line-height:1.7;padding:0 14px 24px;overflow-wrap:anywhere}
+.site-footer{width:min(1280px,calc(100% - 56px));margin:30px auto 22px;padding:18px 4px 8px;border-top:1px solid #e8e5ef;text-align:center;color:var(--muted);font-size:11.5px;line-height:1.7;overflow-wrap:anywhere}
 .site-footer .version{margin-left:6px;font-weight:700;color:#8a8490}
 @media(min-width:901px) and (max-width:1300px){
   .wrap{max-width:1280px;padding:18px 20px 64px}
   .layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 240px;gap:14px}
-  .panel{padding:18px;border-radius:24px}
+  .panel{padding:18px;border-radius:18px}
   .section-title{font-size:22px}
   .result-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .value{font-size:14px}
@@ -79,10 +79,10 @@ button{font:inherit}
   .brand{font-size:23px;margin-bottom:14px}
   .hero-btn{position:sticky;top:10px;z-index:5;border-radius:16px;padding:15px}
   .layout{margin-top:12px;gap:12px;width:100%;min-width:0}
-  .panel{padding:14px;border-radius:20px;width:100%;min-width:0}
+  .panel{padding:14px;border-radius:16px;width:100%;min-width:0}
   .section-title{font-size:18px}
   .result-grid{grid-template-columns:minmax(0,1fr);gap:9px;width:100%;min-width:0}
-  .card,.card.wide{grid-column:auto;padding:14px 15px;border-radius:16px}
+  .card,.card.wide{grid-column:auto;padding:13px 14px;border-radius:12px}
   .value{font-size:14px}
   .side{background:transparent;border:0;box-shadow:none;padding:0;position:static}
   .side-heading{display:none}
@@ -129,7 +129,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.13.0</span>
+  <span class="version">v0.13.1</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
