@@ -18,9 +18,9 @@ header{height:74px;display:flex;align-items:flex-start;justify-content:space-bet
 .brand-word{font-size:34px;font-weight:900;letter-spacing:-1.5px;color:#2b2531;line-height:1.15}
 .brand-sub{font-size:12px;color:#777394;margin-top:6px}
 .head-right{display:flex;align-items:center;gap:18px;padding-top:4px}
-.quote{font-size:12px;line-height:1.45;background:#f0e9ff;border-radius:16px;padding:10px 15px;color:#655890;max-width:190px}
+.quote{font-size:12px;line-height:1.45;background:#f0e9ff;border-radius:10px;padding:10px 15px;color:#655890;max-width:190px}
 .grid{display:grid;grid-template-columns:minmax(420px,.9fr) minmax(560px,1.2fr) 350px;gap:18px;align-items:start}
-.panel{background:rgba(255,255,255,.88);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);min-width:0}
+.panel{background:rgba(255,255,255,.88);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);min-width:0}
 .left,.center,.right{padding:22px 24px 18px}
 .right{position:sticky;top:18px}
 .center-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
@@ -28,10 +28,10 @@ header{height:74px;display:flex;align-items:flex-start;justify-content:space-bet
 .spark{font-size:30px;color:#9b62da;line-height:1}
 h2{font-size:22px;margin:0 0 8px;font-weight:800;letter-spacing:-.03em}
 .desc{color:var(--sub);font-size:13px;line-height:1.65;margin:2px 0 0 40px}
-.panel-reroll{border:1px solid #ded8ed;background:white;border-radius:12px;padding:9px 14px;font-weight:700;cursor:pointer;color:#504b67;transition:.18s;white-space:nowrap}
+.panel-reroll{border:1px solid #ded8ed;background:white;border-radius:8px;padding:9px 14px;font-weight:700;cursor:pointer;color:#504b67;transition:.18s;white-space:nowrap}
 .panel-reroll:hover{background:#faf8ff}
-.result-card{border:1px solid var(--line);border-radius:15px;padding:14px;background:#fff}
-.row{display:grid;grid-template-columns:34px 92px minmax(0,1fr);align-items:center;min-height:64px;border:1px solid #ece8f3;border-radius:13px;margin-bottom:9px;overflow:hidden;background:#fff}
+.result-card{border:1px solid var(--line);border-radius:10px;padding:14px;background:#fff}
+.row{display:grid;grid-template-columns:34px 92px minmax(0,1fr);align-items:center;min-height:64px;border:1px solid #ece8f3;border-radius:8px;margin-bottom:9px;overflow:hidden;background:#fff}
 .row:last-child{margin-bottom:0}
 .row.emphasis{min-height:108px;background:linear-gradient(90deg,#fff4f8,#fff0f6)}
 .icon{font-size:18px;text-align:center;color:#2f376e}
@@ -40,21 +40,21 @@ h2{font-size:22px;margin:0 0 8px;font-weight:800;letter-spacing:-.03em}
 .row.emphasis .label{color:#b1376f}
 .row.emphasis .value{font-size:16px;line-height:1.6;color:#2d1f61;font-weight:800}
 .action-title{display:flex;gap:8px;align-items:center}
-.big{width:100%;border:0;border-radius:13px;background:linear-gradient(135deg,#7c4cd2,#5d2aa9);color:#fff;padding:17px 12px;font-size:16px;font-weight:800;cursor:pointer;margin-top:10px;box-shadow:0 8px 20px rgba(99,51,174,.18)}
-.action{width:100%;border:1px solid #d9d0ec;background:white;border-radius:12px;padding:13px 10px;color:#3b3954;font-weight:700;cursor:pointer;margin-top:9px}
+.big{width:100%;border:0;border-radius:8px;background:linear-gradient(135deg,#7c4cd2,#5d2aa9);color:#fff;padding:17px 12px;font-size:16px;font-weight:800;cursor:pointer;margin-top:10px;box-shadow:0 8px 20px rgba(99,51,174,.18)}
+.action{width:100%;border:1px solid #d9d0ec;background:white;border-radius:8px;padding:13px 10px;color:#3b3954;font-weight:700;cursor:pointer;margin-top:9px}
 .action:hover{background:#faf8ff}
-.tip{margin-top:18px;background:linear-gradient(135deg,#f8f2ff,#fff3f8);border-radius:14px;padding:16px 17px;display:flex;gap:11px;color:#605878}
+.tip{margin-top:18px;background:linear-gradient(135deg,#f8f2ff,#fff3f8);border-radius:9px;padding:16px 17px;display:flex;gap:11px;color:#605878}
 .tip b{display:block;color:#34324d;margin-bottom:3px}
 .recent{margin-top:16px;padding-top:14px;border-top:1px solid #eeeaf4}
 .recent-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:800}
-.recent-item{width:100%;border:1px solid #eeeaf4;border-radius:10px;padding:9px 11px;margin-top:7px;cursor:pointer;background:#fff;text-align:left;color:inherit}
+.recent-item{width:100%;border:1px solid #eeeaf4;border-radius:6px;padding:9px 11px;margin-top:7px;cursor:pointer;background:#fff;text-align:left;color:inherit}
 .recent-item strong{display:block;font-size:12px}
 .recent-item span{display:block;margin-top:3px;font-size:10px;color:#77738b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tiny{font-size:11px;color:#8d8aa0}
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);opacity:0;background:#29263b;color:white;padding:10px 16px;border-radius:999px;font-size:12px;transition:.2s;pointer-events:none;z-index:20}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .site-footer{width:min(1280px,calc(100% - 80px));margin:30px auto 22px;padding:18px 4px 8px;border-top:1px solid #e8e5ef;display:flex;align-items:center;justify-content:space-between;gap:18px;color:#8a8797;font-size:12px;line-height:1.6}
-.version-badge{display:inline-flex;align-items:center;border:1px solid #ded9e9;border-radius:999px;padding:2px 8px;background:#faf9fc;color:#777286}
+.version-badge{display:inline-flex;align-items:center;border:1px solid #ded9e9;border-radius:6px;padding:2px 8px;background:#faf9fc;color:#777286}
 
 @media (min-width:1201px) and (max-width:1300px){
   .shell{width:100%;max-width:1280px;margin:0 auto;padding:18px 20px 28px}
@@ -83,7 +83,7 @@ h2{font-size:22px;margin:0 0 8px;font-weight:800;letter-spacing:-.03em}
   .quote{display:none}
   .grid{grid-template-columns:1fr;gap:12px}
   .left{order:1}.center{order:2}.right{order:3;position:static}
-  .left,.center{padding:14px;border-radius:16px}
+  .left,.center{padding:14px;border-radius:10px}
   .right{background:transparent;border:0;box-shadow:none;padding:0}
   .row{grid-template-columns:30px 82px minmax(0,1fr)}
   .value{font-size:13.5px}
@@ -157,7 +157,7 @@ h2{font-size:22px;margin:0 0 8px;font-weight:800;letter-spacing:-.03em}
 
 <footer class="site-footer">
   <div>BL 한끗 더 · © 2026 미녹음</div>
-  <div><span class="version-badge">v0.15.0</span></div>
+  <div><span class="version-badge">v0.15.1</span></div>
 </footer>
 
 <script>
