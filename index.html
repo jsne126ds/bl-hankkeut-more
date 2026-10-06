@@ -124,7 +124,7 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.9.3</span>
+  <span class="version">v0.9.4</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
@@ -788,7 +788,58 @@ const OBJECTS=[
   {name:"반지",text:"관계의 약속이나 소유감을 직접 말하지 않고 암시한다.",types:["work","hotel","home","fantasy"]},
   {name:"얼음",text:"플레이 뒤 남은 감각이나 온도 차를 의식하게 만드는 소품이다.",types:["hotel","home","playroom"]},
   {name:"녹음기",text:"말과 호칭을 기록한다는 긴장감을 장면에 더한다.",types:["work","playroom","hotel"]},
-  {name:"리모컨",text:"거리를 둔 채 지시하거나 장치를 제어하는 이미지를 만든다.",types:["home","hotel","playroom"]}
+  {name:"리모컨",text:"거리를 둔 채 지시하거나 장치를 제어하는 이미지를 만든다.",types:["home","hotel","playroom"]},
+  {name:"노트",text:"규칙·횟수·반응을 손글씨로 남겨 둘 사이의 기록성을 강조한다.",types:["work","home","hotel","playroom","institution"]},
+  {name:"만년필",text:"서명이나 기록을 통해 합의가 실제 약속으로 굳어지는 순간을 만든다.",types:["work","hotel","institution","home"]},
+  {name:"서류철",text:"공적인 자료 사이에 사적인 메모가 섞여 있다는 긴장을 만든다.",types:["work","institution"]},
+  {name:"봉투",text:"조건·메모·열쇠 같은 것을 직접 건네는 장면의 매개가 된다.",types:["work","hotel","home","institution"]},
+  {name:"명함",text:"공적인 관계의 시작점과 지금의 사적인 관계를 대비시킨다.",types:["work","hotel"]},
+  {name:"랜야드",text:"업무 신분을 드러내는 소품이 사적인 장면에서도 남아 있다는 대비를 만든다.",types:["work","institution"]},
+  {name:"이어폰",text:"주변 소음을 끊거나 둘만의 지시를 듣는 장면 장치로 쓴다.",types:["work","home","hotel","institution"]},
+  {name:"헤드폰",text:"외부와 단절된 느낌과 기다림을 강조한다.",types:["home","hotel","playroom"]},
+  {name:"블루투스 스피커",text:"음악이나 타이머 소리로 평소와 다른 분위기 전환을 만든다.",types:["home","hotel","playroom"]},
+  {name:"머그컵",text:"평범한 일상 소품이 긴장된 장면 속에 남아 관계의 대비를 만든다.",types:["work","home","institution"]},
+  {name:"물잔",text:"플레이 전후 상태 확인과 돌봄을 자연스럽게 연결한다.",types:["home","hotel","playroom","work"]},
+  {name:"생수병",text:"긴장된 장면 중간에 현실적인 휴식과 상태 확인을 넣는 계기가 된다.",types:["work","home","hotel","institution"]},
+  {name:"아이스 버킷",text:"호텔 특유의 공간감과 차가운 감각 이미지를 동시에 만든다.",types:["hotel"]},
+  {name:"담요",text:"플레이 뒤 몸을 감싸는 행동으로 긴장을 돌봄 쪽으로 바꾼다.",types:["home","hotel","playroom"]},
+  {name:"쿠션",text:"자세를 보조하거나 평범한 공간을 임시 플레이 공간으로 바꾸는 데 쓴다.",types:["home","hotel"]},
+  {name:"소파",text:"평범한 휴식 공간이 사적인 규칙이 적용되는 장소로 바뀌는 대비를 만든다.",types:["home","hotel"]},
+  {name:"스탠드 조명",text:"빛을 줄이거나 특정 자리만 밝히며 장면의 집중도를 높인다.",types:["home","hotel","work"]},
+  {name:"커튼",text:"바깥과의 경계를 닫는 행동 자체를 장면의 시작 신호로 활용한다.",types:["home","hotel","work"]},
+  {name:"도어락",text:"잠금음을 둘만의 시간이 시작되는 신호처럼 사용한다.",types:["home","hotel","work","playroom"]},
+  {name:"여분 열쇠",text:"누가 공간에 들어올 권한을 갖는지 보여 주는 관계의 상징이 된다.",types:["home","hotel","playroom"]},
+  {name:"여행가방",text:"출장·원정·짧은 체류가 끝난 뒤 관계가 어떻게 이어질지를 암시한다.",types:["hotel"]},
+  {name:"가먼트백",text:"정장이나 유니폼을 갈아입는 순간을 공적 역할에서 사적 역할로 넘어가는 경계로 쓴다.",types:["hotel","work"]},
+  {name:"구두",text:"단정한 차림을 유지한 채 장면의 긴장만 바뀌는 대비를 만든다.",types:["work","hotel","institution"]},
+  {name:"슬리퍼",text:"완전히 사적인 공간으로 넘어왔다는 느낌을 일상적인 소품으로 보여 준다.",types:["home","hotel"]},
+  {name:"커프스링크",text:"격식을 갖춘 외형과 사적인 통제 관계의 대비를 선명하게 만든다.",types:["work","hotel"]},
+  {name:"타이핀",text:"흐트러지지 않은 외형 속에 사적인 신호를 숨기는 장치로 쓴다.",types:["work","hotel"]},
+  {name:"재킷",text:"벗거나 걸쳐 두는 행동만으로 공적인 역할이 잠시 내려가는 순간을 만든다.",types:["work","hotel","home"]},
+  {name:"코트",text:"밖에서의 관계를 벗어 두고 둘만의 공간으로 들어왔다는 전환을 강조한다.",types:["work","hotel","home"]},
+  {name:"신발장 열쇠",text:"둘만 아는 수납공간이나 보관 장소가 있다는 비밀을 암시한다.",types:["home","institution"]},
+  {name:"수납함",text:"도구나 기록을 평소에는 숨겨 두고 필요할 때만 꺼내는 관계의 비밀성을 보여 준다.",types:["home","playroom","hotel"]},
+  {name:"보관함",text:"규칙에 필요한 물건을 정해진 자리에 보관한다는 반복성과 의식을 만든다.",types:["playroom","institution","work"]},
+  {name:"라커 키",text:"공용 공간 속에서 둘만 아는 사적 물건의 위치를 연결한다.",types:["work","institution","fantasy"]},
+  {name:"출입 팔찌",text:"허가된 공간에만 들어갈 수 있다는 제한과 소속감을 시각적으로 보여 준다.",types:["playroom","institution","fantasy"]},
+  {name:"클립보드",text:"체크리스트나 기록을 손에 들고 확인하는 행동으로 장면의 규칙성을 강화한다.",types:["work","playroom","institution"]},
+  {name:"메모지",text:"짧은 지시·약속·횟수를 적어 말보다 먼저 긴장을 만드는 소품이 된다.",types:["work","home","hotel","institution"]},
+  {name:"포스트잇",text:"평범한 업무 메모처럼 보이지만 둘만 알아보는 신호로 활용한다.",types:["work","home"]},
+  {name:"책",text:"평소 읽던 물건을 덮는 순간 일상에서 플레이로 넘어가는 전환을 만든다.",types:["home","hotel","work"]},
+  {name:"책갈피",text:"다음 만남이나 특정 규칙을 직접 말하지 않고 남겨 두는 표식이 된다.",types:["home","hotel"]},
+  {name:"캘린더",text:"정해진 요일이나 다음 약속을 눈에 보이는 형태로 남긴다.",types:["work","home","institution"]},
+  {name:"벽시계",text:"정해 둔 시간과 기다림을 계속 의식하게 만드는 배경 오브제로 쓴다.",types:["work","home","institution","playroom"]},
+  {name:"알람시계",text:"시작·종료 시점을 명확하게 끊어 둘만의 규칙을 강조한다.",types:["home","hotel","playroom"]},
+  {name:"USB 메모리",text:"둘만 공유하는 기록이나 파일이 있다는 비밀을 암시한다.",types:["work","home","institution"]},
+  {name:"노트북",text:"업무와 사적인 기록이 같은 기기 안에 공존한다는 긴장을 만든다.",types:["work","home","hotel"]},
+  {name:"충전 케이블",text:"머무는 시간이 예상보다 길어졌다는 걸 사소한 생활 흔적으로 보여 준다.",types:["home","hotel"]},
+  {name:"향수",text:"상대의 존재를 시각보다 먼저 알아채는 감각적 신호로 사용한다.",types:["work","hotel","home"]},
+  {name:"손수건",text:"정리와 돌봄, 혹은 평소의 단정한 이미지를 동시에 보여 주는 소품이 된다.",types:["work","hotel","home"]},
+  {name:"목도리",text:"밖에서의 흔적을 가리거나 상대의 물건을 대신 두르고 나가는 장면에 쓴다.",types:["work","hotel","home"]},
+  {name:"우산",text:"같이 이동하게 되는 사소한 계기로 플레이 밖의 관계를 드러낸다.",types:["work","hotel","institution"]},
+  {name:"차 키",text:"누가 데려다주고 돌아갈지를 정하는 행동으로 플레이 이후의 거리감을 보여 준다.",types:["work","home","hotel"]},
+  {name:"주차권",text:"얼마나 오래 머물렀는지 예상치 못하게 드러나는 현실적인 흔적이 된다.",types:["work","hotel"]},
+  {name:"엘리베이터 카드",text:"공적인 공간에서 사적인 공간으로 이동하는 경계를 명확하게 만든다.",types:["work","hotel","institution"]}
 ];
 function chooseSceneObject(type,forcedName){
   const pool=OBJECTS.filter(o=>o.types.includes(type));
