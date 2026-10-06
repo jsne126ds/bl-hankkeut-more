@@ -124,13 +124,22 @@ button{font:inherit}
 </div>
 <footer class="site-footer">
   <span>© 2026 미녹음. All rights reserved.</span>
-  <span class="version">v0.9.2</span>
+  <span class="version">v0.9.3</span>
 </footer>
 <div id="toast" class="toast">복사했어</div>
 
 <script>
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const maybe=(p=.5)=>Math.random()<p;
+function hasBatchim(text){
+  const chars=[...String(text)].filter(ch=>ch>="가"&&ch<="힣");
+  if(!chars.length)return false;
+  return (chars[chars.length-1].charCodeAt(0)-0xAC00)%28!==0;
+}
+const topic=text=>String(text)+(hasBatchim(text)?"은":"는");
+const subject=text=>String(text)+(hasBatchim(text)?"이":"가");
+const objectParticle=text=>String(text)+(hasBatchim(text)?"을":"를");
+const copulaEnding=text=>hasBatchim(text)?"이다":"다";
 const sample=(a,n)=>[...a].sort(()=>Math.random()-.5).slice(0,n);
 const weightedPick=a=>{
   const total=a.reduce((s,x)=>s+(x.weight||1),0);
@@ -593,9 +602,9 @@ function chooseBase(world,profile,relation,role){
     if(!upper)return "가문과 회사의 공적인 역할과 둘만의 플레이 규칙을 분리해 유지한다";
     const lower=upper==="공"?"수":"공";
     if(role&&role.giver===upper){
-      return `가문과 회사에서는 ${upper}가 ${lower}보다 높은 위치에 있고, 사적으로도 ${upper}가 통제권을 갖지만 공적인 지시와 플레이 규칙은 철저히 구분한다`;
+      return `가문과 회사에서는 ${subject(upper)} ${lower}보다 높은 위치에 있고, 사적으로도 ${subject(upper)} 통제권을 갖지만 공적인 지시와 플레이 규칙은 철저히 구분한다`;
     }
-    return `가문과 회사에서는 ${upper}가 ${lower}보다 높은 위치에 있지만, 둘만 있을 때는 ${lower}가 통제권을 갖는다`;
+    return `가문과 회사에서는 ${subject(upper)} ${lower}보다 높은 위치에 있지만, 둘만 있을 때는 ${subject(lower)} 통제권을 갖는다`;
   }
   return base;
 }
@@ -795,7 +804,8 @@ function chooseTrigger(type){if(type==="work")return pick(["넥타이를 푸는 
 
 function buildResult(){
  const world=pick(DATA.worlds),profile=PROFILES[world],[place,type]=pick(profile.places),relation=chooseRelationForProfile(profile),stage=chooseStageForRelation(relation),group=stageGroup(stage),arrangement=chooseArrangementForRelation(relation),role=weightedPick(DATA.roles),tendencies=makeTendencies(role,relation),situation=chooseSituation(group,type,relation,world,stage,role),variable=chooseVariable(group,type,relation,world,stage,situation,role),weak=pick(WEAKS.filter(w=>w[0]!==variable.key)),impact=pick(DATA.impactAreas),hum=chooseHumiliations(impact,type,Math.random()<.45?2:1),sceneObject=chooseSceneObject(type,hum.forcedObject),smPlay=chooseSMPlay(type),sexScene=chooseSexScene(type),posture=choosePosition(type),restraint=chooseRestraint(posture,type),tool1=chooseTool(type),tool2=maybe(.28)?chooseTool(type):null,toolText=(tool2&&tool2!==tool1)?`${tool1} → ${tool2}`:tool1,rhythm=pick(DATA.rhythms),strength=pick(DATA.strengths),rule=chooseRule(relation,world),giver=role.giver,receiver=role.receiver,receiverEmotion=pick(DATA.receiverEmotion),giverEmotion=pick(DATA.giverEmotion),aftermath=pick(DATA.aftermath);
- const result={설정:`${world} · ${chooseBase(world,profile,relation,role)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${rule}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:`${situation} 분위기를 바꾸는 작은 신호는 ‘${chooseTrigger(type)}’다.`,변수:variable.text,성향:`공: ${tendencies.top} / 수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${rhythm} · ${strength} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${receiver==="수"?"수는":"공은"} ${receiverEmotion} 플레이가 끝난 뒤에는 ${aftermath}.`,"하는 사람 감정선":`${giver+"은"} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
+ const aftermathText=/^플레이가 끝난 뒤/.test(aftermath)?aftermath:`플레이가 끝난 뒤에는 ${aftermath}`;
+ const result={설정:`${world} · ${chooseBase(world,profile,relation,role)}. ${arrangement}. ${chooseTiming(type,stage)}, ${place}. ${chooseSecrecy(type)}. 관계 단계는 ‘${stage}’이며, 둘 사이에는 “${rule}”라는 약속이 있다.`,관계:relation,오브제:`${sceneObject.name} · ${sceneObject.text}`,상황:(()=>{const trigger=chooseTrigger(type);return `${situation} 분위기를 바꾸는 작은 신호는 ‘${trigger}’${copulaEnding(trigger)}.`;})(),변수:variable.text,성향:`공: ${tendencies.top} / 수: ${tendencies.bottom}`,플레이:`스팽 — ${impact} · ${toolText} · ${posture} · ${rhythm} · ${strength} · ${restraint}.\nSM — ${smPlay}.\n섹스 — ${sexScene}.\n수치 요소 — ${hum.texts.join(" + ")}.\n약점 — ${weak[1]}.`,"받는 사람 감정선":`${topic(receiver)} ${receiverEmotion} ${aftermathText}.`,"하는 사람 감정선":`${topic(giver)} ${giverEmotion}`,"음성 반응":pick(DATA.voice)};
  result._ctx={world,type,place,relation,stage,role:role.label,hierarchyMode:hierarchyMode(relation,role),tendencies,situation,variable:variable.text,impact,toolText,posture,rhythm,strength,restraint,smPlay,sexScene,rule};
  return result;
 }
